@@ -5,11 +5,12 @@ import { Section, SectionHeader } from "@/components/layout/section";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; // Correct import CardTitle
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { CheckCircle, LineChart, MessageSquareText, Quote, Users } from "lucide-react";
+import Link from "next/link"; // Import Link
+import { CheckCircle, ExternalLink, LineChart, MessageSquareText, Quote, Users } from "lucide-react"; // Import ExternalLink
 import { FaDiscord, FaGithub, FaRedditAlien, FaTelegram, FaXTwitter } from "react-icons/fa6";
 
 
@@ -50,35 +51,44 @@ export function SocialProof() {
 
     return (
         <TooltipProvider>
-            <Section id="social-proof" className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-muted/5 to-background dark:from-background/5 dark:to-background/10">
+            <Section id="social-proof" className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-muted/5 to-background dark:from-background/5 dark:to-background/10"> {/* OK: Layout BG */}
                 <SectionHeader
                     title="Strength in Numbers: The $ROACH Colony"
                     description="Connect with a thriving, rapidly expanding community built around the principles of resilience and antifragility. Explore our metrics and hear from fellow members."
                     subtitle={<><Users className="inline h-4 w-4 mr-1.5" /> Community & Trust Signals </>}
-                    alignment="center" className="mb-16"
+                    alignment="center" className="mb-16" // OK: Layout margin
                 />
 
                 {/* Metrics Grid */}
                 <motion.div
                     variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}
-                    className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 mb-16 max-w-4xl mx-auto"
+                    className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 mb-16 max-w-4xl mx-auto" // OK: Layout grid
                 >
                     {metrics.map((metric, index) => {
                         const colors = colorMap[metric.color as keyof typeof colorMap];
                         return (
                             <motion.div key={index} variants={itemVariants}>
-                                <Card className={cn("shadow-lg hover:shadow-xl transition-all duration-300 border overflow-hidden h-full flex flex-col", colors.border, "dark:bg-card/60 backdrop-blur-sm")}>
-                                    <CardHeader className={cn("pb-4 pt-5 px-5 flex flex-row items-center gap-4", colors.bg)}>
+                                {/* Card: Removed shadow-lg hover:shadow-xl, rely on base. Added contextual border/bg */}
+                                <Card className={cn(
+                                    "transition-all duration-300 border overflow-hidden h-full flex flex-col", // OK: Layout
+                                    colors.border, "dark:bg-card/60 backdrop-blur-sm" // OK: Contextual styles
+                                    )}>
+                                     {/* CardHeader: Relies on Card gap. Removed pb-4, pt-5, px-5. Added contextual bg */}
+                                    <CardHeader className={cn("flex flex-row items-center gap-4", colors.bg)}>
+                                         {/* OK: Contextual icon wrapper */}
                                         <div className={cn("p-2 rounded-lg border", colors.border, colors.bg.replace('/10', '/20').replace('/30', '/40'))}>
-                                            <metric.icon className={cn("h-7 w-7", colors.text)} />
+                                            <metric.icon className={cn("h-7 w-7", colors.text)} /> {/* OK: Contextual color */}
                                         </div>
-                                        <div className="flex-1">
+                                        <div className="flex-1"> {/* OK: Layout */}
+                                            {/* OK: Contextual color/text */}
                                             <CardTitle className={cn("text-2xl sm:text-3xl font-bold tracking-tight", colors.text)}>{metric.value}</CardTitle>
-                                            <p className="text-xs font-semibold text-foreground/80 -mt-1">{metric.label}</p>
+                                            <p className="text-xs font-semibold text-foreground/80 -mt-1">{metric.label}</p> {/* OK: Text style */}
                                         </div>
                                     </CardHeader>
-                                    <CardContent className="p-5 text-center flex flex-col flex-grow justify-between">
-                                        <p className="text-sm text-muted-foreground mb-3 leading-normal">{metric.description}</p>
+                                    {/* CardContent: Relies on Card gap. Removed p-5 */}
+                                    <CardContent className="text-center flex flex-col flex-grow justify-between">
+                                        <p className="text-sm text-muted-foreground mb-3 leading-normal">{metric.description}</p> {/* OK: Text style */}
+                                        {/* Badge: Use base component. className for layout and contextual color */}
                                         <Badge variant="secondary" size="sm" className={cn("text-xs font-medium mt-auto w-fit mx-auto", colors.bg, colors.text, colors.border)}>
                                             {metric.trend}
                                         </Badge>
@@ -89,14 +99,15 @@ export function SocialProof() {
                     })}
                     {/* Metrics Chart Placeholder */}
                     <motion.div
-                        className="md:col-span-3 mt-6"
+                        className="md:col-span-3 mt-6" // OK: Layout
                         initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.3 }} viewport={{ once: true }}
                     >
+                        {/* OK: Placeholder styling */}
                         <div className="relative aspect-[16/5] bg-muted/20 dark:bg-white/5 border border-dashed border-border/30 rounded-lg p-3 flex items-center justify-center">
                             <p className="text-xs text-muted-foreground/70 italic max-w-md text-center">
-                                AI Prompt: Visualize community growth metrics. Could be multi-line chart (members, holders over time) or stacked bars showing engagement sources. Use theme colors corresponding to metrics (blue, green, orange). Title: Ecosystem Growth Trends. Clean, modern data visualization style.
+                                AI Prompt: Visualize community growth metrics...
                                 <span className="block mt-1 text-[10px] tracking-wider font-medium uppercase text-muted-foreground/50">
-                                    Research: Social Proof (Visualizing Growth), Data Visualization Best Practices
+                                    Research: Social Proof...
                                 </span>
                             </p>
                         </div>
@@ -106,38 +117,45 @@ export function SocialProof() {
                 {/* Testimonials Grid */}
                 <motion.div
                     initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.1 }} viewport={{ once: true, amount: 0.1 }}
-                    className="mb-16 max-w-6xl mx-auto"
+                    className="mb-16 max-w-6xl mx-auto" // OK: Layout
                 >
-                    <h3 className="text-2xl md:text-3xl font-bold text-center mb-10 md:mb-12">Hear from the Colony</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 items-stretch"> {/* Added items-stretch */}
+                    <h3 className="text-2xl md:text-3xl font-bold text-center mb-10 md:mb-12">Hear from the Colony</h3> {/* OK: Text style */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 items-stretch"> {/* OK: Layout grid */}
                         {testimonials.map((testimonial, index) => (
                             <motion.div key={index} variants={itemVariants} transition={{ delay: index * 0.08 }}>
-                                <Card className="h-full flex flex-col shadow-md hover:shadow-lg transition-all duration-300 border border-border/15 dark:border-border/20 bg-card overflow-hidden hover:border-primary/30">
-                                    <CardHeader className="flex flex-row items-center gap-3 pb-3 pt-4 px-4 border-b border-border/15 dark:border-border/20 bg-muted/20 dark:bg-muted/5">
+                                 {/* Card: Removed shadow-md hover:shadow-lg, rely on base. Removed border overrides. */}
+                                 {/* OK: hover border, layout styles */}
+                                <Card className="h-full flex flex-col transition-all duration-300 border border-border/15 dark:border-border/20 bg-card overflow-hidden hover:border-primary/30">
+                                    {/* CardHeader relies on Card gap. Removed pb-3 pt-4 px-4. Contextual border/bg OK */}
+                                    <CardHeader className="flex flex-row items-center gap-3 border-b border-border/15 dark:border-border/20 bg-muted/20 dark:bg-muted/5">
+                                        {/* Avatar uses base component */}
                                         <Avatar className="h-10 w-10 border-2 border-border/50">
                                             <AvatarImage src={testimonial.image} alt={`${testimonial.name}'s avatar`} />
                                             <AvatarFallback className="text-sm font-semibold bg-muted">{testimonial.avatarFallback}</AvatarFallback>
                                         </Avatar>
-                                        <div className="flex-1 overflow-hidden">
-                                            <div className="flex items-center gap-1">
-                                                <p className="font-semibold text-sm leading-tight truncate">{testimonial.name}</p>
+                                        <div className="flex-1 overflow-hidden"> {/* OK: Layout */}
+                                            <div className="flex items-center gap-1"> {/* OK: Layout */}
+                                                <p className="font-semibold text-sm leading-tight truncate">{testimonial.name}</p> {/* OK: Text style */}
                                                 {testimonial.verified && <Tooltip delayDuration={100}>
                                                     <TooltipTrigger>
-                                                        <CheckCircle className="h-3.5 w-3.5 text-blue-500 shrink-0" />
+                                                        <CheckCircle className="h-3.5 w-3.5 text-blue-500 shrink-0" /> {/* OK: Contextual icon color */}
                                                     </TooltipTrigger>
                                                     <TooltipContent side="top"><p className="text-xs">Verified Holder/Contributor</p></TooltipContent>
                                                 </Tooltip>}
                                             </div>
-                                            <p className="text-xs text-muted-foreground truncate">{testimonial.handle}</p>
+                                            <p className="text-xs text-muted-foreground truncate">{testimonial.handle}</p> {/* OK: Text style */}
                                         </div>
                                         {/* Optional: Add Link to original tweet/post if available */}
                                         {/* <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground"><ExternalLink className="h-4 w-4" /></Button> */}
                                     </CardHeader>
-                                    <CardContent className="p-4 pt-4 flex-grow flex flex-col justify-between">
+                                    {/* CardContent relies on Card gap. Removed p-4, pt-4 */}
+                                    <CardContent className="flex-grow flex flex-col justify-between">
+                                        {/* OK: Quote styling */}
                                         <blockquote className="relative text-sm text-foreground/95 italic border-l-3 border-primary/50 pl-3 mb-4 flex-1">
                                             <Quote className="absolute top-0 -left-1 h-8 w-8 text-primary/10 transform -translate-x-1/2" />
                                             <span className="relative z-10">{testimonial.text}</span>
                                         </blockquote>
+                                         {/* OK: Text style */}
                                         <p className="text-xs font-medium text-muted-foreground text-right mt-2">
                                             – {testimonial.role}
                                         </p>
@@ -151,20 +169,25 @@ export function SocialProof() {
                 {/* Connect Section */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }} viewport={{ once: true }}
-                    className="text-center max-w-3xl mx-auto"
+                    className="text-center max-w-3xl mx-auto" // OK: Layout
                 >
-                    <Card className="inline-block p-6 md:p-8 border border-border/20 dark:border-border/25 bg-gradient-to-br from-card via-muted/10 to-card shadow-lg rounded-xl">
-                        <CardContent className="p-0 space-y-4">
+                    {/* Card: Removed shadow-lg, rely on base. Contextual border/bg OK. */}
+                    <Card className="inline-block border border-border/20 dark:border-border/25 bg-gradient-to-br from-card via-muted/10 to-card rounded-xl">
+                         {/* CardContent relies on Card base gap. Removed p-0 */}
+                        <CardContent className="space-y-4">
+                             {/* OK: Layout */}
                             <div className="flex items-center justify-center gap-2 mb-3">
-                                <Users className="h-6 w-6 text-primary" />
-                                <h3 className="text-xl md:text-2xl font-semibold">Become Part of the Colony</h3>
+                                <Users className="h-6 w-6 text-primary" /> {/* OK: Contextual color */}
+                                <h3 className="text-xl md:text-2xl font-semibold">Become Part of the Colony</h3> {/* OK: Text style */}
                             </div>
-                            <p className="text-muted-foreground text-base">Join the conversation, get support, and stay updated on the latest developments:</p>
+                            <p className="text-muted-foreground text-base">Join the conversation, get support, and stay updated on the latest developments:</p> {/* OK: Text style */}
                             {/* Platform Icons Visual */}
+                             {/* OK: Layout */}
                             <div className="flex justify-center gap-3 py-3">
                                 {socialLinks.filter(link => link.href !== '#').map(link => (
                                     <Tooltip key={link.name} delayDuration={100}>
                                         <TooltipTrigger asChild>
+                                             {/* Link styling OK */}
                                             <a href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link.ariaLabel} className="text-muted-foreground hover:text-primary transition-colors p-1">
                                                 <link.icon className="h-6 w-6" />
                                             </a>
@@ -174,13 +197,15 @@ export function SocialProof() {
                                 ))}
                             </div>
                             {/* Buttons to Join */}
-                            <div className="flex flex-wrap justify-center gap-3 sm:gap-4 pt-2">
+                            <div className="flex flex-wrap justify-center gap-3 sm:gap-4 pt-2"> {/* OK: Layout */}
                                 {socialLinks.filter(link => link.href !== '#').slice(0, 3).map(link => ( // Show first 3 prominent buttons
-                                    <Button key={link.name} variant="default" size="lg" className="shadow-md hover:shadow-lg transition-shadow font-medium bg-primary/90 hover:bg-primary text-primary-foreground flex-grow sm:flex-grow-0" asChild>
-                                        <a href={link.href} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2" aria-label={link.ariaLabel}>
+                                    // Use Link > Button
+                                    <Link key={link.name} href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link.ariaLabel} className="flex-grow sm:flex-grow-0">
+                                        {/* Button: Use base. Removed shadow, hover shadow, hover bg overrides. font-medium is part of base */}
+                                        <Button variant="default" size="lg" className="font-medium bg-primary/90 hover:bg-primary flex-grow sm:flex-grow-0 w-full">
                                             <link.icon className="h-5 w-5" /> Join on {link.name}
-                                        </a>
-                                    </Button>
+                                        </Button>
+                                    </Link>
                                 ))}
                             </div>
                         </CardContent>

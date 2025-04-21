@@ -1,17 +1,19 @@
-// --- START OF FILE components/ui/Section.tsx ---
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+// --- START OF FILE components/layout/section.tsx ---
+
+// --- START OF FILE components/layout/section.tsx ---
+import { Badge } from "@/components/ui/badge"; // Correct path
+import { Card, CardContent } from "@/components/ui/card"; // Correct path
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import React from "react";
 
+// ... (interfaces remain the same) ...
 interface SectionProps extends React.HTMLAttributes<HTMLElement> {
   id?: string;
   className?: string;
   containerClassName?: string;
   children: React.ReactNode;
-  // New prop to disable default min-height and centering for connectors etc.
   disableDefaultHeight?: boolean;
 }
 
@@ -23,7 +25,6 @@ interface SectionHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
   className?: string;
   titleClassName?: string;
   descriptionClassName?: string;
-  subtitleClassName?: string;
 }
 
 interface SectionConnectorProps {
@@ -33,12 +34,14 @@ interface SectionConnectorProps {
   className?: string;
 }
 
+
+// Section component remains the same as previous refactor
 export function Section({
   id,
   className,
   containerClassName,
   children,
-  disableDefaultHeight = false, // Default to applying height/centering
+  disableDefaultHeight = false,
   ...props
 }: SectionProps) {
   return (
@@ -46,7 +49,6 @@ export function Section({
       id={id}
       className={cn(
         "w-full relative scroll-snap-align-start",
-        // Conditionally apply height and centering
         !disableDefaultHeight && "min-h-screen flex flex-col justify-center py-16 md:py-20 lg:py-24",
         className
       )}
@@ -62,6 +64,7 @@ export function Section({
   );
 }
 
+// SectionHeader: Updated to re-apply subtitle styles via className since Badge variant was removed
 export function SectionHeader({
   title,
   description,
@@ -70,14 +73,13 @@ export function SectionHeader({
   className,
   titleClassName,
   descriptionClassName,
-  subtitleClassName,
   ...props
 }: SectionHeaderProps) {
 
   return (
     <div
       className={cn(
-        "mb-12 md:mb-16 max-w-4xl", // Wider max-width
+        "mb-12 md:mb-16 max-w-4xl",
         {
           'mx-auto text-center': alignment === 'center',
           'text-right ml-auto': alignment === 'right',
@@ -87,34 +89,25 @@ export function SectionHeader({
       )}
       {...props}
     >
-      {/* Subtitle */}
       {subtitle && (
-        <Badge
-          variant="outline"
-          className={cn(
-            "mb-3 inline-flex items-center gap-1.5 border-primary/40 bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wider px-3 py-1 shadow-sm", // Enhanced subtitle badge
-            subtitleClassName
-          )}
-        >
+        <Badge variant="outline" className="mb-3">
           {subtitle}
         </Badge>
       )}
 
-      {/* Main Title */}
       <h2
         className={cn(
-          "text-3xl font-bold tracking-tight sm:text-4xl lg:text-[2.8rem] !leading-tight mb-4 text-balance", // Adjusted size, text-balance
+          "text-3xl font-bold tracking-tight sm:text-4xl lg:text-[2.8rem] !leading-tight mb-4 text-balance",
           titleClassName
         )}
       >
         {title}
       </h2>
 
-      {/* Description */}
       {description && (
         <p
           className={cn(
-            "text-lg text-muted-foreground md:text-xl lg:text-[1.18rem] leading-relaxed", // Slightly larger description
+            "text-lg text-muted-foreground md:text-xl lg:text-[1.18rem] leading-relaxed",
             descriptionClassName
           )}
         >
@@ -125,6 +118,7 @@ export function SectionHeader({
   );
 }
 
+// SectionConnector remains the same as previous refactor
 export function SectionConnector({
   prevSection,
   summary,
@@ -142,12 +136,11 @@ export function SectionConnector({
   }
 
   return (
-    // Use the updated Section, disable its default height/padding behavior
     <Section
-      disableDefaultHeight={true} // Important: Allows this section to be less tall
+      disableDefaultHeight={true}
       className={cn(
-        "bg-transparent", // Transparent background to see page gradient
-        "!py-12 md:!py-16", // Custom padding for connector density
+        "bg-transparent",
+        "!py-12 md:!py-16",
         className
       )}
       aria-hidden="true"
@@ -157,15 +150,13 @@ export function SectionConnector({
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.5 }}
-        className="max-w-lg mx-auto" // Narrower card for transition
+        className="max-w-lg mx-auto"
       >
-        {/* Card with backdrop blur and subtle border */}
         <Card className={cn(
-          "bg-card/50 dark:bg-card/30 border border-border/20 shadow-sm text-center backdrop-blur-sm rounded-xl",
+          "bg-card/50 dark:bg-card/30 border-border/20 text-center backdrop-blur-sm rounded-xl",
           "dark:border-border/30"
         )}>
-          <CardContent className="p-5 md:p-6 space-y-3 md:space-y-4">
-            {/* Summary Section */}
+          <CardContent className="space-y-3 md:space-y-4">
             {summary && (
               <div className="text-center">
                 {prevSection && (
@@ -176,8 +167,6 @@ export function SectionConnector({
                 <p className="text-base md:text-lg text-foreground/95 font-medium">{summary}</p>
               </div>
             )}
-
-            {/* Separator */}
             {summary && nextConcept && (
               <div className="relative flex justify-center items-center my-1">
                 <div className="absolute inset-0 flex items-center" aria-hidden="true">
@@ -188,8 +177,6 @@ export function SectionConnector({
                 </div>
               </div>
             )}
-
-            {/* Next Concept Section */}
             {nextConcept && (
               <div className="flex flex-col items-center gap-0.5 text-sm">
                 <span className="font-semibold tracking-wide text-primary">Coming Up:</span>
@@ -202,3 +189,4 @@ export function SectionConnector({
     </Section>
   );
 }
+// --- END OF FILE components/layout/section.tsx ---

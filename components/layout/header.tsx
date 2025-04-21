@@ -81,53 +81,66 @@ export const Header = memo(({ onScrollTo }: HeaderProps) => {
                 setIsMobileMenuOpen(false);
             }
         }
-        // Let external links behave normally
+        // Let external links or root link behave normally
+        // If it's the root link, just navigate (no scroll prevention needed)
+        else if (href === '/') {
+             if (closeMobileMenu) {
+                setIsMobileMenuOpen(false);
+            }
+            // No preventDefault needed for root link
+        }
+
     }, [onScrollTo]);
 
     return (
         <header
             className={cn(
-                "sticky top-0 z-50 w-full transition-all duration-300 ease-out",
+                "sticky top-0 z-50 w-full transition-all duration-300 ease-out", // OK: Layout/State
                 // Apply subtle blur and border effect when scrolled
                 isScrolled
-                    ? "shadow-md bg-background/90 backdrop-blur-sm border-b border-border/30"
-                    : "bg-transparent border-b border-transparent"
+                    ? "shadow-md bg-background/90 backdrop-blur-sm border-b border-border/30" // OK: State-based visual tweaks
+                    : "bg-transparent border-b border-transparent" // OK: State-based visual tweaks
             )}
         >
-            <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
+            <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6"> {/* OK: Layout */}
                 {/* Logo Area */}
-                <Link href="/" className="flex items-center gap-2 mr-4 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm" onClick={handleNavClick('/')}>
-                    <CockroachMascot size="sm" className="text-primary transition-transform hover:scale-110" />
-                    <span className="text-xl font-bold hidden sm:inline tracking-tight">
+                 {/* Use onClick for root link to potentially close mobile menu */}
+                <Link href="/" className="flex items-center gap-2 mr-4 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm" onClick={handleNavClick('/', true)}>
+                    <CockroachMascot size="sm" className="text-primary transition-transform hover:scale-110" /> {/* OK: Minor tweak (transform), primary color */}
+                    <span className="text-xl font-bold hidden sm:inline tracking-tight"> {/* OK: Text style for brand */}
                         $ROACH
                     </span>
                 </Link>
 
                 {/* Desktop Navigation */}
-                <NavigationMenu className="hidden lg:flex flex-1 justify-center">
+                <NavigationMenu className="hidden lg:flex flex-1 justify-center"> {/* OK: Layout */}
                     <NavigationMenuList>
                         {menuItems.map((item) => (
                             <NavigationMenuItem key={item.href}>
-                                {/* Use Button component styled as link for consistency and accessibility */}
+                                {/* Use Button for navigation action */}
                                 <Button
                                     variant="ghost"
+                                    // Use nav trigger style for base, apply overrides that don't conflict
                                     className={cn(
                                         navigationMenuTriggerStyle(),
-                                        "bg-transparent h-9 px-3 text-sm font-medium", // Adjusted padding
-                                        "hover:bg-accent/70 hover:text-accent-foreground",
-                                        "focus:bg-accent/70 focus:text-accent-foreground data-[active]:bg-accent/50"
+                                        "bg-transparent h-9 px-3 text-sm font-medium", // OK: Specific sizing/padding for this nav context
+                                        "hover:bg-accent/70 hover:text-accent-foreground", // OK: Specific hover for this context
+                                        "focus:bg-accent/70 focus:text-accent-foreground data-[active]:bg-accent/50" // OK: Specific focus/active for this context
                                     )}
                                     onClick={handleNavClick(item.href)} // Use callback for click
                                 >
-                                    <item.icon className="mr-1.5 h-4 w-4 opacity-80" /> {/* Add icon */}
+                                    <item.icon className="mr-1.5 h-4 w-4 opacity-80" /> {/* OK: Icon style */}
                                     {item.name}
                                 </Button>
                             </NavigationMenuItem>
                         ))}
                         {/* Whitepaper link added */}
                         <NavigationMenuItem>
-                            <Link href={WHITEPAPER_LINK} target="_blank" legacyBehavior passHref>
-                                <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "bg-transparent h-9 px-3 text-sm font-medium hover:bg-accent/70")}>
+                            <Link href={WHITEPAPER_LINK} target="_blank" rel="noopener noreferrer" legacyBehavior passHref>
+                                <NavigationMenuLink className={cn(
+                                    navigationMenuTriggerStyle(),
+                                    "bg-transparent h-9 px-3 text-sm font-medium hover:bg-accent/70" // OK: Specific sizing/hover for this context
+                                    )}>
                                     Whitepaper
                                 </NavigationMenuLink>
                             </Link>
@@ -136,37 +149,38 @@ export const Header = memo(({ onScrollTo }: HeaderProps) => {
                 </NavigationMenu>
 
                 {/* Right Side Actions (Desktop) */}
-                <div className="hidden lg:flex items-center gap-2 ml-auto">
-                    {/* Main CTA */}
-                    <Button size="sm" asChild className="shadow-sm hover:shadow-md transition-shadow bg-primary hover:bg-primary-hover">
-                        <a href={SWAP_LINK} target="_blank" rel="noopener noreferrer">
+                <div className="hidden lg:flex items-center gap-2 ml-auto"> {/* OK: Layout */}
+                    {/* Main CTA - Use Link > Button pattern */}
+                    <Link href={SWAP_LINK} target="_blank" rel="noopener noreferrer">
+                        <Button size="sm" className="shadow-sm hover:shadow-md transition-shadow bg-primary hover:bg-primary/90"> {/* OK: Minor shadow transition, rely on Button base for colors/padding */}
                             Get $ROACH
-                        </a>
-                    </Button>
+                        </Button>
+                    </Link>
                 </div>
 
                 {/* Mobile Menu Trigger & Sheet */}
-                <div className="flex items-center gap-2 lg:hidden ml-auto">
+                <div className="flex items-center gap-2 lg:hidden ml-auto"> {/* OK: Layout */}
                     <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                         <SheetTrigger asChild>
                             <Button
                                 variant="ghost"
                                 size="icon"
+                                // OK: size is defined, text color is minor tweak
                                 className="h-8 w-8 text-foreground/80 hover:text-foreground"
                                 aria-label="Toggle navigation menu"
                             >
                                 {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                             </Button>
                         </SheetTrigger>
-                        <SheetContent side="right" className="w-[300px] pt-10 px-0 bg-background flex flex-col border-l border-border/50">
+                        <SheetContent side="right" className="w-[300px] pt-10 px-0 bg-background flex flex-col border-l border-border/50"> {/* OK: Specific Sheet styling for layout */}
                             {/* Mobile Menu Header */}
-                            <div className="px-4 mb-6 flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <CockroachMascot size="sm" className="text-primary" />
-                                    <span className="text-lg font-bold">$ROACH</span>
+                            <div className="px-4 mb-6 flex items-center justify-between"> {/* OK: Layout */}
+                                <div className="flex items-center gap-2"> {/* OK: Layout */}
+                                    <CockroachMascot size="sm" className="text-primary" /> {/* OK: Primary color */}
+                                    <span className="text-lg font-bold">$ROACH</span> {/* OK: Brand text style */}
                                 </div>
                                 <SheetClose asChild>
-                                    <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground">
+                                    <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground"> {/* OK: Specific size/color for close button */}
                                         <X className="h-4 w-4" />
                                         <span className="sr-only">Close menu</span>
                                     </Button>
@@ -174,24 +188,27 @@ export const Header = memo(({ onScrollTo }: HeaderProps) => {
                             </div>
 
                             {/* Mobile Navigation Links */}
-                            <nav className="flex flex-col space-y-1 flex-grow px-4 overflow-y-auto">
+                            <nav className="flex flex-col space-y-1 flex-grow px-4 overflow-y-auto"> {/* OK: Layout */}
                                 {menuItems.map((item) => (
                                     <SheetClose key={item.href} asChild>
+                                        {/* Use Button for interaction, rely on base styles */}
                                         <Button
-                                            variant="ghost" // Use ghost buttons for mobile nav links
-                                            className="w-full justify-start text-base font-medium text-foreground/80 hover:text-foreground hover:bg-accent px-3 py-2 h-auto"
+                                            variant="ghost"
+                                            // Adjust Button styling for mobile nav links
+                                            className="w-full justify-start text-base font-medium text-foreground/80 hover:text-foreground hover:bg-accent px-3 py-2 h-auto" // OK: Specific layout/style for mobile nav item
                                             onClick={handleNavClick(item.href, true)} // Pass true to close menu
                                         >
-                                            <item.icon className="mr-2 h-4 w-4 opacity-80" />
+                                            <item.icon className="mr-2 h-4 w-4 opacity-80" /> {/* OK: Icon style */}
                                             {item.name}
                                         </Button>
                                     </SheetClose>
                                 ))}
                                 <SheetClose asChild>
-                                    <Link href={WHITEPAPER_LINK} target="_blank" legacyBehavior passHref>
+                                    {/* Use Link > a pattern (legacyBehavior requires <a>) */}
+                                    <Link href={WHITEPAPER_LINK} target="_blank" rel="noopener noreferrer" legacyBehavior passHref>
                                         <a className={cn(
-                                            buttonVariants({ variant: "ghost", size: "lg" }), // Use Button styles via variants
-                                            "w-full justify-start text-base font-medium text-foreground/80 hover:text-foreground hover:bg-accent px-3 py-2 h-auto" // Custom padding/height
+                                            buttonVariants({ variant: "ghost" }), // Use Button styles via variants
+                                            "w-full justify-start text-base font-medium text-foreground/80 hover:text-foreground hover:bg-accent px-3 py-2 h-auto" // OK: Specific layout/style for mobile nav item
                                         )}>
                                             Whitepaper
                                         </a>
@@ -200,12 +217,13 @@ export const Header = memo(({ onScrollTo }: HeaderProps) => {
                             </nav>
 
                             {/* Mobile Action Button at bottom */}
-                            <div className="mt-auto border-t border-border/30 p-4">
-                                <Button className="w-full shadow-md bg-primary hover:bg-primary-hover" size="lg" asChild>
-                                    <a href={SWAP_LINK} target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)}>
+                            <div className="mt-auto border-t border-border/30 p-4"> {/* OK: Layout */}
+                                {/* Use Link > Button pattern */}
+                                <Link href={SWAP_LINK} target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)}>
+                                    <Button className="w-full shadow-md bg-primary hover:bg-primary/90" size="lg"> {/* OK: Rely on Button base, minor shadow OK */}
                                         Get $ROACH Now
-                                    </a>
-                                </Button>
+                                    </Button>
+                                </Link>
                             </div>
                         </SheetContent>
                     </Sheet>
@@ -214,4 +232,5 @@ export const Header = memo(({ onScrollTo }: HeaderProps) => {
         </header>
     );
 });
+Header.displayName = 'Header'; // Add display name for memoized component
 // --- END OF FILE components/layout/Header.tsx ---

@@ -1,6 +1,10 @@
+// --- START OF FILE app/layout.tsx ---
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+// Sonner Toaster for notifications (uses default styling from sonner.tsx)
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,12 +27,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning> {/* Added suppressHydrationWarning for next-themes */}
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <Toaster richColors position="bottom-right" /> {/* Added Toaster */}
       </body>
     </html>
   );
 }
+// --- END OF FILE app/layout.tsx ---

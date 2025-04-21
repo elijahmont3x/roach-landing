@@ -1,17 +1,17 @@
-// --- START OF FILE components/sections/Tokenomics.tsx ---
+// --- START OF FILE components/sections/05_Tokenomics.tsx ---
 "use client";
 
 import { Section, SectionHeader } from "@/components/layout/section";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"; // Removed unused TableHead, TableHeader
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { BarChartHorizontal, Check, CheckCircle, Copy, Droplets, ExternalLink, FileText, Gift, GitCommitVertical, Info, Lock, Megaphone, MinusCircle, PieChart as PieChartIcon, Target, Users } from "lucide-react"; // Enhanced icons
+import { BarChartHorizontal, Check, CheckCircle, Circle, Copy, Droplets, ExternalLink, FileText, Gift, GitCommitVertical, Info, Lock, Megaphone, MinusCircle, PieChart as PieChartIcon, Target, Users } from "lucide-react";
 import Link from "next/link";
-import React, { useCallback, useEffect, useState } from "react"; // Added useCallback, useMemo
+import React, { useCallback, useEffect, useState } from "react";
 import { Cell, Legend, Pie, PieChart, Tooltip as RechartsTooltip, ResponsiveContainer, Sector } from 'recharts';
 import { toast } from "sonner";
 
@@ -55,6 +55,7 @@ const tokenDetails = [
 // --------------------
 
 // --- Recharts Customizations ---
+// OK: Styling props passed to low-level charting elements
 const renderActiveShape = (props: any) => {
     const RADIAN = Math.PI / 180;
     const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
@@ -70,7 +71,7 @@ const renderActiveShape = (props: any) => {
     const Icon = payload.icon || PieChartIcon; // Use provided icon or fallback
 
     return (
-        <g className="transition-transform duration-300 ease-out" filter="drop-shadow(0px 2px 4px rgba(0,0,0,0.3))">
+        <g className="transition-transform duration-300 ease-out" style={{ filter: 'drop-shadow(0px 2px 4px rgba(0,0,0,0.3))' }}> {/* Use style for filter */}
             {/* Main Sector */}
             <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius} startAngle={startAngle} endAngle={endAngle} fill={fill} stroke="var(--color-background)" strokeWidth={2} />
             {/* Active Outer Ring */}
@@ -87,6 +88,7 @@ const renderActiveShape = (props: any) => {
     );
 };
 
+// OK: Tooltip content styling is specific to the tooltip
 const CustomTooltip = ({ active, payload, theme }: { active?: boolean; payload?: any[]; theme: 'light' | 'dark' }) => {
     if (active && payload && payload.length) {
         const data = payload[0].payload as AllocationItem; // Type assertion
@@ -106,6 +108,7 @@ const CustomTooltip = ({ active, payload, theme }: { active?: boolean; payload?:
     return null;
 };
 
+// OK: Legend content styling is specific to the legend
 const renderLegend = ({ payload, theme, onMouseEnter, onMouseLeave, activeIndex }: { payload?: any[], theme: 'light' | 'dark', onMouseEnter: Function, onMouseLeave: Function, activeIndex: number | null }) => {
     if (!payload) return null;
     return (
@@ -116,11 +119,13 @@ const renderLegend = ({ payload, theme, onMouseEnter, onMouseLeave, activeIndex 
                 const Icon = data.icon || Circle; // Fallback icon
                 const isActive = index === activeIndex;
                 return (
+                     // OK: Interaction/state styles
                     <li key={`item-${index}`}
                         className={cn("flex items-center cursor-pointer transition-all duration-200 transform hover:scale-105", isActive ? "opacity-100 scale-105" : "opacity-70 hover:opacity-100")}
                         onMouseEnter={() => onMouseEnter(data, index)}
                         onMouseLeave={() => onMouseLeave()}
                     >
+                         {/* OK: Inline style for dynamic color */}
                         <Icon className="h-3.5 w-3.5 mr-1.5 shrink-0" style={{ color }} />
                         <span className="text-muted-foreground">{data.name} ({data.value}%)</span>
                     </li>
@@ -177,28 +182,35 @@ export function Tokenomics() {
 
     return (
         <TooltipProvider>
+            {/* OK: Layout background gradient */}
             <Section id="tokenomics" className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-muted/15 to-background dark:from-background/15 dark:to-background">
                 <SectionHeader
                     title="Tokenomics: Architected for Antifragility"
                     description="A meticulously planned, fixed-supply structure underpins the $ROACH ecosystem. Allocation balances initial needs with long-term resources for growth, stability, and community benefit."
                     subtitle={<><PieChartIcon className="inline h-4 w-4 mr-1.5" /> Supply & Allocation </>}
-                    alignment="center" className="mb-16"
+                    alignment="center" className="mb-16" // OK: Layout margin
                 />
 
-                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 max-w-7xl mx-auto items-stretch"> {/* Use items-stretch */}
+                 {/* OK: Layout grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 max-w-7xl mx-auto items-stretch">
                     {/* --- Distribution Chart Card (Span 3 columns) --- */}
                     <motion.div className="lg:col-span-3" variants={cardVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
-                        <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 border border-border/10 dark:border-border/20 h-full flex flex-col">
+                         {/* Card: Removed shadow-lg, hover:shadow-xl, border overrides. Added h-full for layout. */}
+                        <Card className="h-full flex flex-col">
+                             {/* CardHeader relies on Card gap. */}
                             <CardHeader>
-                                <CardTitle className="text-xl md:text-2xl font-semibold">Token Allocation Breakdown</CardTitle>
-                                <CardDescription>Total Fixed Supply: <strong className="text-foreground font-mono">1,000,000,000</strong> $ROACH (Mint Revoked)</CardDescription>
+                                <CardTitle className="text-xl md:text-2xl font-semibold">Token Allocation Breakdown</CardTitle> {/* OK: Text style */}
+                                <CardDescription>Total Fixed Supply: <strong className="text-foreground font-mono">1,000,000,000</strong> $ROACH (Mint Revoked)</CardDescription> {/* OK: Text style */}
                             </CardHeader>
-                            <CardContent className="flex-grow flex flex-col justify-center"> {/* Allow chart to grow */}
-                                <AspectRatio ratio={16 / 11} className="w-full min-h-[350px] md:min-h-[400px]"> {/* Adjusted aspect ratio, ensure min height */}
+                            {/* CardContent relies on Card gap. */}
+                            <CardContent className="flex-grow flex flex-col justify-center"> {/* OK: Layout */}
+                                 {/* AspectRatio OK */}
+                                <AspectRatio ratio={16 / 11} className="w-full min-h-[350px] md:min-h-[400px]">
                                     <ResponsiveContainer width="100%" height="100%">
+                                        {/* PieChart styling handled internally by recharts/chart.tsx */}
                                         <PieChart>
+                                            {/* ... defs, tooltip, pie, legend */}
                                             <defs>
-                                                {/* Subtle Gradient Definition (Optional) */}
                                                 <linearGradient id="primaryGradient" x1="0" y1="0" x2="0" y2="1">
                                                     <stop offset="5%" stopColor="var(--color-primary)" stopOpacity={0.8} />
                                                     <stop offset="95%" stopColor="var(--color-primary)" stopOpacity={0.4} />
@@ -210,26 +222,26 @@ export function Tokenomics() {
                                                 wrapperStyle={{ zIndex: 50 }}
                                             />
                                             <Pie
-                                                activeIndex={activeIndex ?? -1} // Pass active index or -1 if null
+                                                activeIndex={activeIndex ?? -1}
                                                 activeShape={renderActiveShape}
                                                 data={distributionData}
-                                                cx="50%" cy="45%" // Adjust vertical centering
+                                                cx="50%" cy="45%"
                                                 labelLine={false}
-                                                outerRadius="75%" innerRadius="50%" // Make donut thicker
+                                                outerRadius="75%" innerRadius="50%"
                                                 fill="#8884d8" paddingAngle={2} dataKey="value"
                                                 stroke="var(--color-card)" strokeWidth={3}
                                                 onMouseEnter={onPieEnter}
-                                                onMouseLeave={onPieLeave} // Add leave handler
+                                                onMouseLeave={onPieLeave}
                                             >
                                                 {distributionData.map((entry, index) => (
+                                                     // OK: Dynamic fill based on state
                                                     <Cell key={`cell-${index}`} fill={theme === 'dark' ? entry.darkColor || entry.color : entry.color} />
                                                 ))}
                                             </Pie>
-                                            {/* Render custom legend below */}
                                             <Legend
                                                 content={(props) => renderLegend({ ...props, theme: theme, onMouseEnter: onPieEnter, onMouseLeave: onPieLeave, activeIndex: activeIndex })}
                                                 verticalAlign="bottom"
-                                                wrapperStyle={{ paddingTop: '15px' }}
+                                                wrapperStyle={{ paddingTop: '15px' }} // OK: Specific style for chart element
                                             />
                                         </PieChart>
                                     </ResponsiveContainer>
@@ -239,56 +251,72 @@ export function Tokenomics() {
                     </motion.div>
 
                     {/* --- Token Details Card (Span 2 columns) --- */}
-                    <motion.div className="lg:col-span-2" variants={cardVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2, delay: 0.1 }}>
-                        <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 border border-border/10 dark:border-border/20 h-full flex flex-col">
+                    <motion.div className="lg:col-span-2" variants={cardVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} transition={{ delay: 0.1 }}>
+                        {/* Card: Removed shadow-lg, hover:shadow-xl, border overrides. Added h-full. */}
+                        <Card className="h-full flex flex-col">
+                             {/* CardHeader relies on Card gap. */}
                             <CardHeader>
-                                <CardTitle className="text-xl md:text-2xl font-semibold">Core Token Attributes</CardTitle>
-                                <CardDescription>Immutable properties and security verifications.</CardDescription>
+                                <CardTitle className="text-xl md:text-2xl font-semibold">Core Token Attributes</CardTitle> {/* OK: Text style */}
+                                <CardDescription>Immutable properties and security verifications.</CardDescription> {/* OK: Text style */}
                             </CardHeader>
+                             {/* CardContent relies on Card gap. */}
                             <CardContent className="flex-grow flex flex-col">
-                                <div className="flex-grow">
+                                <div className="flex-grow"> {/* OK: Layout */}
+                                     {/* Table uses base component. */}
                                     <Table>
+                                         {/* TableBody uses base component. */}
                                         <TableBody>
                                             {tokenDetails.map((item, index) => (
+                                                //  {/* TableRow uses base component. className for hover/state/layout OK */}
                                                 <motion.tr
                                                     key={item.key}
-                                                    className="border-b last:border-b-0 hover:bg-muted/30 dark:hover:bg-muted/10 transition-colors align-top h-[50px]" // Align top for potentially wrapping text
+                                                    className="border-b last:border-b-0 hover:bg-muted/30 dark:hover:bg-muted/10 transition-colors align-top h-[50px]" // OK: Specific row height/align/hover for this context
                                                     variants={tableRowVariants}
                                                     initial="hidden"
                                                     whileInView="visible"
                                                     viewport={{ once: true, amount: 0.8 }}
                                                     transition={{ duration: 0.3, delay: index * 0.05 }}
                                                 >
+                                                     {/* TableCell uses base component. className for text/layout/contextual styles OK */}
                                                     <TableCell className="font-medium text-muted-foreground text-xs align-middle py-2 pr-2 w-[120px] whitespace-nowrap">
-                                                        <div className="flex items-center gap-1.5">
+                                                        <div className="flex items-center gap-1.5"> {/* OK: Layout */}
+                                                             {/* OK: Contextual icon color */}
                                                             {item.icon && <item.icon className={cn("h-4 w-4 shrink-0", item.immutable ? "text-primary opacity-90" : "opacity-70")} />}
                                                             {item.key}
                                                             {item.tooltip && (
                                                                 <Tooltip delayDuration={100}>
-                                                                    <TooltipTrigger className="cursor-help flex items-center ml-auto"><Info className="h-3 w-3 text-muted-foreground/60" /></TooltipTrigger>
+                                                                    <TooltipTrigger className="cursor-help flex items-center ml-auto"><Info className="h-3 w-3 text-muted-foreground/60" /></TooltipTrigger> {/* OK: Trigger style */}
                                                                     <TooltipContent side="left" align="start"><p className="max-w-[200px] text-xs">{item.tooltip}</p></TooltipContent>
                                                                 </Tooltip>
                                                             )}
                                                         </div>
                                                     </TableCell>
+                                                    {/* TableCell: Styling for layout and text OK */}
                                                     <TableCell className="text-sm font-medium py-2 align-middle">
-                                                        <div className="flex items-center gap-1">
+                                                        <div className="flex items-center gap-1"> {/* OK: Layout */}
                                                             {item.link && item.link !== '#' && item.link !== "#roadmap" ? (
+                                                                // Link styling OK here as it's a specific link usage
                                                                 <Link href={item.link} target={item.external || item.isAddress ? "_blank" : "_self"} rel={item.external || item.isAddress ? "noopener noreferrer" : undefined} className="hover:text-primary hover:underline transition-colors duration-200 inline-flex items-center gap-1 group focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm" title={item.tooltip || `View ${item.key}`}>
+                                                                    {/* OK: Specific text styles for address display */}
                                                                     <span className={item.isAddress ? "font-mono text-xs block truncate max-w-[120px] sm:max-w-[150px]" : ""}>{item.value}</span>
+                                                                    {/* OK: Group interaction style */}
                                                                     {(item.external || item.isAddress) && <ExternalLink className="h-3 w-3 text-muted-foreground group-hover:text-primary transition-colors duration-200 shrink-0" />}
                                                                 </Link>
                                                             ) : item.link === "#roadmap" ? ( // Special case for internal roadmap link
+                                                                // Internal Link uses same styling approach
                                                                 <Link href="#roadmap" className="hover:text-primary hover:underline transition-colors duration-200 inline-flex items-center gap-1 group focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm" title={item.tooltip || `View ${item.key}`}>
                                                                     {item.value}
                                                                 </Link>
                                                             ) : (
+                                                                // OK: Specific text styles for address display
                                                                 <span className={item.isAddress ? "font-mono text-xs block truncate max-w-[120px] sm:max-w-[150px]" : ""}>{item.value}</span>
                                                             )}
                                                             {item.isAddress && (
                                                                 <Tooltip delayDuration={100}>
                                                                     <TooltipTrigger asChild>
+                                                                        {/* Button uses base. Specific size/color OK for context */}
                                                                         <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0 text-muted-foreground hover:text-foreground" onClick={() => handleCopy(item.value, item.key)} aria-label={`Copy ${item.key}`}>
+                                                                             {/* OK: State-based icon/color */}
                                                                             {copied[item.key] ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
                                                                         </Button>
                                                                     </TooltipTrigger>
@@ -304,6 +332,7 @@ export function Tokenomics() {
                                 </div>
 
                                 {/* Immutable Properties Visual Placeholder */}
+                                 {/* OK: Layout and placeholder styling */}
                                 <div className="mt-auto pt-4 border-t border-border/10 dark:border-border/20 px-1">
                                     <div className="relative bg-muted/30 dark:bg-muted/10 border border-dashed border-primary/30 rounded-md p-3 flex items-center justify-center gap-4 min-h-[60px]">
                                         <FileText className="h-5 w-5 text-primary opacity-70" />
@@ -312,7 +341,7 @@ export function Tokenomics() {
                                         <p className="text-xs text-muted-foreground/80 italic text-center flex-1">
                                             Illustrating immutability: Fixed Supply, Revoked Mint, Verified Code.
                                             <span className="block mt-1 text-[10px] tracking-wider font-medium uppercase text-muted-foreground/50">
-                                                Research: Trust Signals (Cialdini's Authority), Commitment & Consistency
+                                                Research: Trust Signals...
                                             </span>
                                         </p>
                                     </div>

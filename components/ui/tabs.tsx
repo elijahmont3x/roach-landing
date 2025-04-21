@@ -1,9 +1,56 @@
+// --- START OF FILE components/ui/tabs.tsx ---
+
 "use client"
 
 import * as React from "react"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
+import { cva, type VariantProps } from "class-variance-authority" // Import cva
 
 import { cn } from "@/lib/utils"
+
+// Define variants for TabsList
+const tabsListVariants = cva(
+  "inline-flex items-center justify-center rounded-lg p-[3px]", // Base styles remain
+  {
+    variants: {
+      variant: {
+        default: "bg-muted text-muted-foreground",
+        // New variant for the full-width segmented control look
+        segmented: "grid w-full h-auto bg-muted dark:bg-background/40 gap-1.5 rounded-t-lg rounded-b-none",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+)
+
+// Define variants for TabsTrigger
+const tabsTriggerVariants = cva(
+  "inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50", // Base styles simplified slightly, relying on variants more
+  {
+    variants: {
+      variant: {
+        // Default variant for standard tabs
+        default: "rounded-md px-3 py-1.5 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm dark:data-[state=active]:bg-muted",
+        // New variant for the panel-like triggers used in AntifragileEdge
+        panel: "py-2.5 sm:py-3 text-xs sm:text-sm flex-col sm:flex-row items-center justify-center h-auto gap-1.5 rounded-md border border-transparent data-[state=active]:shadow-md data-[state=active]:bg-card data-[state=active]:border-border/50 dark:data-[state=active]:border-border/30 data-[state=active]:font-semibold",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+)
+
+
+// Update TabsListProps and TabsTriggerProps interfaces
+interface TabsListProps extends React.ComponentProps<typeof TabsPrimitive.List>,
+  VariantProps<typeof tabsListVariants> {}
+
+interface TabsTriggerProps extends React.ComponentProps<typeof TabsPrimitive.Trigger>,
+  VariantProps<typeof tabsTriggerVariants> {}
+
 
 function Tabs({
   className,
@@ -12,43 +59,40 @@ function Tabs({
   return (
     <TabsPrimitive.Root
       data-slot="tabs"
-      className={cn("flex flex-col gap-2", className)}
+      className={cn("flex flex-col gap-2", className)} // Maintained original gap
       {...props}
     />
   )
 }
 
-function TabsList({
-  className,
-  ...props
-}: React.ComponentProps<typeof TabsPrimitive.List>) {
-  return (
-    <TabsPrimitive.List
-      data-slot="tabs-list"
-      className={cn(
-        "bg-muted text-muted-foreground inline-flex h-9 w-fit items-center justify-center rounded-lg p-[3px]",
-        className
-      )}
-      {...props}
-    />
-  )
-}
+// Updated TabsList to accept variant prop
+const TabsList = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.List>,
+  TabsListProps
+>(({ className, variant, ...props }, ref) => (
+  <TabsPrimitive.List
+    ref={ref}
+    data-slot="tabs-list"
+    className={cn(tabsListVariants({ variant }), className)}
+    {...props}
+  />
+));
+TabsList.displayName = TabsPrimitive.List.displayName;
 
-function TabsTrigger({
-  className,
-  ...props
-}: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
-  return (
-    <TabsPrimitive.Trigger
-      data-slot="tabs-trigger"
-      className={cn(
-        "data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        className
-      )}
-      {...props}
-    />
-  )
-}
+// Updated TabsTrigger to accept variant prop
+const TabsTrigger = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Trigger>,
+  TabsTriggerProps
+>(({ className, variant, ...props }, ref) => (
+  <TabsPrimitive.Trigger
+    ref={ref}
+    data-slot="tabs-trigger"
+    className={cn(tabsTriggerVariants({ variant }), className)}
+    {...props}
+  />
+));
+TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
+
 
 function TabsContent({
   className,
@@ -57,10 +101,13 @@ function TabsContent({
   return (
     <TabsPrimitive.Content
       data-slot="tabs-content"
-      className={cn("flex-1 outline-none", className)}
+      // Removed flex-1 from base, can be added via className if needed
+      // Added default focus-visible outline for accessibility
+      className={cn("outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md", className)}
       {...props}
     />
   )
 }
 
 export { Tabs, TabsList, TabsTrigger, TabsContent }
+// --- END OF FILE components/ui/tabs.tsx ---

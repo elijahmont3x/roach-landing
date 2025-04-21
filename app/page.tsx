@@ -1,3 +1,5 @@
+// --- START OF FILE app/page.tsx ---
+
 "use client";
 
 import React, { Suspense, lazy } from 'react';
@@ -5,7 +7,11 @@ import React, { Suspense, lazy } from 'react';
 import { LoadingSpinner } from '@/components/internal/spinner';
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
-import { Section } from '@/components/layout/section';
+// Section and SectionConnector are already in layout/section.tsx
+// Section does not use UI components directly that need className changes.
+// SectionConnector uses Card, CardContent but className '!py-12 md:!py-16' is layout adjustment.
+// Let's import Section from the correct path though.
+import { Section, SectionConnector } from '@/components/layout/section';
 
 // Section Components (Use React.lazy for code splitting non-critical sections)
 import { Hero } from "@/components/sections/00_Hero";
@@ -20,8 +26,8 @@ const HowToBuy = lazy(() => import('@/components/sections/08_HowToBuy').then(mod
 const SocialProof = lazy(() => import('@/components/sections/09_SocialProof').then(module => ({ default: module.SocialProof })));
 const FAQ = lazy(() => import('@/components/sections/10_FAQ').then(module => ({ default: module.FAQ })));
 
-// UI Components
-const SectionConnector = lazy(() => import('@/components/layout/section').then(module => ({ default: module.SectionConnector })));
+// UI Components (SectionConnector is already imported from layout/section)
+// const SectionConnector = lazy(() => import('@/components/layout/section').then(module => ({ default: module.SectionConnector })));
 
 
 export default function Home() {
@@ -59,7 +65,7 @@ export default function Home() {
             prevSection="Introduction"
             summary="Conventional tokens often weaken under market pressure."
             nextConcept="Understanding Antifragility"
-            className="!py-10" // Override padding for density
+            className="!py-10" // Override padding for density - OK (Layout)
           />
           {/* --- 2. Antifragility Concept --- */}
           <TheAntifragileEdge id="the-antifragile-edge" />
@@ -69,7 +75,7 @@ export default function Home() {
             prevSection="Antifragility: Fragile vs. Resilient vs. Antifragile"
             summary="Antifragility means actively *gaining* from chaos, unlike resilience (just surviving)."
             nextConcept="Why the Cockroach Emblem?"
-            className="!py-10"
+            className="!py-10" // OK (Layout)
           />
           {/* --- 3. Cockroach Connection --- */}
           <CockroachConnection id="cockroach-connection" />
@@ -79,7 +85,7 @@ export default function Home() {
             prevSection="Nature's Survivor"
             summary="Specific cockroach traits (resilience, defense, adaptation) inspired $ROACH's adaptive mechanics."
             nextConcept="Core Engine: How $ROACH Adapts"
-            className="!py-10"
+            className="!py-10" // OK (Layout)
           />
           {/* --- 4. Token Mechanics (5-Tier System) --- */}
           <TokenMechanics id="mechanics" />
@@ -89,7 +95,7 @@ export default function Home() {
             prevSection="Dynamic 5-Tier System"
             summary="The system auto-adjusts taxes and rewards based on real-time sell/buy pressure (4hr window)."
             nextConcept="Performance Simulation: Stress Tests"
-            className="!py-10"
+            className="!py-10" // OK (Layout)
           />
           {/* --- 5. Market Scenarios Comparison --- */}
           <MarketScenarios id="market-scenarios" />
@@ -99,7 +105,7 @@ export default function Home() {
             prevSection="Scenario Simulation"
             summary="$ROACH's adaptive model aims to leverage volatility, potentially outperforming static systems under stress."
             nextConcept="Token Supply & Allocation Strategy"
-            className="!py-10"
+            className="!py-10" // OK (Layout)
           />
           {/* --- 6. Tokenomics --- */}
           <Tokenomics id="tokenomics" />
@@ -109,7 +115,7 @@ export default function Home() {
             prevSection="Tokenomics & Supply"
             summary="Fixed supply strategically allocated for liquidity, growth, security, and future expansion."
             nextConcept="Security Measures & Trust"
-            className="!py-10"
+            className="!py-10" // OK (Layout)
           />
           {/* --- 7. Security --- */}
           <SecuritySection id="security" />
@@ -119,7 +125,7 @@ export default function Home() {
             prevSection="Security & Trust Pillars"
             summary="Audited contract, locked liquidity, vested team, and fixed supply establish a secure foundation."
             nextConcept="Project Development Trajectory"
-            className="!py-10"
+            className="!py-10" // OK (Layout)
           />
           {/* --- 8. Roadmap --- */}
           <Roadmap id="roadmap" />
@@ -129,7 +135,7 @@ export default function Home() {
             prevSection="Development Roadmap"
             summary="Phased development focuses on launch, stabilization, ecosystem growth, and feature expansion."
             nextConcept="How to Acquire $ROACH"
-            className="!py-10"
+            className="!py-10" // OK (Layout)
           />
           {/* --- 9. How To Buy --- */}
           <HowToBuy id="how-to-buy" />
@@ -139,7 +145,7 @@ export default function Home() {
             prevSection="Secure Acquisition Guide"
             summary="Acquire $ROACH safely via trusted Solana wallets and DEX aggregators like Jupiter."
             nextConcept="Community Strength & Voice"
-            className="!py-10"
+            className="!py-10" // OK (Layout)
           />
           {/* --- 10. Social Proof --- */}
           <SocialProof id="social-proof" />
@@ -149,7 +155,7 @@ export default function Home() {
             prevSection="Community Voices"
             summary="Join a rapidly growing, engaged community supporting the antifragile vision."
             nextConcept="Common Questions Answered"
-            className="!py-10"
+            className="!py-10" // OK (Layout)
           />
           {/* --- 11. FAQ --- */}
           <FAQ id="faq" />
@@ -159,3 +165,4 @@ export default function Home() {
     </div>
   );
 }
+// --- END OF FILE app/page.tsx ---
