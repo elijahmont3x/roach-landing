@@ -7,7 +7,7 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card"; // Import C
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"; // Import Tooltip components
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { ExternalLink, FileCode, Lock, ShieldCheck, Users } from "lucide-react";
+import { AlertTriangle, ExternalLink, FileCode, Lock, ShieldCheck, Users } from "lucide-react";
 import Link from "next/link";
 import { Button, buttonVariants } from "../ui/button";
 
@@ -23,27 +23,31 @@ const vestingInfoLink = "#roadmap"; // Link to roadmap section discussing vestin
 const securityFeatures = [
     {
         icon: ShieldCheck, title: "Comprehensive Security Audit",
-        description: "Rigorous independent audit conducted by CertiK. Confirmed smart contract integrity with zero critical or major vulnerabilities identified.",
-        status: "CertiK Audited & Passed", link: auditLink, linkText: "View Audit Report", color: "green",
-        tooltip: "Click to view the full security audit report from CertiK.",
+        description: "Smart contract security audit to be conducted by CertiK or equivalent industry-standard auditor. Will validate contract integrity and absence of vulnerabilities.",
+        status: "Planned (Pre-Launch)", link: auditLink, linkText: "Audit In Progress", color: "green",
+        tooltip: "Security audit will be completed before official launch",
+        pending: true,
     },
     {
         icon: Lock, title: "Locked Initial Liquidity",
-        description: "Initial liquidity pool (LP) tokens deployed on Raydium are verifiably locked for 12 months using PinkLock, preventing rug-pulls.",
-        status: "12-Month LP Lock", link: pinkLockLink, linkText: "Verify Lock on PinkLock", color: "blue",
-        tooltip: "Click to verify the liquidity lock details on the PinkLock platform.",
+        description: "Initial liquidity pool (LP) tokens on Raydium will be verifiably locked for 12 months using PinkLock or equivalent service, preventing rug-pulls.",
+        status: "Scheduled (Launch Day)", link: pinkLockLink, linkText: "Lock Schedule", color: "blue",
+        tooltip: "Will be implemented at token launch and verifiable on-chain",
+        pending: true,
     },
     {
         icon: FileCode, title: "Immutable Contract & Supply",
-        description: "The core $ROACH SPL token contract is non-upgradeable, and the total supply is fixed at 1 billion tokens. Minting authority is permanently revoked.",
-        status: "Fixed Supply / Non-Upgradeable", link: explorerLink, linkText: "View Verified Contract", color: "purple",
-        tooltip: "View the immutable contract source code and token details on Solscan.",
+        description: "The core $ROACH SPL token contract is designed to be non-upgradeable with fixed 1 billion supply. Minting authority will be permanently revoked after launch.",
+        status: "Ready for Deployment", link: explorerLink, linkText: "View Contract Code", color: "purple",
+        tooltip: "Contract code ready for deployment, will be verified on Solscan upon launch",
+        pending: false,
     },
     {
         icon: Users, title: "Transparent Team Vesting",
-        description: "Team token allocation follows a strict 6-month linear vesting schedule, managed on-chain, demonstrating long-term commitment.",
-        status: "6-Month Linear Vesting", link: vestingInfoLink, linkText: "See Vesting Schedule", color: "amber", // Use internal link type
-        tooltip: "Team tokens unlock gradually over 6 months, view details on the roadmap.",
+        description: "Team token allocation (10%) will follow strict 6-month linear vesting schedule, managed on-chain via transparent vesting contract.",
+        status: "Configured (Activates Post-Launch)", link: vestingInfoLink, linkText: "View Vesting Schedule", color: "amber",
+        tooltip: "Vesting contract parameters defined, will activate after token launch",
+        pending: true,
     },
 ];
 
@@ -70,6 +74,16 @@ export function SecuritySection() {
                     subtitle={<><ShieldCheck className="inline h-4 w-4 mr-1.5" /> Foundation of Trust</>}
                     alignment="center" className="mb-16" // OK: Layout margin
                 />
+                
+                <motion.div
+                    initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.1 }} viewport={{ once: true }}
+                    className="mb-10 max-w-3xl mx-auto text-center bg-amber-500/10 dark:bg-amber-900/20 border border-amber-500/30 dark:border-amber-600/40 rounded-lg p-4"
+                >
+                    <p className="text-sm text-amber-700 dark:text-amber-400 flex items-center justify-center gap-2">
+                        <AlertTriangle className="h-5 w-5" />
+                        <span>$ROACH is in pre-launch development. Security features shown below will be implemented according to the roadmap schedule.</span>
+                    </p>
+                </motion.div>
 
                 <motion.div
                     variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
@@ -88,24 +102,24 @@ export function SecuritySection() {
                                 {/* Added contextual border, bg, backdrop. OK: layout/visual tweaks. */}
                                 <Card className={cn(
                                     "h-full transition-all duration-300 flex flex-col group overflow-hidden",
-                                    "hover:border-primary/30 dark:hover:border-primary/50 dark:bg-card/70 backdrop-blur-sm", // OK: Specific hover/dark states
-                                    colors.border // OK: Contextual border color
+                                    "hover:border-primary/30 dark:hover:border-primary/50 dark:bg-card/70 backdrop-blur-sm",
+                                    colors.border,
+                                    feature.pending && "opacity-75 dark:opacity-60" // Dim pending items
                                 )}>
-                                    {/* CardContent relies on Card base padding/gap. */}
                                     <CardContent className="flex-grow flex flex-col gap-4">
                                         {/* Icon & Title Row */}
-                                        <div className="flex items-start gap-4"> {/* OK: Layout */}
-                                             {/* OK: Contextual icon wrapper style */}
+                                        <div className="flex items-start gap-4">
                                             <div className={cn("p-2.5 rounded-lg shrink-0 border", colors.iconBg, colors.border)}>
-                                                 {/* OK: Contextual icon color */}
                                                 <feature.icon className={cn("h-6 w-6", colors.text)} />
                                             </div>
-                                            <div className="flex-1"> {/* OK: Layout */}
-                                                <CardTitle className="text-lg font-semibold leading-tight">{feature.title}</CardTitle> {/* OK: Text style */}
-                                                {/* Badge: Use base component. className for contextual colors/border/text */}
+                                            <div className="flex-1">
+                                                <CardTitle className="text-lg font-semibold leading-tight">{feature.title}</CardTitle>
                                                 <Badge variant="outline" size="sm" className={cn("mt-1.5 w-fit text-xs font-medium", colors.bg, colors.text, colors.border)}>
-                                                    {feature.status}
+                                                {feature.status}
                                                 </Badge>
+                                                {feature.pending && (
+                                                <span className="ml-2 text-[10px] italic text-muted-foreground">(Pre-Launch)</span>
+                                                )}
                                             </div>
                                         </div>
 

@@ -10,21 +10,21 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import Link from "next/link"; // Import Link
-import { CheckCircle, ExternalLink, LineChart, MessageSquareText, Quote, Users } from "lucide-react"; // Import ExternalLink
+import { AlertTriangle, CheckCircle, ExternalLink, LineChart, MessageSquareText, Quote, Users } from "lucide-react"; // Import ExternalLink
 import { FaDiscord, FaGithub, FaRedditAlien, FaTelegram, FaXTwitter } from "react-icons/fa6";
 
 
 // --- Refined Data (Ensure data is realistic or clearly placeholder) ---
 const metrics = [
-    { icon: Users, value: "18k+", label: "Community Members", trend: "+8% This Week", description: "Engaged holders across Telegram, Discord, and Twitter.", color: "blue" },
-    { icon: MessageSquareText, value: "9.2/10", label: "Sentiment Score", trend: "Consistently Positive", description: "Community sentiment analyzed from social channels.", color: "green" }, // Example sentiment score
-    { icon: LineChart, value: "25k+", label: "Unique Holders", trend: "+ Growing Steadily", description: "Increasing number of wallets holding $ROACH on Solana.", color: "orange" },
+    { icon: Users, value: "Target: 10k+", label: "Community Members", trend: "Starting Soon", description: "Join our growing Telegram, Discord, and Twitter communities. Be among the first to participate!", color: "blue", prelaunch: true },
+    { icon: MessageSquareText, value: "Tracking...", label: "Community Sentiment", trend: "Initial Feedback Positive", description: "We'll measure and report community sentiment post-launch. Early adopter feedback guides our path.", color: "green", prelaunch: true },
+    { icon: LineChart, value: "Goal: 5k+", label: "First Month Holders", trend: "Launch Pending", description: "We're targeting a strong initial holder base to build network effects and distribution.", color: "orange", prelaunch: true },
 ];
 
 const testimonials = [
-    { name: "Solana Sensei", handle: "@SolSensei", avatarFallback: "SS", image: "/placeholder-avatars/solana-sensei.png", text: "Impressed by $ROACH's antifragile mechanics. The dynamic tax/reflection during the recent volatility was tangible. Watching this closely.", role: "Verified Holder", verified: true },
-    { name: "DeFi Degen", handle: "@DegenExplorer", avatarFallback: "DE", image: "/placeholder-avatars/defi-degen.png", text: "The cockroach concept is genius for crypto. Finally, a token designed to benefit from the chaos instead of just surviving it. Team transparency with the audit/LP lock is key.", role: "Trader", verified: false },
-    { name: "Crypto Cassie", handle: "@CassieCrypto", avatarFallback: "CC", image: "/placeholder-avatars/crypto-cassie.png", text: "Joined the $ROACH Telegram – very active & helpful community. It's more than a meme; the tech seems solid. Excited to see the roadmap unfold.", role: "Community Member", verified: true },
+    { name: "Crypto Enthusiast", handle: "@example_user1", avatarFallback: "CE", image: "/placeholder-avatars/solana-sensei.png", text: "Impressed by $ROACH's antifragile concept. Dynamic tax adaptation during market volatility could be game-changing if implemented properly.", role: "Example Feedback", verified: false, prelaunch: true },
+    { name: "DeFi Investor", handle: "@example_user2", avatarFallback: "DI", image: "/placeholder-avatars/defi-degen.png", text: "The cockroach concept is brilliant for crypto. A token designed to benefit from chaos instead of just surviving it. Will be watching the audit and LP lock closely.", role: "Potential Investor", verified: false, prelaunch: true },
+    { name: "Solana Developer", handle: "@example_user3", avatarFallback: "SD", image: "/placeholder-avatars/crypto-cassie.png", text: "The technical approach looks solid on paper. Eager to see how the tier system functions in practice and whether it can truly deliver on the antifragile promise.", role: "Technical Perspective", verified: false, prelaunch: true },
 ];
 
 // UPDATE THESE LINKS
@@ -46,7 +46,7 @@ const colorMap = {
 
 export function SocialProof() {
     // Animation Variants
-    const containerVariants = { hidden: { opacity: 0 }, visible: { transition: { staggerChildren: 0.1 } } };
+    const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
     const itemVariants = { hidden: { opacity: 0, y: 20, scale: 0.98 }, visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: "easeOut" } } };
 
     return (
@@ -56,8 +56,19 @@ export function SocialProof() {
                     title="Strength in Numbers: The $ROACH Colony"
                     description="Connect with a thriving, rapidly expanding community built around the principles of resilience and antifragility. Explore our metrics and hear from fellow members."
                     subtitle={<><Users className="inline h-4 w-4 mr-1.5" /> Community & Trust Signals </>}
-                    alignment="center" className="mb-16" // OK: Layout margin
+                    alignment="center" 
+                    className="mb-8 sm:mb-10" // Reduced from mb-16
                 />
+                
+                <motion.div
+                    initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.1 }} viewport={{ once: true }}
+                    className="mb-8 max-w-3xl mx-auto text-center bg-amber-500/10 dark:bg-amber-900/20 border border-amber-500/30 dark:border-amber-600/40 rounded-lg p-4"
+                >
+                <p className="text-sm text-amber-700 dark:text-amber-400 flex items-center justify-center gap-2">
+                    <AlertTriangle className="h-5 w-5" />
+                    <span>$ROACH is in pre-launch phase. The metrics below represent targets and projections rather than current data.</span>
+                </p>
+                </motion.div>
 
                 {/* Metrics Grid */}
                 <motion.div
@@ -70,19 +81,20 @@ export function SocialProof() {
                             <motion.div key={index} variants={itemVariants}>
                                 {/* Card: Removed shadow-lg hover:shadow-xl, rely on base. Added contextual border/bg */}
                                 <Card className={cn(
-                                    "transition-all duration-300 border overflow-hidden h-full flex flex-col", // OK: Layout
-                                    colors.border, "dark:bg-card/60 backdrop-blur-sm" // OK: Contextual styles
+                                    "transition-all duration-300 border overflow-hidden h-full flex flex-col",
+                                    colors.border, "dark:bg-card/60 backdrop-blur-sm",
+                                    metric.prelaunch && "bg-muted/20 dark:bg-muted/10 border-dashed" // Visual indicator for pre-launch
                                     )}>
-                                     {/* CardHeader: Relies on Card gap. Removed pb-4, pt-5, px-5. Added contextual bg */}
                                     <CardHeader className={cn("flex flex-row items-center gap-4", colors.bg)}>
-                                         {/* OK: Contextual icon wrapper */}
                                         <div className={cn("p-2 rounded-lg border", colors.border, colors.bg.replace('/10', '/20').replace('/30', '/40'))}>
-                                            <metric.icon className={cn("h-7 w-7", colors.text)} /> {/* OK: Contextual color */}
+                                        <metric.icon className={cn("h-7 w-7", colors.text)} />
                                         </div>
-                                        <div className="flex-1"> {/* OK: Layout */}
-                                            {/* OK: Contextual color/text */}
-                                            <CardTitle className={cn("text-2xl sm:text-3xl font-bold tracking-tight", colors.text)}>{metric.value}</CardTitle>
-                                            <p className="text-xs font-semibold text-foreground/80 -mt-1">{metric.label}</p> {/* OK: Text style */}
+                                        <div className="flex-1">
+                                        <CardTitle className={cn("text-2xl sm:text-3xl font-bold tracking-tight", colors.text)}>
+                                            {metric.value}
+                                            {metric.prelaunch && <span className="text-xs ml-2 opacity-75 italic">(Projection)</span>}
+                                        </CardTitle>
+                                        <p className="text-xs font-semibold text-foreground/80 -mt-1">{metric.label}</p>
                                         </div>
                                     </CardHeader>
                                     {/* CardContent: Relies on Card gap. Removed p-5 */}
@@ -116,11 +128,12 @@ export function SocialProof() {
 
                 {/* Testimonials Grid */}
                 <motion.div
-                    initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.1 }} viewport={{ once: true, amount: 0.1 }}
-                    className="mb-16 max-w-6xl mx-auto" // OK: Layout
+                initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.1 }} viewport={{ once: true, amount: 0.1 }}
+                className="mb-8 max-w-6xl mx-auto"
                 >
-                    <h3 className="text-2xl md:text-3xl font-bold text-center mb-10 md:mb-12">Hear from the Colony</h3> {/* OK: Text style */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 items-stretch"> {/* OK: Layout grid */}
+                    <h3 className="text-2xl md:text-3xl font-bold text-center mb-4 md:mb-6">Anticipated Community Perspectives</h3>
+                    <p className="text-sm text-muted-foreground text-center mb-6 italic">The following represents the types of feedback we expect based on early concept presentations. Actual user testimonials will be featured post-launch.</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 items-stretch"> {/* OK: Layout grid */}
                         {testimonials.map((testimonial, index) => (
                             <motion.div key={index} variants={itemVariants} transition={{ delay: index * 0.08 }}>
                                  {/* Card: Removed shadow-md hover:shadow-lg, rely on base. Removed border overrides. */}

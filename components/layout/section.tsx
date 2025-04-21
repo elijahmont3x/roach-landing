@@ -97,7 +97,7 @@ export function SectionHeader({
 
       <h2
         className={cn(
-          "text-3xl font-bold tracking-tight sm:text-4xl lg:text-[2.8rem] !leading-tight mb-4 text-balance",
+          "text-2xl sm:text-3xl md:text-4xl lg:text-[2.8rem] font-bold tracking-tight !leading-tight mb-2 sm:mb-4 text-balance",
           titleClassName
         )}
       >
@@ -107,7 +107,7 @@ export function SectionHeader({
       {description && (
         <p
           className={cn(
-            "text-lg text-muted-foreground md:text-xl lg:text-[1.18rem] leading-relaxed",
+            "text-base sm:text-lg md:text-xl lg:text-[1.18rem] text-muted-foreground leading-relaxed sm:leading-relaxed max-w-[90%] sm:max-w-full mx-auto",
             descriptionClassName
           )}
         >
@@ -137,9 +137,9 @@ export function SectionConnector({
 
   return (
     <Section
-      disableDefaultHeight={true}
       className={cn(
-        "bg-transparent",
+        "min-h-screen flex flex-col justify-center items-center", // Ensures full height like other sections
+        "bg-gradient-to-b from-background/5 to-muted/10 dark:from-background/10 dark:to-muted/5", // Added subtle gradient
         "!py-12 md:!py-16",
         className
       )}

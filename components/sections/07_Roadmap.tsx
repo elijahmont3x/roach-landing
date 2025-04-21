@@ -7,50 +7,49 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { CalendarClock, CheckCircle2, Construction, Cpu, ExternalLink, ListChecks, Rocket, Zap } from "lucide-react"; // Added ExternalLink
+import { AlertTriangle, CalendarClock, CheckCircle2, Construction, Cpu, ExternalLink, ListChecks, Rocket, Zap } from "lucide-react"; // Added ExternalLink
 import React from "react";
 import Link from "next/link"; // Import Link
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"; // Correct import path
 
-// Refined Roadmap Data with more descriptive items and icons
 const roadmapPhases = [
     {
-        id: "phase1", title: "Phase 1: Foundation & Fortification", status: "Completed", icon: CheckCircle2, color: "green", items: [
+        id: "phase1", title: "Phase 1: Foundation & Fortification", status: "In Progress", icon: CheckCircle2, color: "blue", items: [
             { text: "Core SPL Token & 5-Tier System Development", completed: true },
             { text: "Implementation of 4-Hour Rolling Window Market Tracking", completed: true },
-            { text: "Comprehensive CertiK Security Audit Passed", completed: true, link: "#" }, // Add link to audit
+            { text: "Security Audit Planning and Vendor Selection", completed: false, status: 'In Progress' },
             { text: "Website V1 Launch & Initial Community Setup (Telegram, Twitter)", completed: true },
-            { text: "Successful Private Presale ($35k Raised)", completed: true },
+            { text: "Initial Whitepaper and Documentation", completed: true },
         ]
     },
     {
-        id: "phase2", title: "Phase 2: Launch & Market Entry", status: "In Progress", icon: Zap, color: "blue", items: [
-            { text: "Public Presale Execution via Pinksale (Target $65k+)", completed: false, status: 'Active' },
-            { text: "Establishment of Initial Raydium Liquidity Pool", completed: false, status: 'Pending Presale' },
-            { text: "LP Token Locking/Burning via PinkLock (12 Months)", completed: false, status: 'Pending LP Creation', link: "#" }, // Link to PinkLock
-            { text: "Token Distribution to Presale Participants", completed: false, status: 'Pending Presale End' },
-            { text: "CoinGecko & CoinMarketCap Listing Applications", completed: false, status: 'Preparing' },
-            { text: "Deployment of Launch Marketing & KOL Partnerships", completed: false, status: 'Ongoing' },
-            { text: "Launch of Holder Dashboard V1 (Tier Status, Rewards Tracking)", completed: false, status: 'Development' },
+        id: "phase2", title: "Phase 2: Launch & Market Entry", status: "Upcoming", icon: Zap, color: "green", items: [
+            { text: "Public Presale Execution (Target $65k+)", completed: false, status: 'Scheduled', speculative: true },
+            { text: "Security Audit Completion by CertiK or equivalent", completed: false, status: 'Pending', link: "#" },
+            { text: "Establishment of Initial Raydium Liquidity Pool", completed: false, status: 'Planned' },
+            { text: "LP Token Locking via PinkLock (12 Months)", completed: false, status: 'Planned', link: "#" },
+            { text: "Token Distribution to Presale Participants", completed: false, status: 'Pending Presale' },
+            { text: "CoinGecko & CoinMarketCap Listing Applications", completed: false, status: 'Post-Launch' },
+            { text: "Holder Dashboard V1 Development (Tier Status, Rewards Tracking)", completed: false, status: 'Planned', speculative: true },
         ]
     },
     {
-        id: "phase3", title: "Phase 3: Ecosystem Growth & Adaptation", status: "Upcoming", icon: Rocket, color: "purple", items: [
-            { text: "Research: Automated Buyback & Treasury Management Features", completed: false },
-            { text: "Exploration of Strategic Solana Ecosystem Integrations", completed: false },
-            { text: "Initiation of Tier 2 Centralized Exchange (CEX) Listing Outreach", completed: false },
-            { text: "Integration with Additional DEX Aggregators & Platforms", completed: false },
-            { text: "Development of $ROACH Staking Mechanisms (Token/NFT)", completed: false, speculative: true }, // Mark as speculative if uncertain
-            { text: "Enhancement of Holder Dashboard V2 (Advanced Analytics, Tools)", completed: false },
-            { text: "Community Governance Framework Proposal", completed: false },
+        id: "phase3", title: "Phase 3: Ecosystem Growth & Adaptation", status: "Future", icon: Rocket, color: "purple", items: [
+            { text: "Research: Automated Buyback & Treasury Management Features", completed: false, speculative: true },
+            { text: "Strategic Solana Ecosystem Integrations", completed: false, speculative: true },
+            { text: "Tier 2 Centralized Exchange (CEX) Listing Outreach", completed: false, speculative: true },
+            { text: "Integration with Additional DEX Aggregators & Platforms", completed: false, status: 'Future' },
+            { text: "Development of $ROACH Staking Mechanisms (Token/NFT)", completed: false, speculative: true },
+            { text: "Enhancement of Holder Dashboard V2 (Advanced Analytics, Tools)", completed: false, speculative: true },
+            { text: "Community Governance Framework Proposal", completed: false, speculative: true },
         ]
     },
     {
-        id: "phase4", title: "Phase 4: Long-Term Evolution", status: "Future", icon: Cpu, color: "gray", items: [ // Use gray for distant future
+        id: "phase4", title: "Phase 4: Long-Term Evolution", status: "Future", icon: Cpu, color: "gray", items: [
             { text: "Cross-Chain Exploration & Potential Bridging", completed: false, speculative: true },
             { text: "Development of Novel Antifragile Utility Cases", completed: false, speculative: true },
-            { text: "Ongoing Protocol Optimization based on Market Data", completed: false },
-            { text: "Sustained Community-Driven Development Initiatives", completed: false },
+            { text: "Ongoing Protocol Optimization based on Market Data", completed: false, speculative: true },
+            { text: "Sustained Community-Driven Development Initiatives", completed: false, speculative: true },
         ]
     },
 ];
@@ -82,6 +81,15 @@ export function Roadmap() {
                     alignment="center" className="mb-16" // OK: Layout margin
                 />
 
+                <motion.div
+                initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.1 }} viewport={{ once: true }}
+                className="mb-10 max-w-3xl mx-auto text-center bg-amber-500/10 dark:bg-amber-900/20 border border-amber-500/30 dark:border-amber-600/40 rounded-lg p-4"
+                >
+                <p className="text-sm text-amber-700 dark:text-amber-400 flex items-center justify-center gap-2">
+                    <AlertTriangle className="h-5 w-5" />
+                    <span>This roadmap represents our current development timeline. Items marked as "Tentative" are subject to change based on market conditions and community feedback.</span>
+                </p>
+                </motion.div>
                 {/* Desktop Vertical Timeline View */}
                  {/* OK: Layout container */}
                 <div className="hidden md:block max-w-3xl mx-auto relative">
@@ -124,25 +132,37 @@ export function Roadmap() {
                                             <motion.ul className="space-y-2.5 text-sm" variants={{ visible: { transition: { staggerChildren: 0.05 } } }}> {/* OK: Layout */}
                                                 {phase.items.map((item, itemIndex) => (
                                                      // OK: Layout/list item styles
-                                                    <motion.li key={itemIndex} variants={listItemVariants} className="flex items-start gap-2.5 text-muted-foreground">
-                                                         {/* OK: Icon styling based on state */}
+                                                        <motion.li key={itemIndex} variants={listItemVariants} className={cn(
+                                                        "flex items-start gap-2.5 text-muted-foreground",
+                                                        item.speculative && "italic opacity-80" // Visually distinguish speculative items
+                                                        )}>
                                                         <span className={cn("mt-1 flex-shrink-0 h-4 w-4 flex items-center justify-center")}>
                                                             {item.completed ? (
-                                                                <CheckCircle2 className="h-4 w-4 text-green-500" />
-                                                            ) : item.status === 'Active' || item.status === 'Ongoing' ? (
-                                                                <Zap className="h-4 w-4 text-blue-500 animate-pulse" />
-                                                            ) : item.status === 'Development' || item.status === 'Preparing' || item.status === 'Pending Presale' || item.status === 'Pending LP Creation' || item.status === 'Pending Presale End' ? (
-                                                                <Construction className="h-4 w-4 text-amber-500" />
+                                                            <CheckCircle2 className="h-4 w-4 text-green-500" />
+                                                            ) : item.status === 'In Progress' ? (
+                                                            <Zap className="h-4 w-4 text-blue-500 animate-pulse" />
+                                                            ) : item.status === 'Scheduled' || item.status === 'Planned' ? (
+                                                            <Construction className="h-4 w-4 text-amber-500" />
                                                             ) : (
-                                                                <ListChecks className={cn("h-4 w-4", phase.status === 'Upcoming' ? 'text-purple-500/70' : 'text-gray-400/60')} />
+                                                            <ListChecks className={cn("h-4 w-4", 
+                                                                phase.status === 'Upcoming' ? 'text-green-500/70' : 
+                                                                phase.status === 'In Progress' ? 'text-blue-500/70' : 'text-gray-400/60')} />
                                                             )}
                                                         </span>
-                                                        <div className="flex-1"> {/* OK: Layout */}
-                                                            <span>{item.text}</span>
-                                                             {/* OK: Text style */}
-                                                            {item.status && !item.completed && <span className="text-[10px] font-medium text-muted-foreground/80 ml-1.5">({item.status})</span>}
-                                                             {/* OK: Text style */}
-                                                            {item.speculative && <span className="text-[10px] font-medium text-orange-500/80 ml-1.5">(Speculative)</span>}
+                                                        <div className="flex-1">
+                                                            <span className={cn(
+                                                            item.speculative && "text-muted-foreground/90 italic" // Style for speculative items
+                                                            )}>{item.text}</span>
+                                                            {item.status && !item.completed && (
+                                                            <span className="text-[10px] font-medium text-muted-foreground/80 ml-1.5 bg-muted/50 dark:bg-muted/30 px-1.5 py-0.5 rounded">
+                                                                {item.status}
+                                                            </span>
+                                                            )}
+                                                            {item.speculative && (
+                                                            <span className="text-[10px] font-medium text-amber-500/80 ml-1.5">
+                                                                (Tentative)
+                                                            </span>
+                                                            )}
                                                         </div>
                                                          {/* OK: Tooltip usage with Link */}
                                                         {item.link && item.link !== '#' && (

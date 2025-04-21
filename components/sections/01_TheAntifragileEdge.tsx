@@ -15,9 +15,9 @@ import React from "react";
 
 // Enhanced Concept Data (remains the same)
 const concepts = [
-    { value: "fragile", label: "Fragile", icon: ShieldX, colorTheme: "destructive", summary: "Breaks Under Pressure", definition: "Systems harmed or destroyed by volatility, errors, and randomness. They require predictability and stable conditions to function.", characteristics: ["Degrades with Stress", "Fears Volatility", "Needs Stability", "Vulnerable to Shocks"], cryptoExample: "Over-leveraged positions, meme coins with no utility or defense, protocols lacking security audits.", responseToStress: { label: "Weakens / Breaks", icon: TrendingDown }, metaphor: "Glass Vase", talebQuote: '"The fragile wants tranquility." - Nassim Taleb', visualPrompt: "AI Prompt: Simple line graph..." },
-    { value: "resilient", label: "Resilient", icon: ShieldCheck, colorTheme: "amber", summary: "Withstands & Recovers", definition: "Systems that resist shocks and return to their original state after disturbance. They endure stress but do not gain from it.", characteristics: ["Tolerates Shocks", "Returns to Baseline", "Static Response", "Focuses on Stability"], cryptoExample: "Basic tokens with only locked LP, stablecoins maintaining peg (ideally), protocols with fixed buyback rates.", responseToStress: { label: "Recovers to Original State", icon: Activity }, metaphor: "Steel Beam", talebQuote: '"The robust stays the same." - Nassim Taleb', visualPrompt: "AI Prompt: Simple line graph..." },
-    { value: "antifragile", label: "$ROACH", icon: Zap, colorTheme: "primary", summary: "Strengthens from Stress", definition: "$ROACH's Core Principle: Systems that **benefit** from shocks, volatility, randomness, and stressors. They use disorder to improve and become more robust.", characteristics: ["Gains from Volatility", "Improves with Stressors", "Leverages Disorder", "$ROACH Dynamic 5-Tier System"], cryptoExample: "$ROACH's adaptive tax/reflection system converts sell pressure into increased holder rewards and potential price floor support.", responseToStress: { label: "Improves & Strengthens", icon: TrendingUp }, metaphor: "Immune System (Adapts)", talebQuote: '"The antifragile gets better." - Nassim Taleb', visualPrompt: "AI Prompt: Simple line graph..." }
+  { value: "fragile", label: "Fragile", icon: ShieldX, colorTheme: "destructive", summary: "Breaks Under Pressure", definition: "Systems harmed or destroyed by volatility, errors, and randomness. They require predictability and stable conditions to function.", characteristics: ["Degrades with Stress", "Fears Volatility", "Needs Stability", "Vulnerable to Shocks"], cryptoExample: "pump.fun and similar hyper-volatile meme tokens without utility, over-leveraged yield farming positions, projects lacking security audits that implode under scrutiny.", responseToStress: { label: "Weakens / Breaks", icon: TrendingDown }, metaphor: "Glass Vase", talebQuote: '"The fragile wants tranquility." - Nassim Taleb', visualPrompt: "Subject: Financial stability visualization; Style: Data-driven, minimalist; Composition: Three-line graph showing rapid decline; Palette: Red, decreasing opacity; Keywords: collapse, breakdown, fragility; Message: Systems that crumble under stress." },
+  { value: "resilient", label: "Resilient", icon: ShieldCheck, colorTheme: "amber", summary: "Withstands & Recovers", definition: "Systems that resist shocks and return to their original state after disturbance. They endure stress but do not gain from it.", characteristics: ["Tolerates Shocks", "Returns to Baseline", "Static Response", "Focuses on Stability"], cryptoExample: "$IMG and other tokens with fixed tax rates (3-5%), stablecoins struggling to maintain their peg during volatility, protocols with LP locks but no adaptive mechanisms to incentivize recovery.", responseToStress: { label: "Recovers to Original State", icon: Activity }, metaphor: "Steel Beam", talebQuote: '"The robust stays the same." - Nassim Taleb', visualPrompt: "Subject: Economic resilience pattern; Style: Technical, precise; Composition: Line graph showing dip and return to baseline; Palette: Amber/gold with neutral accents; Keywords: endurance, persistence, maintenance; Message: Systems that absorb shock and return to equilibrium." },
+  { value: "antifragile", label: "$ROACH", icon: Zap, colorTheme: "green", summary: "Strengthens from Stress", definition: "$ROACH's Core Principle: Systems that **benefit** from shocks, volatility, randomness, and stressors. They use disorder to improve and become more robust.", characteristics: ["Gains from Volatility", "Improves with Stressors", "Leverages Disorder", "$ROACH Dynamic 5-Tier System"], cryptoExample: "$ROACH's adaptive tax/reflection system converts sell pressure into increased holder rewards and strengthened price floor support, building protocol reserves during volatility rather than depleting them.", responseToStress: { label: "Improves & Strengthens", icon: TrendingUp }, metaphor: "Immune System (Adapts)", talebQuote: '"The antifragile gets better." - Nassim Taleb', visualPrompt: "Subject: Antifragile growth mechanism; Style: Dynamic, energetic; Composition: Ascending graph with emphasis on upward trajectory after stress points; Palette: Vibrant green with emerald accents; Keywords: adaptation, evolution, growth; Message: Systems that convert volatility into strength." },
 ];
 
 
@@ -52,14 +52,12 @@ export function TheAntifragileEdge() {
                 <TabsTrigger
                   key={concept.value}
                   value={concept.value}
-                  variant="panel" // Use the new panel variant
-                  // Apply contextual overrides for state colors (necessary as variant doesn't handle this)
+                  variant="panel"
                   className={cn(
-                    // Specific hover/active/inactive colors needed for this specific theme
                     concept.colorTheme === 'destructive' && "data-[state=active]:text-destructive hover:bg-destructive/5 hover:text-destructive",
                     concept.colorTheme === 'amber' && "data-[state=active]:text-amber-600 dark:data-[state=active]:text-amber-400 hover:bg-amber-500/5 hover:text-amber-600",
-                    concept.colorTheme === 'primary' && "data-[state=active]:text-primary hover:bg-primary/5 hover:text-primary",
-                    "data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:bg-accent/50 data-[state=inactive]:hover:text-foreground/80" // Inactive state
+                    concept.colorTheme === 'green' && "data-[state=active]:text-green-600 dark:data-[state=active]:text-green-400 hover:bg-green-500/5 hover:text-green-600",
+                    "data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:bg-accent/50 data-[state=inactive]:hover:text-foreground/80"
                   )}
                 >
                   <concept.icon className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" /> {concept.label}
@@ -118,7 +116,7 @@ interface ConceptContentProps {
   characteristics: string[];
   cryptoExample: string;
   responseToStress: { label: string; icon: React.ElementType };
-  colorTheme: 'destructive' | 'amber' | 'primary';
+  colorTheme: 'destructive' | 'amber' | 'green';
   visualPrompt: string;
   metaphor: string;
   talebQuote: string;
@@ -131,7 +129,7 @@ function ConceptContent({
   const themes = {
     destructive: { text: "text-destructive", border: "border-destructive/40", bg: "bg-destructive/5", icon: AlertTriangle, iconColor: "text-destructive", responseBadge: "bg-destructive/10 text-destructive border-destructive/20", characteristicIconColor: "text-destructive/70" },
     amber: { text: "text-amber-600 dark:text-amber-400", border: "border-amber-500/40", bg: "bg-amber-500/5", icon: ShieldCheck, iconColor: "text-amber-500", responseBadge: "bg-amber-500/10 text-amber-600 border-amber-500/20", characteristicIconColor: "text-amber-600/70" },
-    primary: { text: "text-primary", border: "border-primary/40", bg: "bg-primary/5", icon: Zap, iconColor: "text-primary", responseBadge: "bg-primary/10 text-primary border-primary/20", characteristicIconColor: "text-primary/70" },
+    green: { text: "text-green-600 dark:text-green-400", border: "border-green-500/40", bg: "bg-green-500/5", icon: Zap, iconColor: "text-green-500", responseBadge: "bg-green-500/10 text-green-600 border-green-500/20", characteristicIconColor: "text-green-600/70" },
   };
   const theme = themes[colorTheme];
   const CharacteristicIcon = theme.icon;
