@@ -1,57 +1,72 @@
-// --- START OF FILE components/sections/SecuritySection.tsx ---
 "use client";
 
+import React from 'react';
 import { Section, SectionHeader } from "@/components/layout/section";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardTitle } from "@/components/ui/card"; // Import Card components
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"; // Import Tooltip components
+import { Button, buttonVariants } from "@/components/ui/button";
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { AlertTriangle, ExternalLink, FileCode, Lock, ShieldCheck, Users } from "lucide-react";
 import Link from "next/link";
-import { Button, buttonVariants } from "../ui/button";
 
-// Ensure Links are updated
+// Security links - Replace with actual links in production
 const contractAddress = "ROACHaBXfk3N57vr1gDmQCkSp22d9Xv4V1f";
 const explorerLink = `https://solscan.io/token/${contractAddress}`;
-const pinkLockLink = "#"; // REPLACE
-const auditLink = "#"; // REPLACE
+const pinkLockLink = "#"; // Replace with actual PinkLock URL
+const auditLink = "#"; // Replace with actual CertiK URL
 const vestingInfoLink = "#roadmap"; // Link to roadmap section discussing vesting
-
 
 // Security Features Data
 const securityFeatures = [
     {
-        icon: ShieldCheck, title: "Comprehensive Security Audit",
+        icon: ShieldCheck, 
+        title: "Comprehensive Security Audit",
         description: "Smart contract security audit to be conducted by CertiK or equivalent industry-standard auditor. Will validate contract integrity and absence of vulnerabilities.",
-        status: "Planned (Pre-Launch)", link: auditLink, linkText: "Audit In Progress", color: "green",
+        status: "Planned (Pre-Launch)", 
+        link: auditLink, 
+        linkText: "Audit In Progress", 
+        color: "green",
         tooltip: "Security audit will be completed before official launch",
         pending: true,
     },
     {
-        icon: Lock, title: "Locked Initial Liquidity",
+        icon: Lock, 
+        title: "Locked Initial Liquidity",
         description: "Initial liquidity pool (LP) tokens on Raydium will be verifiably locked for 12 months using PinkLock or equivalent service, preventing rug-pulls.",
-        status: "Scheduled (Launch Day)", link: pinkLockLink, linkText: "Lock Schedule", color: "blue",
+        status: "Scheduled (Launch Day)", 
+        link: pinkLockLink, 
+        linkText: "Lock Schedule", 
+        color: "blue",
         tooltip: "Will be implemented at token launch and verifiable on-chain",
         pending: true,
     },
     {
-        icon: FileCode, title: "Immutable Contract & Supply",
+        icon: FileCode, 
+        title: "Immutable Contract & Supply",
         description: "The core $ROACH SPL token contract is designed to be non-upgradeable with fixed 1 billion supply. Minting authority will be permanently revoked after launch.",
-        status: "Ready for Deployment", link: explorerLink, linkText: "View Contract Code", color: "purple",
+        status: "Ready for Deployment", 
+        link: explorerLink, 
+        linkText: "View Contract Code", 
+        color: "purple",
         tooltip: "Contract code ready for deployment, will be verified on Solscan upon launch",
         pending: false,
     },
     {
-        icon: Users, title: "Transparent Team Vesting",
+        icon: Users, 
+        title: "Transparent Team Vesting",
         description: "Team token allocation (10%) will follow strict 6-month linear vesting schedule, managed on-chain via transparent vesting contract.",
-        status: "Configured (Activates Post-Launch)", link: vestingInfoLink, linkText: "View Vesting Schedule", color: "amber",
+        status: "Configured (Activates Post-Launch)", 
+        link: vestingInfoLink, 
+        linkText: "View Vesting Schedule", 
+        color: "amber",
         tooltip: "Vesting contract parameters defined, will activate after token launch",
         pending: true,
     },
 ];
 
-// Color map helper
+// Color mapping for consistent theming
 const colorMap = {
     green: { text: 'text-green-700 dark:text-green-400', bg: 'bg-green-500/10 dark:bg-green-900/40', border: 'border-green-500/30 dark:border-green-500/35', iconBg: 'bg-green-100 dark:bg-green-900/40' },
     blue: { text: 'text-blue-700 dark:text-blue-400', bg: 'bg-blue-500/10 dark:bg-blue-900/40', border: 'border-blue-500/30 dark:border-blue-500/35', iconBg: 'bg-blue-100 dark:bg-blue-900/40' },
@@ -59,20 +74,25 @@ const colorMap = {
     amber: { text: 'text-amber-700 dark:text-amber-500', bg: 'bg-amber-500/10 dark:bg-amber-900/40', border: 'border-amber-500/30 dark:border-amber-500/35', iconBg: 'bg-amber-100 dark:bg-amber-900/40' },
 };
 
-// Animation variants
-const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.1 } } };
-const itemVariants = { hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: [0.25, 1, 0.5, 1] } } }; // Smoother ease
+// Animation variants for staggered entries
+const containerVariants = { 
+    hidden: { opacity: 0 }, 
+    visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.1 } } 
+};
+const itemVariants = { 
+    hidden: { opacity: 0, scale: 0.95 }, 
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: [0.25, 1, 0.5, 1] } }
+};
 
 export function SecuritySection() {
-
     return (
         <TooltipProvider>
-            <Section id="security" className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-muted/5 to-background/20 dark:from-background/5 dark:to-background/20"> {/* OK: Layout BG */}
+            <Section id="security" className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-muted/5 to-background/20 dark:from-background/5 dark:to-background/20">
                 <SectionHeader
                     title="Fortified Security & Transparent Trust"
                     description="Security and transparency are paramount. $ROACH is built on verifiable measures designed to protect holders and foster long-term confidence in the ecosystem."
                     subtitle={<><ShieldCheck className="inline h-4 w-4 mr-1.5" /> Foundation of Trust</>}
-                    alignment="center" className="mb-16" // OK: Layout margin
+                    alignment="center" className="mb-16"
                 />
                 
                 <motion.div
@@ -87,7 +107,6 @@ export function SecuritySection() {
 
                 <motion.div
                     variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
-                     // OK: Layout grid
                     className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 max-w-5xl mx-auto"
                 >
                     {securityFeatures.map((feature) => {
@@ -98,8 +117,6 @@ export function SecuritySection() {
 
                         return (
                             <motion.div key={feature.title} variants={itemVariants}>
-                                {/* Card: Removed shadow-md hover:shadow-lg hover:border-primary, rely on base. */}
-                                {/* Added contextual border, bg, backdrop. OK: layout/visual tweaks. */}
                                 <Card className={cn(
                                     "h-full transition-all duration-300 flex flex-col group overflow-hidden",
                                     "hover:border-primary/30 dark:hover:border-primary/50 dark:bg-card/70 backdrop-blur-sm",
@@ -124,18 +141,16 @@ export function SecuritySection() {
                                         </div>
 
                                         {/* Description */}
-                                        <p className="text-sm text-muted-foreground flex-grow leading-relaxed">{feature.description}</p> {/* OK: Text style */}
+                                        <p className="text-sm text-muted-foreground flex-grow leading-relaxed">{feature.description}</p>
 
                                         {/* Link / Action */}
-                                         {/* OK: Layout */}
                                         <div className="mt-auto pt-3 border-t border-border/20 text-right">
-                                            {/* Button: Using variant="link" and size="sm". ClassName for color/interaction */}
                                             <LinkComponent
-                                                href={isInternalLink ? undefined : feature.link} // Href only if external Link
+                                                href={isInternalLink ? undefined : feature.link}
                                                 target={isInternalLink ? '_self' : '_blank'}
                                                 rel={isInternalLink ? undefined : 'noopener noreferrer'}
                                                 title={feature.tooltip}
-                                                // Handle smooth scroll for internal button clicks
+                                                // Handle smooth scroll for internal links
                                                 onClick={isInternalLink ? (e: React.MouseEvent) => {
                                                         e.preventDefault();
                                                         const element = document.getElementById(feature.link.substring(1));
@@ -147,13 +162,12 @@ export function SecuritySection() {
                                                         }
                                                     } : undefined}
                                                 className={cn(
-                                                    buttonVariants({ variant: "link", size: "sm" }), // Use button variant styles
-                                                    "h-auto p-0 text-sm font-medium group/link", // Specific sizing reset for link style
-                                                    colors.text // Apply contextual color
+                                                    buttonVariants({ variant: "link", size: "sm" }),
+                                                    "h-auto p-0 text-sm font-medium group/link",
+                                                    colors.text
                                                 )}
                                             >
                                                 {feature.linkText}
-                                                {/* OK: Group interaction styling */}
                                                 {!isInternalLink && <ExternalLink className="h-3.5 w-3.5 ml-1 opacity-70 group-hover/link:opacity-100 transition-opacity" />}
                                             </LinkComponent>
                                         </div>
@@ -166,24 +180,22 @@ export function SecuritySection() {
 
                 <motion.div
                     initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.3 }} viewport={{ once: true }}
-                    className="mt-12 text-center" // OK: Layout
+                    className="mt-12 text-center"
                 >
-                     {/* OK: Text style */}
                     <p className="text-muted-foreground text-base max-w-xl mx-auto leading-relaxed">
                         We champion transparency. Verify these security cornerstones independently using the provided links.
                     </p>
                 </motion.div>
 
-                {/* Composite Visual Placeholder */}
+                {/* Composite Visual */}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.2 }} viewport={{ once: true, amount: 0.2 }}
-                     // OK: Layout and placeholder styling
                     className="mt-12 max-w-2xl mx-auto p-4 rounded-lg border border-dashed border-primary/30 bg-gradient-to-br from-green-500/5 via-blue-500/5 to-purple-500/5 dark:from-green-900/10 dark:via-blue-900/10 dark:to-purple-900/10 aspect-[16/5] flex items-center justify-center shadow-inner"
                 >
                     <p className="text-xs text-muted-foreground/70 italic text-center">
-                        AI Prompt: Illustrate the layers of $ROACH security...
+                        AI Prompt: Illustrate the layers of $ROACH security architecture - show locked liquidity, vested team tokens, and contract audit as security pillars forming a shield around the token.
                         <span className="block mt-1 text-[10px] tracking-wider font-medium uppercase text-muted-foreground/50">
-                            Research: Cialdini's Principles...
+                            Research: Cialdini's Principles - Authority, Social Proof, Commitment
                         </span>
                     </p>
                 </motion.div>
@@ -192,4 +204,4 @@ export function SecuritySection() {
     );
 }
 
-// --- END OF FILE components/sections/SecuritySection.tsx ---
+export default SecuritySection;

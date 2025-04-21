@@ -13,7 +13,7 @@ import { CockroachMascot } from "@/components/internal/cockroach-mascot";
 import { tierData } from '@/lib/tier-data';
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { Activity, AlertCircle, Award, BarChartHorizontal, ChevronsDown, HelpCircle, LineChart, MessageSquareWarning, Scale, ShieldAlert, ShieldCheck, TrendingDown, TrendingUp, Zap } from "lucide-react";
+import { Activity, AlertCircle, Award, BarChartHorizontal, ChevronsDown, HelpCircle, LineChart, MessageSquareWarning, Pause, Play, Scale, ShieldAlert, ShieldCheck, TrendingDown, TrendingUp, Users, Zap } from "lucide-react";
 
 // Market Scenario Data (realistic but illustrative examples)
 const marketScenarios = [
@@ -116,7 +116,7 @@ const marketScenarios = [
 ];
 
 // Color mapping for scenarios (for visual consistency)
-const scenarioColorMap: { [key: string]: { text: string; bg: string; border: string; indicator: string; darkText?: string; darkBg?: string; darkBorder?: string; } } = {
+const scenarioColorMap = {
     gray: { text: 'text-gray-600', bg: 'bg-gray-500/10', border: 'border-gray-500/30', indicator: 'bg-gray-500', darkText: 'dark:text-gray-400', darkBg: 'dark:bg-gray-500/20', darkBorder: 'dark:border-gray-500/40' },
     yellow: { text: 'text-yellow-600', bg: 'bg-yellow-500/10', border: 'border-yellow-500/30', indicator: 'bg-yellow-500', darkText: 'dark:text-yellow-400', darkBg: 'dark:bg-yellow-500/20', darkBorder: 'dark:border-yellow-500/40' },
     orange: { text: 'text-orange-600', bg: 'bg-orange-500/10', border: 'border-orange-500/30', indicator: 'bg-orange-500', darkText: 'dark:text-orange-400', darkBg: 'dark:bg-orange-500/20', darkBorder: 'dark:border-orange-500/40' },
@@ -124,7 +124,7 @@ const scenarioColorMap: { [key: string]: { text: string; bg: string; border: str
 };
 
 // Helper functions to map reward levels and price impacts to visual elements
-const mapRewardLevelToVisual = (level: string): { text: string; value: number; colorClass: string; icon: React.ElementType } => {
+const mapRewardLevelToVisual = (level) => {
     switch (level.toLowerCase()) {
         case 'none/fixed': return { text: "None / Fixed", value: 5, colorClass: "bg-muted", icon: HelpCircle };
         case 'standard': return { text: "Standard", value: 25, colorClass: scenarioColorMap['gray'].indicator, icon: Activity };
@@ -135,7 +135,7 @@ const mapRewardLevelToVisual = (level: string): { text: string; value: number; c
     }
 };
 
-const mapPriceImpactToVisual = (impact: string, isRoach: boolean): { text: string; icon: React.ElementType; colorClass: string } => {
+const mapPriceImpactToVisual = (impact, isRoach) => {
     const iL = impact.toLowerCase();
     if (iL === 'stable' || iL === 'stable orbit') return { text: "Stable", icon: Activity, colorClass: cn(scenarioColorMap['gray'].text, scenarioColorMap['gray'].darkText) };
     if (iL === 'noticeable dip') return { text: "Dip", icon: ChevronsDown, colorClass: cn(scenarioColorMap['yellow'].text, scenarioColorMap['yellow'].darkText) };
@@ -150,7 +150,7 @@ const mapPriceImpactToVisual = (impact: string, isRoach: boolean): { text: strin
 };
 
 // Tier color mapping for consistency with other sections
-const tierColorMap: { [key: number]: { text: string; bg: string; border: string; indicator: string; darkText?: string; darkBg?: string; darkBorder?: string; } } = {
+const tierColorMap = {
     1: { text: 'text-blue-600', bg: 'bg-blue-500/10', border: 'border-blue-500/30', indicator: 'bg-blue-500', darkText: 'dark:text-blue-400', darkBg: 'dark:bg-blue-500/20', darkBorder: 'dark:border-blue-500/40' },
     2: { text: 'text-gray-600', bg: 'bg-gray-500/10', border: 'border-gray-500/30', indicator: 'bg-gray-500', darkText: 'dark:text-gray-400', darkBg: 'dark:bg-gray-500/20', darkBorder: 'dark:border-gray-500/40' },
     3: { text: 'text-yellow-600', bg: 'bg-yellow-500/10', border: 'border-yellow-500/30', indicator: 'bg-yellow-500', darkText: 'dark:text-yellow-400', darkBg: 'dark:bg-yellow-500/20', darkBorder: 'dark:border-yellow-500/40' },
@@ -158,7 +158,7 @@ const tierColorMap: { [key: number]: { text: string; bg: string; border: string;
     5: { text: 'text-red-600', bg: 'bg-red-500/10', border: 'border-red-500/30', indicator: 'bg-red-500', darkText: 'dark:text-red-400', darkBg: 'dark:bg-red-500/20', darkBorder: 'dark:border-red-500/40' },
 };
 
-export function MarketScenarios() {
+export default function MarketScenarios({ id }) {
     const [activeScenarioId, setActiveScenarioId] = useState(marketScenarios[1].id);
     const [isSimulationPlaying, setIsSimulationPlaying] = useState(false);
     const [simulationStep, setSimulationStep] = useState(0);
@@ -206,7 +206,7 @@ export function MarketScenarios() {
 
     return (
         <TooltipProvider>
-            <Section id="market-scenarios" className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-muted/5 via-background to-muted/5 dark:from-background/5 dark:via-background dark:to-background/5">
+            <Section id={id} className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-muted/5 via-background to-muted/5 dark:from-background/5 dark:via-background dark:to-background/5">
                 <SectionHeader
                     title="Performance Under Pressure: $ROACH vs. Static Resilience"
                     description="Explore simulated responses during market volatility. See how $ROACH's adaptive 5-tier system aims to turn stress into strength, compared to typical static token models."
@@ -217,7 +217,7 @@ export function MarketScenarios() {
                 <Tabs value={activeScenarioId} onValueChange={setActiveScenarioId} className="max-w-6xl mx-auto">
                     <TabsList variant="segmented" className="md:grid-cols-4 mb-10">
                         {marketScenarios.map((scenario) => {
-                            const colors = scenarioColorMap[scenario.color as keyof typeof scenarioColorMap];
+                            const colors = scenarioColorMap[scenario.color];
                             const isActive = scenario.id === activeScenarioId;
                             return (
                                 <TabsTrigger
@@ -524,21 +524,6 @@ export function MarketScenarios() {
 }
 
 // ScenarioCard Component 
-interface ScenarioCardProps { 
-    tokenName: string; 
-    tokenIcon: React.ElementType; 
-    tier?: number; 
-    priceData: { text: string; icon: React.ElementType; colorClass: string }; 
-    rewardData: { text: string; value: number; colorClass: string; icon: React.ElementType }; 
-    sentiment: string; 
-    outcome: string; 
-    isRoach: boolean; 
-    scenarioColor: string; 
-    clarification?: string; 
-    simulationData: number[];
-    simulationStep: number;
-}
-
 function ScenarioCard({ 
     tokenName, 
     tokenIcon: TokenIcon, 
@@ -552,7 +537,7 @@ function ScenarioCard({
     clarification, 
     simulationData,
     simulationStep
-}: ScenarioCardProps) {
+}) {
     const baseCardColors = isRoach ? tierColorMap[tier ?? 2] : scenarioColorMap['gray'];
     const activeTierColors = isRoach && tier ? tierColorMap[tier] : null;
     
@@ -668,9 +653,7 @@ function ScenarioCard({
 }
 
 // MetricDisplay Sub-Component
-interface MetricDisplayProps { label: string; value: string; icon: React.ElementType; colorClass: string; }
-
-function MetricDisplay({ label, value, icon: Icon, colorClass }: MetricDisplayProps) {
+function MetricDisplay({ label, value, icon: Icon, colorClass }) {
     return (
         <div className="flex flex-col">
             <span className="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1">
@@ -681,4 +664,4 @@ function MetricDisplay({ label, value, icon: Icon, colorClass }: MetricDisplayPr
     );
 }
 
-export default MarketScenarios;
+export { MarketScenarios };
