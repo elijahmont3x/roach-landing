@@ -179,23 +179,6 @@ export function TokenMechanics() {
                                          {[10, 30, 50, 70].map((val, idx) => ( // Values based on mapRatioToProgress
                                              <div key={`marker-${idx}`} className="absolute top-0 h-full w-px bg-border/50" style={{ left: `${val}%` }} />
                                          ))}
-                                          {/* Active Tier Bubble */}
-                                        <motion.div
-                                            key={`bubble-${activeTier.id}`}
-                                            initial={{ scale: 0.7, opacity: 0.5 }}
-                                            animate={{ scale: 1, opacity: 1 }}
-                                            transition={{ type: 'spring', stiffness: 400, damping: 20, duration: 0.3 }}
-                                             className={cn(
-                                                 "absolute top-1/2 z-10 transform -translate-y-1/2 transition-all ease-out flex items-center gap-1 cursor-pointer",
-                                                 "h-5 px-2 rounded-full text-[10px] font-bold whitespace-nowrap leading-none shadow-md border",
-                                                 currentTierColors.bg, currentTierColors.text, currentTierColors.border, currentTierColors.darkBorder,
-                                                'hover:scale-110'
-                                            )}
-                                            style={{ left: `max(1px, calc(${progressValue}% - 14px))`, transitionDuration: `${TRANSITION_DURATION_MS}ms` }} // Keep bubble mostly inside progress bar
-                                            onClick={() => setManualTier(activeTier.id - 1)} // Click bubble to focus
-                                         >
-                                             T{activeTier.id}
-                                         </motion.div>
                                      </div>
                                      {/* Labels Below */}
                                     <div className="flex justify-between text-[9px] text-muted-foreground/80 pt-0.5 px-1">
