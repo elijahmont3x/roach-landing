@@ -14,29 +14,30 @@ export function CockroachMascot({ size = 'md', className }: CockroachMascotProps
   const sizeClasses = {
     xs: 'h-5 w-5',
     sm: 'h-8 w-8',
-    md: 'h-12 w-12',
-    lg: 'h-20 w-20',
-    xl: 'h-28 w-28',
+    md: 'h-10 w-10',
+    lg: 'h-18 w-18',
+    xl: 'h-24 w-24',
   };
 
   return (
     <div className={cn(
       sizeClasses[size],
       'relative flex-shrink-0',
-      // 'shadow-md rounded-full', 
-      // 'border border-border', 
-      // 'bg-background', // Added theme-aware border
+      'shadow-md hover:shadow-lg transition-shadow duration-300',
+      'rounded-full',
+      'border-2 border-solid border-border/70 hover:border-border/100',
+      'bg-background',
       className
     )}>
       <Image
-        src="/logo.png"
-        alt="Roach Mascot"
-        fill
-        quality={100} // Ensures highest quality, no compression
-        unoptimized={true} // Bypasses Next.js image optimization completely
-        sizes={`(max-width: 768px) ${parseInt(sizeClasses[size].split('-')[1])}px, ${parseInt(sizeClasses[size].split('-')[1])}px`}
-        className="object-contain"
-        priority={size === 'lg' || size === 'xl'}
+      src="/logo.png"
+      alt="Roach Mascot"
+      fill
+      quality={100}
+      unoptimized={true}
+      sizes={`(max-width: 768px) ${parseInt(sizeClasses[size].split('-')[1])}px, ${parseInt(sizeClasses[size].split('-')[1])}px`}
+      className="object-contain scale-116"
+      priority={true}
       />
     </div>
   );

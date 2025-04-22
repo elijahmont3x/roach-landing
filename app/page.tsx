@@ -1,5 +1,3 @@
-// --- START OF FILE app/page.tsx ---
-
 "use client";
 
 import React, { Suspense, lazy, useCallback } from 'react';
@@ -52,35 +50,64 @@ export default function Home() {
             <Header onScrollTo={handleScrollTo} />
             <main className="flex-grow scroll-smooth">
                 <Hero onScrollDown={() => handleScrollTo('the-antifragile-edge')} />
-                <Suspense fallback={sectionFallback}>
-                    {/* Sequence of Sections and Connectors... */}
-                     <SectionConnector prevSection="Introduction" summary="While others break or merely endure, $ROACH thrives on volatility." nextConcept="Antifragility: More Than Resilience" className="!py-12" />
+                
+                {/* Each section now handles its own suspense boundary */}
+                <Section useSuspense>
                     <TheAntifragileEdge id="the-antifragile-edge" />
-                    <SectionConnector prevSection="Core Antifragile Concept" summary="Unlike static resilience, antifragility means converting disorder into strength." nextConcept="The Cockroach: Nature's Blueprint" className="!py-12" />
+                </Section>
+                
+                <Section useSuspense>
                     <CockroachConnection id="cockroach-connection" />
-                    <SectionConnector prevSection="Bio-Inspired Design" summary="Key survival traits translate into adaptive token mechanics." nextConcept="The Adaptive 5-Tier System" className="!py-12" />
+                </Section>
+                
+                <Section useSuspense>
                     <TokenMechanics id="mechanics" />
-                    <SectionConnector prevSection="Adaptive Engine Explained" summary="Taxes & rewards dynamically shift based on real-time market pressure." nextConcept="$ROACH vs. Static Tokens Under Pressure" className="!py-12" />
+                </Section>
+                
+                <Section useSuspense>
                     <MarketScenarios id="market-scenarios" />
-                    <SectionConnector prevSection="Performance Simulations" summary="The model shows potential for outperformance by harnessing stress." nextConcept="Token Structure: Supply & Allocation" className="!py-12" />
+                </Section>
+                
+                <Section useSuspense>
                     <Tokenomics id="tokenomics" />
-                    <SectionConnector prevSection="Tokenomics Overview" summary="A fixed supply strategically allocated for long-term ecosystem health." nextConcept="Security Measures & Transparency" className="!py-12" />
+                </Section>
+                
+                <Section useSuspense>
                     <SecuritySection id="security" />
-                    <SectionConnector prevSection="Security Foundations" summary="Audits, locked LP, and transparent vesting build verifiable trust." nextConcept="Project Development Milestones" className="!py-12" />
+                </Section>
+                
+                <Section useSuspense>
                     <Roadmap id="roadmap" />
-                    <SectionConnector prevSection="Future Development Plans" summary="A phased approach ensures foundational strength before expansion." nextConcept="How to Securely Acquire $ROACH" className="!py-12" />
+                </Section>
+                
+                <Section useSuspense>
                     <HowToBuy id="how-to-buy" />
-                     <SectionConnector prevSection="Secure Purchase Guide" summary="Acquire easily via Solana wallets and trusted DEXs." nextConcept="Community Signals & Voices" className="!py-12" />
+                </Section>
+                
+                <SectionConnector 
+                    prevSection="Secure Purchase Guide" 
+                    summary="Acquire easily via Solana wallets and trusted DEXs." 
+                    nextConcept="Community Signals & Voices" 
+                    className="!py-12" 
+                />
+                
+                <Section useSuspense>
                     <SocialProof id="social-proof" />
-                     <SectionConnector prevSection="The $ROACH Colony" summary="Explore community sentiment and projected growth." nextConcept="Frequently Asked Questions" className="!py-12" />
+                </Section>
+                
+                <SectionConnector 
+                    prevSection="The $ROACH Colony" 
+                    summary="Explore community sentiment and projected growth." 
+                    nextConcept="Frequently Asked Questions" 
+                    className="!py-12" 
+                />
+                
+                <Section useSuspense>
                     <FAQ id="faq" />
-                </Suspense>
+                </Section>
             </main>
             <Footer />
-             {/* REMOVE ParticleLayer */}
-             {/* ADD ThemeToggleButton */}
-             <ThemeToggleButton />
-         </div>
-     );
+            <ThemeToggleButton />
+        </div>
+    );
 }
-// --- END OF FILE app/page.tsx ---

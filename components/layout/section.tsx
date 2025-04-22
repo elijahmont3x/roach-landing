@@ -4,7 +4,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
-import React from "react";
+import React, { Suspense } from "react"; // Import Suspense
+import { LoadingSpinner } from "@/components/internal/spinner"; // Import LoadingSpinner
 
 interface SectionProps extends React.HTMLAttributes<HTMLElement> {
     id?: string;
@@ -17,6 +18,8 @@ interface SectionProps extends React.HTMLAttributes<HTMLElement> {
     patternBackground?: string; // Path to pattern SVG
     gradientOpacity?: number; // 0 to 1
     patternOpacity?: number; // 0 to 1
+    // New prop for suspense handling
+    useSuspense?: boolean;
 }
 
 interface SectionHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
@@ -49,14 +52,22 @@ export function Section({
     patternBackground,
     gradientOpacity = 0.5,
     patternOpacity = 0.02,
+    useSuspense = false,
     ...props
 }: SectionProps) {
+    // Suspense fallback UI
+    const suspenseFallback = (
+        <div className="flex items-center justify-center min-h-[70vh] w-full">
+            <LoadingSpinner size="xl" text="Loading Section..." />
+        </div>
+    );
+    
     return (
         <section
             id={id}
             className={cn(
-                "w-full relative scroll-snap-align-start", // scroll-snap-align-start kept
-                !disableDefaultHeight && "min-h-[100svh] flex flex-col justify-center py-16 md:py-20 lg:py-24", // Using svh for viewport height
+                "w-full relative scroll-snap-align-start", 
+                !disableDefaultHeight && "min-h-[100svh] flex flex-col justify-center py-16 md:py-20 lg:py-24",
                 className
             )}
             {...props}
@@ -85,10 +96,16 @@ export function Section({
             )}
             {/* Main Content Container */}
             <div className={cn(
-                "container mx-auto px-4 md:px-6 w-full z-10", // Ensure content is above background
+                "container mx-auto px-4 md:px-6 w-full z-10",
                 containerClassName
             )}>
-                {children}
+                {useSuspense ? (
+                    <Suspense fallback={suspenseFallback}>
+                        {children}
+                    </Suspense>
+                ) : (
+                    children
+                )}
             </div>
         </section>
     );
