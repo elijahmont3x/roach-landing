@@ -142,29 +142,6 @@ export function Hero({ onScrollDown }: HeroProps) {
                     </motion.div>
                 )}
             </motion.div>
-
-            {/* Optional Animated Mascot (if applicable) */}
-            <motion.div
-                className="absolute bottom-[-30px] right-[-40px] md:bottom-[-50px] md:right-[-60px] lg:bottom-[-70px] lg:right-[-80px] opacity-10 dark:opacity-[0.07] pointer-events-none z-0"
-                style={{ y: mascotY }} // Apply parallax
-                initial={{ scale: 0.85, rotate: -3, opacity: 0 }}
-                animate={{ scale: 1, rotate: 0, opacity: 0.1 }}
-                transition={{ duration: 1.5, delay: 0.6, type: 'spring', stiffness: 60 }}
-            >
-                {/* Replace CockroachMascot with your actual SVG component */}
-                 {/* Use a large size and slight color modification */}
-                <CockroachMascot size="xl" className="text-primary/80 w-44 h-44 md:w-64 md:h-64 lg:w-[320px] lg:h-[320px]" />
-            </motion.div>
-
-            {/* Visual Placeholder Comment for Background */}
-            <div className="absolute inset-0 -z-20 flex items-center justify-center opacity-0" aria-hidden="true"> {/* Container for dev prompt */}
-                <p className="text-xs text-muted-foreground/70 italic text-center p-4 bg-card/10 rounded">
-                    AI Prompt: Create a subtle, dynamic background. Consider particle animations reacting to scroll, or a layered gradient mesh that shifts hues gently. Evoke technology and biological resilience. Color palette: Dark background, subtle primary/secondary highlights matching $ROACH brand.
-                    <span className="block mt-1 text-[10px] tracking-wider font-medium uppercase text-muted-foreground/50">
-                    Research: Perceptual Flow, Attention Guidance
-                    </span>
-                </p>
-            </div>
         </Section>
     );
 }

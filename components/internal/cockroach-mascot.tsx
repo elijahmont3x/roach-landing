@@ -1,8 +1,8 @@
 // --- START OF FILE components/ui/CockroachMascot.tsx ---
 // Simplified Placeholder Implementation - Replace with actual SVG/Image
 import React from 'react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { Bug } from 'lucide-react'; // Using Lucide Bug as a readily available placeholder
 
 interface CockroachMascotProps {
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
@@ -19,17 +19,27 @@ export function CockroachMascot({ size = 'md', className }: CockroachMascotProps
     xl: 'h-28 w-28',
   };
 
-  // TODO: Replace 'Bug' icon with the actual Roach mascot SVG component or Image tag
-  // Example replacement:
-  // import RoachIcon from './RoachIcon.svg'; // Assuming RoachIcon.svg exists
-  // <RoachIcon className={cn(sizeClasses[size], 'text-primary', className)} />
-
   return (
-    <Bug className={cn(
-        sizeClasses[size],
-        'text-primary', // Default color, override with className if needed
-        className
-    )} />
+    <div className={cn(
+      sizeClasses[size],
+      'relative flex-shrink-0',
+      // 'shadow-md rounded-full', 
+      // 'border border-border', 
+      // 'bg-background', // Added theme-aware border
+      className
+    )}>
+      <Image
+        src="/logo.png"
+        alt="Roach Mascot"
+        fill
+        quality={100} // Ensures highest quality, no compression
+        unoptimized={true} // Bypasses Next.js image optimization completely
+        sizes={`(max-width: 768px) ${parseInt(sizeClasses[size].split('-')[1])}px, ${parseInt(sizeClasses[size].split('-')[1])}px`}
+        className="object-contain"
+        priority={size === 'lg' || size === 'xl'}
+      />
+    </div>
   );
 }
+
 // --- END OF FILE components/ui/CockroachMascot.tsx ---
