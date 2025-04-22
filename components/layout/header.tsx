@@ -1,4 +1,4 @@
-// --- START OF FILE components/layout/Header.tsx ---
+// --- START OF FILE components/layout/header.tsx ---
 "use client";
 
 import { CockroachMascot } from "@/components/internal/cockroach-mascot";
@@ -17,22 +17,22 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { Activity, Coins, Info, ListChecks, Menu, ShieldCheck, X } from "lucide-react";
+import { Activity, Coins, GitBranch, HelpCircle, ListChecks, Menu, ShieldCheck, Sparkles, X, BookOpen } from "lucide-react"; // Use different icons
 import Link from "next/link";
 import React, { memo, useCallback, useEffect, useState } from "react";
 
 // Constants for links - USE YOUR ACTUAL LINKS
 const SWAP_LINK = "https://jup.ag/swap/SOL-ROACHaBXfk3N57vr1gDmQCkSp22d9Xv4V1f";
-const WHITEPAPER_LINK = "/PARADOX_Whitepaper_v2.txt"; // Link to static asset
+const WHITEPAPER_LINK = "/ROACH_Whitepaper_v2.txt"; // Updated path based on provided file name
 
 // --- Menu Items (Ensure IDs match section IDs in page.tsx) ---
 const menuItems = [
-    { name: "Concept", href: "#the-antifragile-edge", icon: ShieldCheck },
+    { name: "Concept", href: "#the-antifragile-edge", icon: Sparkles }, // Changed Icon
     { name: "Mechanics", href: "#mechanics", icon: Activity },
     { name: "Tokenomics", href: "#tokenomics", icon: Coins },
     { name: "Security", href: "#security", icon: ShieldCheck },
-    { name: "Roadmap", href: "#roadmap", icon: ListChecks },
-    { name: "FAQ", href: "#faq", icon: Info },
+    { name: "Roadmap", href: "#roadmap", icon: ListChecks }, // Changed Icon
+    { name: "FAQ", href: "#faq", icon: HelpCircle }, // Changed Icon
 ];
 
 interface HeaderProps {
@@ -54,7 +54,8 @@ export const Header = memo(({ onScrollTo }: HeaderProps) => {
 
             if (!ticking) {
                 window.requestAnimationFrame(() => {
-                    const scrolled = lastKnownScrollPosition > 10;
+                    const scrollThreshold = 5; // Trigger slightly earlier
+                    const scrolled = lastKnownScrollPosition > scrollThreshold;
                     if (scrolled !== isScrolled) { // Update state only if changed
                         setIsScrolled(scrolled);
                     }
@@ -65,162 +66,126 @@ export const Header = memo(({ onScrollTo }: HeaderProps) => {
         };
 
         window.addEventListener("scroll", handleScroll, { passive: true });
-        // Run once on mount to set initial state
-        handleScroll();
+        handleScroll(); // Initial check
 
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [isScrolled]); // Depend only on isScrolled
+    }, [isScrolled]);
 
     // Callback for handling navigation clicks
     const handleNavClick = useCallback((href: string, closeMobileMenu = false) => (e: React.MouseEvent) => {
         if (href.startsWith('#')) {
-            e.preventDefault(); // Prevent default jump
+            e.preventDefault();
             const id = href.substring(1);
             onScrollTo(id);
-            if (closeMobileMenu) {
-                setIsMobileMenuOpen(false);
-            }
+        } else {
+            // Allow normal navigation for external or root links
         }
-        // Let external links or root link behave normally
-        // If it's the root link, just navigate (no scroll prevention needed)
-        else if (href === '/') {
-             if (closeMobileMenu) {
-                setIsMobileMenuOpen(false);
-            }
-            // No preventDefault needed for root link
+        if (closeMobileMenu) {
+            setIsMobileMenuOpen(false);
         }
-
     }, [onScrollTo]);
 
     return (
         <header
             className={cn(
-                "sticky top-0 z-50 w-full transition-all duration-300 ease-out", // OK: Layout/State
-                // Apply subtle blur and border effect when scrolled
+                "fixed top-0 z-50 w-full transition-all duration-300 ease-out", // Use fixed positioning
                 isScrolled
-                    ? "shadow-md bg-background/90 backdrop-blur-sm border-b border-border/30" // OK: State-based visual tweaks
-                    : "bg-transparent border-b border-transparent" // OK: State-based visual tweaks
+                    ? "shadow-lg bg-background/85 backdrop-blur-lg border-b border-border/30"
+                    : "bg-transparent border-b border-transparent"
             )}
         >
-            <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6"> {/* OK: Layout */}
-                {/* Logo Area */}
-                 {/* Use onClick for root link to potentially close mobile menu */}
-                <Link href="/" className="flex items-center gap-2 mr-4 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm" onClick={handleNavClick('/', true)}>
-                    <CockroachMascot size="sm" className="text-primary transition-transform hover:scale-110" /> {/* OK: Minor tweak (transform), primary color */}
-                    <span className="text-xl font-bold hidden sm:inline tracking-tight"> {/* OK: Text style for brand */}
+            <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
+                <Link href="/" className="flex items-center gap-2 mr-4 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm group" onClick={handleNavClick('/', true)}>
+                    <CockroachMascot size="sm" className="text-primary transition-transform group-hover:rotate-[-10deg] group-hover:scale-110 duration-200" />
+                    <span className="text-xl font-bold hidden sm:inline tracking-tighter bg-gradient-to-r from-primary to-foreground/80 bg-clip-text text-transparent">
                         $ROACH
                     </span>
                 </Link>
 
-                {/* Desktop Navigation */}
-                <NavigationMenu className="hidden lg:flex flex-1 justify-center"> {/* OK: Layout */}
+                <NavigationMenu className="hidden lg:flex flex-1 justify-center">
                     <NavigationMenuList>
                         {menuItems.map((item) => (
                             <NavigationMenuItem key={item.href}>
-                                {/* Use Button for navigation action */}
-                                <Button
-                                    variant="ghost"
-                                    // Use nav trigger style for base, apply overrides that don't conflict
-                                    className={cn(
-                                        navigationMenuTriggerStyle(),
-                                        "bg-transparent h-9 px-3 text-sm font-medium", // OK: Specific sizing/padding for this nav context
-                                        "hover:bg-accent/70 hover:text-accent-foreground", // OK: Specific hover for this context
-                                        "focus:bg-accent/70 focus:text-accent-foreground data-[active]:bg-accent/50" // OK: Specific focus/active for this context
-                                    )}
-                                    onClick={handleNavClick(item.href)} // Use callback for click
+                                {/* Updated button approach for nav links */}
+                                <button
+                                    className={cn(navigationMenuTriggerStyle(), "bg-transparent h-9 px-3 text-sm font-medium focus:bg-accent/70 hover:bg-accent/70 data-[active]:bg-accent/50 focus:text-accent-foreground hover:text-accent-foreground gap-1.5")}
+                                    onClick={handleNavClick(item.href)}
+                                    aria-label={`Scroll to ${item.name}`}
                                 >
-                                    <item.icon className="mr-1.5 h-4 w-4 opacity-80" /> {/* OK: Icon style */}
+                                    <item.icon className="h-4 w-4 opacity-80" />
                                     {item.name}
-                                </Button>
+                                </button>
                             </NavigationMenuItem>
                         ))}
-                        {/* Whitepaper link added */}
                         <NavigationMenuItem>
                             <Link href={WHITEPAPER_LINK} target="_blank" rel="noopener noreferrer" legacyBehavior passHref>
-                                <NavigationMenuLink className={cn(
-                                    navigationMenuTriggerStyle(),
-                                    "bg-transparent h-9 px-3 text-sm font-medium hover:bg-accent/70" // OK: Specific sizing/hover for this context
-                                    )}>
-                                    Whitepaper
+                                <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "bg-transparent h-9 px-3 text-sm font-medium hover:bg-accent/70 gap-1.5 focus:bg-accent/70")}>
+                                   <BookOpen className="h-4 w-4 opacity-80"/> Whitepaper
                                 </NavigationMenuLink>
                             </Link>
                         </NavigationMenuItem>
                     </NavigationMenuList>
                 </NavigationMenu>
 
-                {/* Right Side Actions (Desktop) */}
-                <div className="hidden lg:flex items-center gap-2 ml-auto"> {/* OK: Layout */}
-                    {/* Main CTA - Use Link > Button pattern */}
+                <div className="hidden lg:flex items-center gap-2 ml-auto">
                     <Link href={SWAP_LINK} target="_blank" rel="noopener noreferrer">
-                        <Button size="sm" className="shadow-sm hover:shadow-md transition-shadow bg-primary hover:bg-primary/90"> {/* OK: Minor shadow transition, rely on Button base for colors/padding */}
-                            Get $ROACH
+                        <Button size="sm" className="shadow-sm hover:shadow-md transition-shadow bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/90 font-semibold text-primary-foreground">
+                           Get $ROACH
                         </Button>
                     </Link>
                 </div>
 
-                {/* Mobile Menu Trigger & Sheet */}
-                <div className="flex items-center gap-2 lg:hidden ml-auto"> {/* OK: Layout */}
+                <div className="flex items-center gap-2 lg:hidden ml-auto">
                     <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                         <SheetTrigger asChild>
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                // OK: size is defined, text color is minor tweak
-                                className="h-8 w-8 text-foreground/80 hover:text-foreground"
+                                className="h-9 w-9 text-foreground/80 hover:text-foreground"
                                 aria-label="Toggle navigation menu"
                             >
                                 {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                             </Button>
                         </SheetTrigger>
-                        <SheetContent side="right" className="w-[300px] pt-10 px-0 bg-background flex flex-col border-l border-border/50"> {/* OK: Specific Sheet styling for layout */}
-                            {/* Mobile Menu Header */}
-                            <div className="px-4 mb-6 flex items-center justify-between"> {/* OK: Layout */}
-                                <div className="flex items-center gap-2"> {/* OK: Layout */}
-                                    <CockroachMascot size="sm" className="text-primary" /> {/* OK: Primary color */}
-                                    <span className="text-lg font-bold">$ROACH</span> {/* OK: Brand text style */}
+                        <SheetContent side="right" className="w-[calc(100vw*0.8)] max-w-[320px] pt-10 px-0 bg-background border-l border-border/50 flex flex-col">
+                            <div className="px-4 mb-6 flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <CockroachMascot size="sm" className="text-primary" />
+                                    <span className="text-lg font-bold bg-gradient-to-r from-primary to-foreground/80 bg-clip-text text-transparent">$ROACH</span>
                                 </div>
                                 <SheetClose asChild>
-                                    <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground"> {/* OK: Specific size/color for close button */}
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
                                         <X className="h-4 w-4" />
                                         <span className="sr-only">Close menu</span>
                                     </Button>
                                 </SheetClose>
                             </div>
 
-                            {/* Mobile Navigation Links */}
-                            <nav className="flex flex-col space-y-1 flex-grow px-4 overflow-y-auto"> {/* OK: Layout */}
+                            <nav className="flex flex-col space-y-1 flex-grow px-4 overflow-y-auto mb-4">
                                 {menuItems.map((item) => (
                                     <SheetClose key={item.href} asChild>
-                                        {/* Use Button for interaction, rely on base styles */}
-                                        <Button
-                                            variant="ghost"
-                                            // Adjust Button styling for mobile nav links
-                                            className="w-full justify-start text-base font-medium text-foreground/80 hover:text-foreground hover:bg-accent px-3 py-2 h-auto" // OK: Specific layout/style for mobile nav item
-                                            onClick={handleNavClick(item.href, true)} // Pass true to close menu
+                                         {/* Updated button for mobile nav items */}
+                                        <button
+                                            className={cn(buttonVariants({ variant: "ghost", size: "lg" }), "w-full justify-start text-base font-medium h-11")}
+                                            onClick={handleNavClick(item.href, true)}
                                         >
-                                            <item.icon className="mr-2 h-4 w-4 opacity-80" /> {/* OK: Icon style */}
+                                            <item.icon className="mr-2 h-4 w-4 opacity-80" />
                                             {item.name}
-                                        </Button>
+                                        </button>
                                     </SheetClose>
                                 ))}
                                 <SheetClose asChild>
-                                    {/* Use Link > a pattern (legacyBehavior requires <a>) */}
                                     <Link href={WHITEPAPER_LINK} target="_blank" rel="noopener noreferrer" legacyBehavior passHref>
-                                        <a className={cn(
-                                            buttonVariants({ variant: "ghost" }), // Use Button styles via variants
-                                            "w-full justify-start text-base font-medium text-foreground/80 hover:text-foreground hover:bg-accent px-3 py-2 h-auto" // OK: Specific layout/style for mobile nav item
-                                        )}>
-                                            Whitepaper
+                                        <a className={cn(buttonVariants({ variant: "ghost", size: "lg" }), "w-full justify-start text-base font-medium h-11")}>
+                                           <BookOpen className="mr-2 h-4 w-4 opacity-80" /> Whitepaper
                                         </a>
                                     </Link>
                                 </SheetClose>
                             </nav>
 
-                            {/* Mobile Action Button at bottom */}
-                            <div className="mt-auto border-t border-border/30 p-4"> {/* OK: Layout */}
-                                {/* Use Link > Button pattern */}
-                                <Link href={SWAP_LINK} target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)}>
-                                    <Button className="w-full shadow-md bg-primary hover:bg-primary/90" size="lg"> {/* OK: Rely on Button base, minor shadow OK */}
+                            <div className="mt-auto border-t border-border/30 p-4">
+                                <Link href={SWAP_LINK} target="_blank" rel="noopener noreferrer" onClick={handleNavClick(SWAP_LINK, true)}>
+                                    <Button className="w-full shadow-md bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/90 font-semibold text-primary-foreground" size="lg">
                                         Get $ROACH Now
                                     </Button>
                                 </Link>
@@ -232,5 +197,5 @@ export const Header = memo(({ onScrollTo }: HeaderProps) => {
         </header>
     );
 });
-Header.displayName = 'Header'; // Add display name for memoized component
-// --- END OF FILE components/layout/Header.tsx ---
+Header.displayName = 'Header';
+// --- END OF FILE components/layout/header.tsx ---

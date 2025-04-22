@@ -1,207 +1,198 @@
+// --- START OF FILE components/sections/06_SecuritySection.tsx ---
 "use client";
 
-import React from 'react';
 import { Section, SectionHeader } from "@/components/layout/section";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { AlertTriangle, ExternalLink, FileCode, Lock, ShieldCheck, Users } from "lucide-react";
+import { AlertTriangle, CheckCircle, Construction, ExternalLink, FileCode, Info, Lock, ShieldCheck, Users } from "lucide-react";
 import Link from "next/link";
+import { Button, buttonVariants } from "../ui/button"; // Import Button and variants
 
-// Security links - Replace with actual links in production
 const contractAddress = "ROACHaBXfk3N57vr1gDmQCkSp22d9Xv4V1f";
 const explorerLink = `https://solscan.io/token/${contractAddress}`;
-const pinkLockLink = "#"; // Replace with actual PinkLock URL
-const auditLink = "#"; // Replace with actual CertiK URL
+const pinkLockLink = "#"; // Placeholder
+const auditLink = "#"; // Placeholder
 const vestingInfoLink = "#roadmap"; // Link to roadmap section discussing vesting
 
-// Security Features Data
 const securityFeatures = [
     {
-        icon: ShieldCheck, 
-        title: "Comprehensive Security Audit",
-        description: "Smart contract security audit to be conducted by CertiK or equivalent industry-standard auditor. Will validate contract integrity and absence of vulnerabilities.",
-        status: "Planned (Pre-Launch)", 
-        link: auditLink, 
-        linkText: "Audit In Progress", 
-        color: "green",
-        tooltip: "Security audit will be completed before official launch",
+        icon: ShieldCheck, title: "Smart Contract Audit",
+        description: "Planned comprehensive audit by CertiK (or equivalent) to validate code integrity and identify vulnerabilities before full launch.",
+        status: "Scheduled", link: auditLink, linkText: "View Report (Post-Audit)", color: "green",
+        tooltip: "Security audit scheduled pre-launch. Report will be public.",
         pending: true,
     },
     {
-        icon: Lock, 
-        title: "Locked Initial Liquidity",
-        description: "Initial liquidity pool (LP) tokens on Raydium will be verifiably locked for 12 months using PinkLock or equivalent service, preventing rug-pulls.",
-        status: "Scheduled (Launch Day)", 
-        link: pinkLockLink, 
-        linkText: "Lock Schedule", 
-        color: "blue",
-        tooltip: "Will be implemented at token launch and verifiable on-chain",
+        icon: Lock, title: "Initial Liquidity Lock",
+        description: "Raydium Liquidity Pool (LP) tokens created at launch will be verifiably locked for 12 months via PinkLock, ensuring stability.",
+        status: "Planned (Launch)", link: pinkLockLink, linkText: "Verify Lock (Post-Launch)", color: "blue",
+        tooltip: "LP locking occurs immediately upon token launch. Verification link provided then.",
         pending: true,
     },
     {
-        icon: FileCode, 
-        title: "Immutable Contract & Supply",
-        description: "The core $ROACH SPL token contract is designed to be non-upgradeable with fixed 1 billion supply. Minting authority will be permanently revoked after launch.",
-        status: "Ready for Deployment", 
-        link: explorerLink, 
-        linkText: "View Contract Code", 
-        color: "purple",
-        tooltip: "Contract code ready for deployment, will be verified on Solscan upon launch",
-        pending: false,
+        icon: FileCode, title: "Verified & Immutable Contract",
+        description: "The core $ROACH SPL contract will be verified on Solscan. Designed as non-upgradeable with fixed supply and revoked mint authority post-launch.",
+        status: "Deployed & Verified (Post-Launch)", link: explorerLink, linkText: "View Verified Contract", color: "purple",
+        tooltip: "View the verified source code and on-chain data on Solscan.",
+        pending: true, // Marked pending until verified post-launch
     },
     {
-        icon: Users, 
-        title: "Transparent Team Vesting",
-        description: "Team token allocation (10%) will follow strict 6-month linear vesting schedule, managed on-chain via transparent vesting contract.",
-        status: "Configured (Activates Post-Launch)", 
-        link: vestingInfoLink, 
-        linkText: "View Vesting Schedule", 
-        color: "amber",
-        tooltip: "Vesting contract parameters defined, will activate after token launch",
+        icon: Users, title: "Transparent Team Vesting",
+        description: "Team tokens (10% total) are subject to a strict 6-month linear vesting schedule via smart contract, starting after launch.",
+        status: "Configured (Activates Post-Launch)", link: vestingInfoLink, linkText: "Learn About Vesting", color: "amber",
+        tooltip: "Vesting schedule ensures long-term team commitment. View details on roadmap/docs.",
         pending: true,
     },
 ];
 
-// Color mapping for consistent theming
 const colorMap = {
-    green: { text: 'text-green-700 dark:text-green-400', bg: 'bg-green-500/10 dark:bg-green-900/40', border: 'border-green-500/30 dark:border-green-500/35', iconBg: 'bg-green-100 dark:bg-green-900/40' },
-    blue: { text: 'text-blue-700 dark:text-blue-400', bg: 'bg-blue-500/10 dark:bg-blue-900/40', border: 'border-blue-500/30 dark:border-blue-500/35', iconBg: 'bg-blue-100 dark:bg-blue-900/40' },
-    purple: { text: 'text-purple-700 dark:text-purple-400', bg: 'bg-purple-500/10 dark:bg-purple-900/40', border: 'border-purple-500/30 dark:border-purple-500/35', iconBg: 'bg-purple-100 dark:bg-purple-900/40' },
-    amber: { text: 'text-amber-700 dark:text-amber-500', bg: 'bg-amber-500/10 dark:bg-amber-900/40', border: 'border-amber-500/30 dark:border-amber-500/35', iconBg: 'bg-amber-100 dark:bg-amber-900/40' },
+    green: { text: 'text-green-700 dark:text-green-400', bg: 'bg-green-500/5 dark:bg-green-900/30', border: 'border-green-500/25 dark:border-green-600/40', iconBg: 'bg-green-100 dark:bg-green-900/50' },
+    blue: { text: 'text-blue-700 dark:text-blue-400', bg: 'bg-blue-500/5 dark:bg-blue-900/30', border: 'border-blue-500/25 dark:border-blue-600/40', iconBg: 'bg-blue-100 dark:bg-blue-900/50' },
+    purple: { text: 'text-purple-700 dark:text-purple-400', bg: 'bg-purple-500/5 dark:bg-purple-900/30', border: 'border-purple-500/25 dark:border-purple-600/40', iconBg: 'bg-purple-100 dark:bg-purple-900/50' },
+    amber: { text: 'text-amber-700 dark:text-amber-500', bg: 'bg-amber-500/5 dark:bg-amber-800/30', border: 'border-amber-500/25 dark:border-amber-600/40', iconBg: 'bg-amber-100 dark:bg-amber-900/50' },
 };
 
-// Animation variants for staggered entries
-const containerVariants = { 
-    hidden: { opacity: 0 }, 
-    visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.1 } } 
-};
-const itemVariants = { 
-    hidden: { opacity: 0, scale: 0.95 }, 
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: [0.25, 1, 0.5, 1] } }
-};
+const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.15 } } };
+const itemVariants = { hidden: { opacity: 0, scale: 0.95, y: 15 }, visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 1, 0.5, 1] } } };
 
 export function SecuritySection() {
+
+    // Helper for scroll or link based on destination
+     const handleLinkClick = (href: string, isInternal: boolean) => (e: React.MouseEvent) => {
+        if (isInternal && href.startsWith('#')) {
+             e.preventDefault();
+             const element = document.getElementById(href.substring(1));
+             if (element) {
+                const headerOffset = 80;
+                const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+                 const offsetPosition = elementPosition - headerOffset;
+                 window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+             }
+         }
+         // Let external Links handle themselves via the <Link> component
+     };
+
+
     return (
         <TooltipProvider>
-            <Section id="security" className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-muted/5 to-background/20 dark:from-background/5 dark:to-background/20">
+             <Section id="security" className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-background/50 to-muted/5 dark:from-background/50 dark:to-background/10">
                 <SectionHeader
-                    title="Fortified Security & Transparent Trust"
-                    description="Security and transparency are paramount. $ROACH is built on verifiable measures designed to protect holders and foster long-term confidence in the ecosystem."
-                    subtitle={<><ShieldCheck className="inline h-4 w-4 mr-1.5" /> Foundation of Trust</>}
-                    alignment="center" className="mb-16"
+                    title="Fortified for Trust: Security & Transparency"
+                    description="Built on verifiable safeguards: Our commitment includes comprehensive audits, locked liquidity, immutable contracts, and transparent team vesting."
+                    subtitle={<><ShieldCheck className="inline h-4 w-4 mr-1.5" /> Verifiable Trust Pillars</>}
+                    alignment="center" className="mb-10"
                 />
-                
-                <motion.div
-                    initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.1 }} viewport={{ once: true }}
-                    className="mb-10 max-w-3xl mx-auto text-center bg-amber-500/10 dark:bg-amber-900/20 border border-amber-500/30 dark:border-amber-600/40 rounded-lg p-4"
-                >
+
+                {/* Pre-Launch Notice */}
+                 <motion.div
+                    initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} viewport={{ once: true }}
+                    className="mb-10 max-w-3xl mx-auto text-center bg-amber-500/10 dark:bg-amber-900/20 border border-amber-500/30 dark:border-amber-600/40 rounded-lg p-4 shadow-sm"
+                 >
                     <p className="text-sm text-amber-700 dark:text-amber-400 flex items-center justify-center gap-2">
                         <AlertTriangle className="h-5 w-5" />
-                        <span>$ROACH is in pre-launch development. Security features shown below will be implemented according to the roadmap schedule.</span>
+                        <span><strong>Pre-Launch Status:</strong> Features below are scheduled for implementation per roadmap. Links become active post-completion.</span>
                     </p>
-                </motion.div>
+                 </motion.div>
 
+                {/* Security Features Grid */}
                 <motion.div
                     variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
                     className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 max-w-5xl mx-auto"
                 >
-                    {securityFeatures.map((feature) => {
+                    {securityFeatures.map((feature, index) => {
                         const colors = colorMap[feature.color as keyof typeof colorMap];
                         const isInternalLink = feature.link === vestingInfoLink;
-                        // Use Link for external, Button for internal scroll
-                        const LinkComponent = isInternalLink ? 'button' : Link;
+                        const isPlaceholderLink = feature.link === '#';
+                        const LinkComponent = !isInternalLink && !isPlaceholderLink ? Link : 'button'; // Determine component type
 
                         return (
-                            <motion.div key={feature.title} variants={itemVariants}>
-                                <Card className={cn(
-                                    "h-full transition-all duration-300 flex flex-col group overflow-hidden",
-                                    "hover:border-primary/30 dark:hover:border-primary/50 dark:bg-card/70 backdrop-blur-sm",
-                                    colors.border,
-                                    feature.pending && "opacity-75 dark:opacity-60" // Dim pending items
-                                )}>
-                                    <CardContent className="flex-grow flex flex-col gap-4">
+                            <motion.div key={feature.title} variants={itemVariants} transition={{ delay: index * 0.05 }}>
+                                 <Card className={cn(
+                                     "h-full transition-all duration-300 flex flex-col group overflow-hidden border dark:bg-card/60 backdrop-blur-sm shadow-sm hover:shadow-md dark:shadow-md dark:shadow-black/10",
+                                     colors.border, "hover:border-primary/40 dark:hover:border-primary/50",
+                                     feature.pending && "opacity-80 dark:opacity-75"
+                                 )}>
+                                     <CardContent className="flex-grow flex flex-col gap-3 p-5"> {/* Standardized Padding */}
                                         {/* Icon & Title Row */}
-                                        <div className="flex items-start gap-4">
-                                            <div className={cn("p-2.5 rounded-lg shrink-0 border", colors.iconBg, colors.border)}>
-                                                <feature.icon className={cn("h-6 w-6", colors.text)} />
+                                         <div className="flex items-start gap-4">
+                                            <div className={cn("p-2 rounded-lg shrink-0 border shadow-inner", colors.iconBg, colors.border)}>
+                                                {feature.pending ? <Construction className={cn("h-6 w-6", colors.text)} /> : <feature.icon className={cn("h-6 w-6", colors.text)} /> }
                                             </div>
                                             <div className="flex-1">
-                                                <CardTitle className="text-lg font-semibold leading-tight">{feature.title}</CardTitle>
-                                                <Badge variant="outline" size="sm" className={cn("mt-1.5 w-fit text-xs font-medium", colors.bg, colors.text, colors.border)}>
-                                                {feature.status}
+                                                 <CardTitle className="text-lg font-semibold leading-tight mb-0.5">{feature.title}</CardTitle>
+                                                <Badge variant="outline" size="sm" className={cn("w-fit text-[10px] font-medium px-2 py-0.5 tracking-wide", colors.bg, colors.text, colors.border)}>
+                                                    {feature.status}
                                                 </Badge>
-                                                {feature.pending && (
-                                                <span className="ml-2 text-[10px] italic text-muted-foreground">(Pre-Launch)</span>
-                                                )}
                                             </div>
-                                        </div>
+                                         </div>
 
-                                        {/* Description */}
-                                        <p className="text-sm text-muted-foreground flex-grow leading-relaxed">{feature.description}</p>
+                                         {/* Description */}
+                                        <p className="text-sm text-muted-foreground flex-grow leading-relaxed text-balance">{feature.description}</p>
 
-                                        {/* Link / Action */}
-                                        <div className="mt-auto pt-3 border-t border-border/20 text-right">
-                                            <LinkComponent
-                                                href={isInternalLink ? undefined : feature.link}
-                                                target={isInternalLink ? '_self' : '_blank'}
-                                                rel={isInternalLink ? undefined : 'noopener noreferrer'}
-                                                title={feature.tooltip}
-                                                // Handle smooth scroll for internal links
-                                                onClick={isInternalLink ? (e: React.MouseEvent) => {
-                                                        e.preventDefault();
-                                                        const element = document.getElementById(feature.link.substring(1));
-                                                        const headerOffset = 80;
-                                                        if (element) {
-                                                            const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-                                                            const offsetPosition = elementPosition - headerOffset;
-                                                            window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-                                                        }
-                                                    } : undefined}
-                                                className={cn(
-                                                    buttonVariants({ variant: "link", size: "sm" }),
-                                                    "h-auto p-0 text-sm font-medium group/link",
-                                                    colors.text
-                                                )}
-                                            >
-                                                {feature.linkText}
-                                                {!isInternalLink && <ExternalLink className="h-3.5 w-3.5 ml-1 opacity-70 group-hover/link:opacity-100 transition-opacity" />}
-                                            </LinkComponent>
-                                        </div>
-                                    </CardContent>
-                                </Card>
+                                         {/* Link / Action Area */}
+                                        <div className="mt-auto pt-3 border-t border-border/15 text-right">
+                                            <Tooltip delayDuration={150}>
+                                                <TooltipTrigger asChild>
+                                                      {/* Dynamically render Link or button */}
+                                                       {/* @ts-ignore Issues with polymorphic components or dynamic tag names, using ignore for pragmatic solution here */}
+                                                       <LinkComponent
+                                                           href={!isInternalLink && !isPlaceholderLink ? feature.link : undefined}
+                                                           target={!isInternalLink && !isPlaceholderLink ? '_blank' : undefined}
+                                                           rel={!isInternalLink && !isPlaceholderLink ? 'noopener noreferrer' : undefined}
+                                                           onClick={handleLinkClick(feature.link, isInternalLink)}
+                                                           disabled={isPlaceholderLink} // Disable button if link is placeholder
+                                                           className={cn(
+                                                                buttonVariants({ variant: "link", size: "sm" }),
+                                                                "h-auto p-0 text-sm font-medium group/link disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed",
+                                                                isPlaceholderLink ? "text-muted-foreground/60" : colors.text // Dim disabled link
+                                                           )}
+                                                           title={isPlaceholderLink ? "Link available post-completion" : feature.tooltip}
+                                                        >
+                                                             {feature.linkText}
+                                                             {!isInternalLink && !isPlaceholderLink && <ExternalLink className="h-3.5 w-3.5 ml-1 opacity-70 group-hover/link:opacity-100 transition-opacity" />}
+                                                       </LinkComponent>
+                                                </TooltipTrigger>
+                                                {!isPlaceholderLink && (
+                                                    <TooltipContent side="top" align="end"><p className="text-xs">{feature.tooltip}</p></TooltipContent>
+                                                 )}
+                                             </Tooltip>
+                                         </div>
+                                     </CardContent>
+                                 </Card>
                             </motion.div>
                         );
                     })}
                 </motion.div>
 
+                 {/* Composite Visual Placeholder */}
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.3 }} viewport={{ once: true }}
+                     initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, delay: 0.2 }} viewport={{ once: true, amount: 0.2 }}
+                     className="mt-16 max-w-3xl mx-auto p-4 rounded-lg border border-dashed border-primary/30 bg-gradient-to-br from-primary/5 via-transparent to-primary/5 dark:from-primary/10 dark:via-background/10 dark:to-primary/10 aspect-[16/4] flex items-center justify-center shadow-inner overflow-hidden"
+                 >
+                     <p className="text-xs text-muted-foreground/70 italic text-center">
+                        AI Prompt: Create a layered shield graphic metaphor. Layers representing Audit, Locked LP, Immutability, Vesting. Style: Clean tech schematic, subtle animation showing layers assembling. Use primary/accent colors.
+                        <span className="block mt-1 text-[9px] tracking-wider font-medium uppercase text-muted-foreground/50">
+                           Research: Visual Metaphor Effectiveness, Progressive Disclosure in UI
+                        </span>
+                     </p>
+                     {/* Decorative elements */}
+                     <ShieldCheck className="absolute -bottom-4 -left-4 h-16 w-16 text-primary opacity-[0.04] transform -rotate-12" />
+                     <Lock className="absolute -top-3 -right-3 h-12 w-12 text-blue-500 opacity-[0.04] transform rotate-15" />
+                 </motion.div>
+
+                 <motion.div
+                     initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.3 }} viewport={{ once: true }}
                     className="mt-12 text-center"
                 >
-                    <p className="text-muted-foreground text-base max-w-xl mx-auto leading-relaxed">
-                        We champion transparency. Verify these security cornerstones independently using the provided links.
-                    </p>
-                </motion.div>
-
-                {/* Composite Visual */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.2 }} viewport={{ once: true, amount: 0.2 }}
-                    className="mt-12 max-w-2xl mx-auto p-4 rounded-lg border border-dashed border-primary/30 bg-gradient-to-br from-green-500/5 via-blue-500/5 to-purple-500/5 dark:from-green-900/10 dark:via-blue-900/10 dark:to-purple-900/10 aspect-[16/5] flex items-center justify-center shadow-inner"
-                >
-                    <p className="text-xs text-muted-foreground/70 italic text-center">
-                        AI Prompt: Illustrate the layers of $ROACH security architecture - show locked liquidity, vested team tokens, and contract audit as security pillars forming a shield around the token.
-                        <span className="block mt-1 text-[10px] tracking-wider font-medium uppercase text-muted-foreground/50">
-                            Research: Cialdini's Principles - Authority, Social Proof, Commitment
-                        </span>
-                    </p>
+                     <p className="text-muted-foreground text-sm sm:text-base max-w-xl mx-auto leading-relaxed text-balance">
+                        Transparency is key. We encourage verifying these safeguards independently via the provided links as they become active.
+                     </p>
                 </motion.div>
             </Section>
         </TooltipProvider>
     );
 }
-
-export default SecuritySection;
+// --- END OF FILE components/sections/06_SecuritySection.tsx ---
