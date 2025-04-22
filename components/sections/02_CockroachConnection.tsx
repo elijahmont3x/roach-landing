@@ -56,18 +56,20 @@ const itemVariants = { hidden: { opacity: 0, y: 25, scale: 0.95 }, visible: { op
 
 function CharacteristicCard({ 
   title, 
-  description, 
+  cockroachFact, // Changed prop name from 'description'
+  tokenLinkText, // Added new prop for hover content
   icon: Icon, 
   index, 
   isRightColumn,
-  colors  // Add colors prop
+  colors
 }: { 
   title: string; 
-  description: string; 
+  cockroachFact: string; // Changed type
+  tokenLinkText: string; // New prop type
   icon: React.ElementType; 
   index: number;
   isRightColumn: boolean;
-  colors: { text: string; bg: string; border: string; iconBg: string; hoverBorder: string };  // Define type for colors prop
+  colors: { text: string; bg: string; border: string; iconBg: string; hoverBorder: string };
 }) {
   return (
     <HoverCard openDelay={150} closeDelay={100}>
@@ -75,11 +77,11 @@ function CharacteristicCard({
             {/* Use consistent Card application */}
             <Card className={cn(
                 "h-full flex flex-col group cursor-help overflow-hidden shadow-sm dark:shadow-md dark:shadow-black/10",
-                "border transition-colors duration-300 dark:bg-card/50 backdrop-blur-sm", // Added backdrop
+                "border transition-colors duration-300 dark:bg-card/50 backdrop-blur-sm pb-3", // Added backdrop
                 colors.border,
                 colors.hoverBorder
             )}>
-                <CardContent className="flex-grow flex flex-col gap-3  px-4 md:px-5"> {/* Adjusted padding */}
+                <CardContent className="flex-grow flex flex-col gap-3 px-4 md:px-5"> {/* Adjusted padding */}
                     {/* Top part: Icon and Title */}
                     <div className="flex items-start gap-3">
                          <div className={cn("p-2 rounded-lg shrink-0 border", colors.iconBg, colors.border)}>
@@ -87,19 +89,19 @@ function CharacteristicCard({
                          </div>
                         <CardTitle className={cn("text-base sm:text-lg font-semibold leading-snug", colors.text, "transition-colors duration-200 group-hover:", colors.text.replace('-600','-700').replace('-400','-500'))}>{title}</CardTitle>
                     </div>
-                    {/* Middle part: Fact */}
-                    <p className="text-sm text-muted-foreground flex-grow leading-relaxed my-1 text-balance">{description}</p>
+                    {/* Middle part: Cockroach Fact (now showing cockroachFact instead of description) */}
+                    <p className="text-sm text-muted-foreground flex-grow leading-relaxed my-1 text-balance">{cockroachFact}</p>
                     {/* Footer part: Link Hint */}
                     <div className={cn(
                         "mt-auto pt-2 border-t border-border/20 text-xs text-muted-foreground flex items-center justify-end gap-1",
                     )}>
-                        <Info className="h-3.5 w-3.5" />
+                        Hover to see $ROACH Parallel <Info className="h-3.5 w-3.5" />
                     </div>
                 </CardContent>
             </Card>
         </HoverCardTrigger>
-        {/* Hover Card Content (Pop-up) */}
-        <HoverCardContent side={isRightColumn ? "right" : "left"} align={isRightColumn ? "center" : "center"} className={cn(
+        {/* Hover Card Content (Pop-up) - Now displays tokenLinkText */}
+        <HoverCardContent side={isRightColumn ? "right" : "left"} align="center" className={cn(
             "w-72 max-w-[calc(100vw-2rem)] shadow-xl border rounded-lg p-4 backdrop-blur-lg", // Enhanced pop-up style
             colors.border, colors.bg.replace('/5','/10').replace('/15','/25') // Slightly stronger bg on hover
         )}>
@@ -108,7 +110,7 @@ function CharacteristicCard({
                     <Link2 className="h-4 w-4 opacity-80" /> $ROACH Parallel:
                 </h4>
                 <p className="text-xs font-medium text-foreground/90 mb-1">{title}</p>
-                <p className="text-xs text-muted-foreground leading-relaxed">{description}</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">{tokenLinkText}</p>
             </div>
         </HoverCardContent>
     </HoverCard>
@@ -132,13 +134,13 @@ export function CockroachConnection() {
                 title="Nature's Masterpiece: The Antifragile Blueprint"
                 description="More than a mascot, the cockroach's unparalleled survival engineering informs $ROACH's core mechanics. Discover the bio-inspired connection."
                 subtitle={<><Dna className="inline h-4 w-4 mr-1.5" /> Bio-Inspired Tokenomics</>}
-                align="left"
+                align="inherit"
             />
 
             {/* Intro Row with Framer Motion */}
             <motion.div
                 variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
-                className="grid grid-cols-1 lg:grid-cols-2 items-center w-fill max-w-6xl mx-auto -my-25" // Increased gap and bottom margin
+                className="grid grid-cols-1 lg:grid-cols-2 items-center w-fill max-w-6xl mx-auto -my-24 -mt-48" // Increased gap and bottom margin
             >
                 <motion.div variants={itemVariants} className="flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1">
                     <h3 className="text-2xl lg:text-3xl font-bold mb-4 text-foreground">
@@ -182,11 +184,12 @@ export function CockroachConnection() {
                         <motion.div key={trait.title} variants={itemVariants} transition={{ delay: index * 0.05 }}>
                             <CharacteristicCard 
                                 title={trait.title} 
-                                description={trait.tokenLinkText} 
+                                cockroachFact={trait.cockroachFact} // Use cockroachFact here
+                                tokenLinkText={trait.tokenLinkText} // Pass tokenLinkText as a separate prop
                                 icon={trait.icon} 
                                 index={index}
                                 isRightColumn={isRightColumn}
-                                colors={colors} // Pass colors prop here
+                                colors={colors}
                             />
                         </motion.div>
                     );

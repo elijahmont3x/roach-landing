@@ -79,17 +79,17 @@ export function TheAntifragileEdge() {
       patternBackground="/patterns/subtle-dots.svg" // Example pattern
       gradientOpacity={0.15}
       patternOpacity={0.015}
-      align="left"
+      align="center"
       useSuspense
     >
       <SectionHeader
-          title="Not Just Resilient — Antifragile"
+          title="Beyond Resilience: The Antifragile Edge"
           description="Standard assets crumble (Fragile) or merely endure (Resilient) market shocks. $ROACH is architected differently—it's designed to harness volatility and grow stronger."
         subtitle={<><Sparkles className="inline h-4 w-4 mr-1.5" /> Core Concept: Antifragility</>}
         align="inherit"
       />
 
-      <motion.div {...cardMotionProps} className="w-full max-w-6xl mx-auto">
+      <motion.div {...cardMotionProps} className="w-full max-w-5xl mx-auto">
         <Card paddingless className="overflow-hidden border border-border/15 shadow-lg shadow-primary/5">
             <Tabs defaultValue="antifragile" className="w-full">
                 <TabsList variant="segmented" className="grid-cols-3 bg-muted/40 dark:bg-background/40">

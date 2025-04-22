@@ -4,8 +4,28 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
-import React, { Suspense } from "react"; // Import Suspense
-import { LoadingSpinner } from "@/components/internal/spinner"; // Import LoadingSpinner
+import React, { Suspense, createContext, useContext } from "react"; // Added createContext and useContext
+import { LoadingSpinner } from "@/components/internal/spinner";
+
+// Define alignment types for better type safety
+type Alignment = 'left' | 'center' | 'right';
+
+// Create a context for alignment information
+interface SectionContextType {
+  align: Alignment;
+}
+
+const SectionContext = createContext<SectionContextType | undefined>(undefined);
+
+// Custom hook to access section context
+function useSectionContext() {
+  const context = useContext(SectionContext);
+  if (context === undefined) {
+    // Default to 'center' if used outside a Section
+    return { align: 'center' as Alignment };
+  }
+  return context;
+}
 
 interface SectionProps extends React.HTMLAttributes<HTMLElement> {
     id?: string;
@@ -13,16 +33,12 @@ interface SectionProps extends React.HTMLAttributes<HTMLElement> {
     containerClassName?: string;
     children: React.ReactNode;
     disableDefaultHeight?: boolean;
-    // New props for background effects
     gradientBackground?: boolean;
-    patternBackground?: string; // Path to pattern SVG
-    gradientOpacity?: number; // 0 to 1
-    patternOpacity?: number; // 0 to 1
-    // New prop for suspense handling
+    patternBackground?: string;
+    gradientOpacity?: number;
+    patternOpacity?: number;
     useSuspense?: boolean;
-    // Renamed from alignment to align
-    align?: 'left' | 'center' | 'right';
-    // New prop to make gradient full-width
+    align?: Alignment;
     fullWidthGradient?: boolean;
 }
 
@@ -30,14 +46,11 @@ interface SectionHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
     title: React.ReactNode;
     description?: React.ReactNode;
     subtitle?: React.ReactNode;
-    // Also rename here for consistency
-    align?: 'left' | 'center' | 'right' | 'inherit';
+    align?: Alignment | 'inherit';
     className?: string;
     titleClassName?: string;
     descriptionClassName?: string;
-    // New prop for text glow effect
     glowEffect?: 'primary' | 'secondary' | 'none';
-    // Add a new prop for text alignment independent from block alignment
     textAlign?: 'left' | 'center' | 'right' | 'inherit';
 }
 
@@ -47,7 +60,6 @@ interface SectionConnectorProps {
     nextConcept?: React.ReactNode;
     className?: string;
 }
-
 
 export function Section({
     id,
@@ -60,8 +72,8 @@ export function Section({
     gradientOpacity = 0.5,
     patternOpacity = 0.02,
     useSuspense = false,
-    align = 'center', // Renamed from alignment to align
-    fullWidthGradient = false, // New prop
+    align = 'center',
+    fullWidthGradient = false,
     ...props
 }: SectionProps) {
     // Suspense fallback UI
@@ -71,174 +83,128 @@ export function Section({
         </div>
     );
     
-    // Simplify alignment to only handle *horizontal* alignment
+    // Content alignment classes
     const contentAlignClasses = {
-        'left': 'items-start', // Only control horizontal alignment
-        'center': 'items-center', // Only control horizontal alignment
-        'right': 'items-end' // Only control horizontal alignment
+        'left': 'items-start',
+        'center': 'items-center',
+        'right': 'items-end'
     }[align];
     
-    // The container itself is always centered with mx-auto
-    // We'll apply custom width constraints based on the alignment
-    const containerWidthClasses = {
-        'left': 'mr-auto', // Left-aligned content gets right margin auto
-        'center': 'mx-auto', // Centered content gets margin auto on both sides
-        'right': 'ml-auto'   // Right-aligned content gets left margin auto
-    }[align];
+    // Provide section context to all children
+    const sectionContextValue = {
+        align
+    };
     
     return (
-        <section
-            id={id}
-            className={cn(
-                "w-full relative scroll-snap-align-start", 
-                !disableDefaultHeight && "min-h-[100svh] flex flex-col justify-center py-16 md:py-20 lg:py-24",
-                // For sections that should fill the height completely, add h-screen or specific height classes
-                className
-            )}
-            // Properly set data attribute as a prop
-            data-section-align={align}
-            {...props}
-        >
-            {/* Optional Background Effects - Adjusted for full-width capability */}
-            {(gradientBackground || patternBackground) && (
-                <div className={cn(
-                    "absolute -z-10 overflow-hidden pointer-events-none",
-                    fullWidthGradient ? "fixed inset-0" : "inset-0" // Use fixed positioning for full-width
-                )}>
-                    {gradientBackground && (
-                         // Adjusted gradient for subtlety
-                         <div
-                            className="absolute inset-0 bg-gradient-to-br from-background via-primary/5 to-background dark:from-background/10 dark:via-primary/10 dark:to-background/15"
-                            style={{ opacity: Math.max(0, Math.min(1, gradientOpacity)) }} // Ensure opacity is between 0 and 1
-                         />
-                    )}
-                    {patternBackground && (
-                         <div
-                             className="absolute inset-0 bg-repeat bg-center"
-                             style={{
-                                 backgroundImage: `url(${patternBackground})`,
-                                 opacity: Math.max(0, Math.min(1, patternOpacity)),
-                                 maskImage: 'radial-gradient(ellipse at center, black 30%, transparent 80%)' // Optional soft fade
-                             }}
-                         />
-                    )}
-                </div>
-            )}
-            {/* Container is always full width */}
-            <div 
+        <SectionContext.Provider value={sectionContextValue}>
+            <section
+                id={id}
                 className={cn(
-                    "container mx-auto px-4 md:px-6 w-full z-10 flex-grow flex flex-col", // Added flex-grow and flex flex-col
-                    containerClassName
+                    "w-full relative scroll-snap-align-start", 
+                    !disableDefaultHeight && "min-h-[100svh] flex flex-col justify-center py-16 md:py-20 lg:py-24",
+                    className
                 )}
+                {...props}
             >
-                {/* Inner wrapper now has flex-grow to fill available height */}
-                <div className={cn("w-full flex-grow flex flex-col", contentAlignClasses)}>
-                    {useSuspense ? (
-                        <Suspense fallback={suspenseFallback}>
-                            {children}
-                        </Suspense>
-                    ) : (
-                        children  // FIX: Removed the incorrect curly braces around children
+                {/* Background effects */}
+                {(gradientBackground || patternBackground) && (
+                    <div className={cn(
+                        "absolute -z-10 overflow-hidden pointer-events-none",
+                        fullWidthGradient ? "fixed inset-0" : "inset-0"
+                    )}>
+                        {gradientBackground && (
+                            <div
+                                className="absolute inset-0 bg-gradient-to-br from-background via-primary/5 to-background dark:from-background/10 dark:via-primary/10 dark:to-background/15"
+                                style={{ opacity: Math.max(0, Math.min(1, gradientOpacity)) }}
+                            />
+                        )}
+                        {patternBackground && (
+                            <div
+                                className="absolute inset-0 bg-repeat bg-center"
+                                style={{
+                                    backgroundImage: `url(${patternBackground})`,
+                                    opacity: Math.max(0, Math.min(1, patternOpacity)),
+                                    maskImage: 'radial-gradient(ellipse at center, black 30%, transparent 80%)'
+                                }}
+                            />
+                        )}
+                    </div>
+                )}
+                
+                {/* Container */}
+                <div 
+                    className={cn(
+                        "container mx-auto px-4 md:px-6 w-full z-10 flex-grow flex flex-col",
+                        containerClassName
                     )}
+                >
+                    {/* Inner wrapper for content alignment */}
+                    <div className={cn("w-full flex-grow flex flex-col", contentAlignClasses)}>
+                        {useSuspense ? (
+                            <Suspense fallback={suspenseFallback}>
+                                {children}
+                            </Suspense>
+                        ) : (
+                            children
+                        )}
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </SectionContext.Provider>
     );
 }
-
 
 export function SectionHeader({
     title,
     description,
     subtitle,
-    align = 'inherit', // Default is now 'inherit' instead of a specific value
-    textAlign = 'left', 
+    align = 'inherit',
+    textAlign = 'left',
     className,
     titleClassName,
     descriptionClassName,
     glowEffect = 'none',
     ...props
 }: SectionHeaderProps) {
-    // Get reference to the component
-    const headerRef = React.useRef<HTMLDivElement>(null);
+    // Get alignment from section context
+    const { align: sectionAlign } = useSectionContext();
     
-    // State to store inherited alignment from parent section
-    const [inheritedAlign, setInheritedAlign] = React.useState<'left' | 'center' | 'right'>('center');
+    // Determine effective alignment - use section alignment if inherit
+    const effectiveAlign = align === 'inherit' ? sectionAlign : align;
     
-    // Effect to find and read parent section's alignment
-    React.useEffect(() => {
-        // Run this only once after component mounts
-        if (align === 'inherit' && headerRef.current) {
-            try {
-                // Find the closest section element
-                const parentSection = headerRef.current.closest('section');
-                
-                if (parentSection) {
-                    // Log parent section for debugging
-                    console.log("Found parent section:", parentSection);
-                    
-                    // Direct DOM attribute access with fallback
-                    const alignAttr = parentSection.getAttribute('data-section-align');
-                    console.log("Raw alignment attribute:", alignAttr);
-                    
-                    // Set alignment based on the attribute value, with fallback to center
-                    if (alignAttr === 'left' || alignAttr === 'center' || alignAttr === 'right') {
-                        console.log(`Setting alignment to: ${alignAttr}`);
-                        setInheritedAlign(alignAttr as 'left' | 'center' | 'right');
-                    } else {
-                        console.log("No valid alignment found, defaulting to center");
-                        setInheritedAlign('center');
-                    }
-                } else {
-                    console.log("No parent section found");
-                }
-            } catch (error) {
-                console.error("Error finding parent section:", error);
-            }
-        }
-    }, [align]); // Only depend on align prop
-    
-    // Determine effective alignment - use inheritedAlign only when align is 'inherit'
-    const effectiveAlign = align === 'inherit' ? inheritedAlign : align;
-    
-    // For debugging - log the effective alignment being used
-    console.log("Using effectiveAlign:", effectiveAlign);
-
-    const titleGlowClass = {
-        primary: 'text-glow-primary',
-        secondary: 'text-glow-secondary',
-        none: ''
-    }[glowEffect];
-
-    // Use effectiveAlign instead of align for text alignment
+    // Apply text alignment classes
     const effectiveTextAlign = textAlign === 'inherit' ? effectiveAlign : textAlign;
     const textAlignClass = {
         'left': 'text-left',
         'center': 'text-center',
         'right': 'text-right'
     }[effectiveTextAlign];
-
-    // Use effectiveAlign for subtitle alignment
+    
+    // Apply subtitle alignment
     const subtitleAlignClass = {
         'left': 'justify-start',
         'center': 'justify-center',
         'right': 'justify-end'
     }[effectiveAlign];
-
+    
+    // Apply glow effect
+    const titleGlowClass = {
+        primary: 'text-glow-primary',
+        secondary: 'text-glow-secondary',
+        none: ''
+    }[glowEffect];
+    
     return (
         <div
-            ref={headerRef}
             className={cn(
-                "mb-12 md:mb-16 max-w-4xl relative", // Added relative positioning
-                {
-                    'mx-auto': effectiveAlign === 'center',
-                    'ml-auto': effectiveAlign === 'right',
-                    'mr-auto': effectiveAlign === 'left',
-                },
+                "mb-12 md:mb-16 max-w-4xl relative",
+                // Apply position based on effective alignment
+                effectiveAlign === 'center' && "mx-auto",
+                effectiveAlign === 'right' && "ml-auto",
+                effectiveAlign === 'left' && "mr-auto",
                 className
             )}
-            // Add debug attribute to check alignment in DOM
-            data-effective-align={effectiveAlign}
+            data-header-align={effectiveAlign} // For debugging
             {...props}
         >
             {subtitle && (
@@ -256,7 +222,7 @@ export function SectionHeader({
                 className={cn(
                     "text-2xl sm:text-3xl md:text-3xl lg:text-[2.8rem] font-bold tracking-tight !leading-snug mb-3 sm:mb-4 text-balance",
                     "text-foreground dark:text-foreground/95",
-                    textAlignClass, // Apply text alignment
+                    textAlignClass,
                     titleGlowClass,
                     titleClassName
                 )}>
@@ -267,8 +233,8 @@ export function SectionHeader({
                 <p
                     className={cn(
                         "text-base sm:text-lg lg:text-xl text-muted-foreground leading-relaxed sm:leading-relaxed",
-                        textAlignClass, // Apply same text alignment as title
-                        "max-w-full", // Always max width
+                        textAlignClass,
+                        "max-w-full",
                         descriptionClassName
                     )}
                 >

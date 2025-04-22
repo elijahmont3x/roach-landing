@@ -141,7 +141,7 @@ export function HowToBuy() {
                     className="mb-12 text-center max-w-3xl mx-auto"
                 >
                     <Card className="inline-block border-amber-500/50 dark:border-amber-600/60 bg-amber-500/10 dark:bg-amber-900/30 shadow-md">
-                        <CardContent className="p-4 flex items-start sm:items-center gap-3">
+                        <CardContent className="p-4 flex items-start sm:items-center gap-3 py-0">
                             <AlertTriangle className="h-8 w-8 sm:h-6 sm:w-6 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5 sm:mt-0" />
                              <div className="text-left">
                                  <p className="text-sm font-semibold text-amber-700 dark:text-amber-300">Critical Security Reminder:</p>

@@ -418,6 +418,7 @@ export function TokenMechanics() {
                                                                 icon={TrendingUp} 
                                                                 iconColor="text-green-600 dark:text-green-400" 
                                                                 tooltip={`Lower tax encourages buying (${tierData.length-1}, ${tierData.length}).`} 
+                                                                activeTier={activeTier.id}
                                                             />
                                                         </motion.div>
                                                         <motion.div variants={itemVariants}>
@@ -428,6 +429,7 @@ export function TokenMechanics() {
                                                                 icon={TrendingDown} 
                                                                 iconColor="text-red-600 dark:text-red-400" 
                                                                 tooltip="Higher tax deters selling, funds rewards." 
+                                                                activeTier={activeTier.id}
                                                             />
                                                         </motion.div>
                                                         <motion.div variants={itemVariants}>
@@ -438,6 +440,7 @@ export function TokenMechanics() {
                                                                 icon={Users} 
                                                                 iconColor={cn("text-primary", currentTierColors.text, currentTierColors.darkText)} 
                                                                 tooltip="Share of SELL tax automatically redistributed. Max in high pressure." 
+                                                                activeTier={activeTier.id}
                                                             />
                                                         </motion.div>
                                                     </motion.div>
@@ -538,18 +541,33 @@ export function TokenMechanics() {
 
 // --- Sub-Components Refined ---
 
-interface MetricCardProps { label: string; value: string; delta: number; icon: React.ElementType; iconColor: string; tooltip: string; }
-function MetricCard({ label, value, delta, icon: Icon, iconColor, tooltip }: MetricCardProps) {
+interface MetricCardProps { label: string; value: string; delta: number; icon: React.ElementType; iconColor: string; tooltip: string; activeTier: number; }
+function MetricCard({ label, value, delta, icon: Icon, iconColor, tooltip, activeTier }: MetricCardProps) {
     const deltaSign = delta > 0 ? '+' : ''; // delta < 0 is already handled by default negative sign
     const deltaColor = delta > 0 ? 'text-red-600 dark:text-red-400' : delta < 0 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground/70';
     // Refine delta text for clarity, show +/- only if not zero
     const deltaText = delta !== 0 ? `${deltaSign}${delta.toFixed(1)}%` : '±0.0%';
 
+    // Get the color class from the active tier
+    const activeTierColor = tierData.find(t => t.id === activeTier)?.colorClass || 'blue';
+  
+    // Map tier color classes to Tailwind border classes
+    const tierColorMap = {
+        'blue': 'border-blue-400/50 dark:border-blue-500/50',
+        'gray': 'border-gray-400/50 dark:border-gray-500/50',
+        'yellow': 'border-yellow-400/50 dark:border-yellow-500/50',
+        'orange': 'border-orange-400/50 dark:border-orange-500/50',
+        'red': 'border-red-400/50 dark:border-red-500/50',
+    };
 
     return (
         <Tooltip delayDuration={150}>
             <TooltipTrigger asChild>
-                 <Card className="p-0 text-left w-full h-full cursor-help transition-all duration-200 border border-border/15 hover:border-border/30 dark:bg-card/60 hover:shadow-sm dark:hover:shadow-md dark:shadow-black/10">
+                 <Card className={cn(
+                    "p-0 text-left w-full h-full cursor-help transition-all duration-200 border border-border/15 hover:border-border/30 dark:bg-card/60 hover:shadow-sm dark:hover:shadow-md dark:shadow-black/10",
+                    // Apply the active tier's color to the border
+                    `${tierColorMap[activeTierColor]}/50` || 'border-primary/50',
+                 )}>
                     <CardContent className="pt-3 pb-3 px-3"> {/* Reduced padding */}
                         <div className="flex items-center justify-between mb-1">
                             <span className="text-[11px] font-medium text-muted-foreground flex items-center gap-1.5">

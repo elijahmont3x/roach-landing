@@ -168,22 +168,6 @@ export function SecuritySection() {
                     })}
                 </motion.div>
 
-                 {/* Composite Visual Placeholder */}
-                <motion.div
-                     initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, delay: 0.2 }} viewport={{ once: true, amount: 0.2 }}
-                     className="mt-16 max-w-3xl mx-auto p-4 rounded-lg border border-dashed border-primary/30 bg-gradient-to-br from-primary/5 via-transparent to-primary/5 dark:from-primary/10 dark:via-background/10 dark:to-primary/10 aspect-[16/4] flex items-center justify-center shadow-inner overflow-hidden"
-                 >
-                     <p className="text-xs text-muted-foreground/70 italic text-center">
-                        AI Prompt: Create a layered shield graphic metaphor. Layers representing Audit, Locked LP, Immutability, Vesting. Style: Clean tech schematic, subtle animation showing layers assembling. Use primary/accent colors.
-                        <span className="block mt-1 text-[9px] tracking-wider font-medium uppercase text-muted-foreground/50">
-                           Research: Visual Metaphor Effectiveness, Progressive Disclosure in UI
-                        </span>
-                     </p>
-                     {/* Decorative elements */}
-                     <ShieldCheck className="absolute -bottom-4 -left-4 h-16 w-16 text-primary opacity-[0.04] transform -rotate-12" />
-                     <Lock className="absolute -top-3 -right-3 h-12 w-12 text-blue-500 opacity-[0.04] transform rotate-15" />
-                 </motion.div>
-
                  <motion.div
                      initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.3 }} viewport={{ once: true }}
                     className="mt-12 text-center"

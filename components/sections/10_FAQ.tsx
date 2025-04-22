@@ -123,7 +123,7 @@ export function FAQ() {
                                          )}
                                          aria-pressed={activeCategory === cat.value}
                                      >
-                                         <cat.icon className="h-3.5 w-3.5 mr-1.5 shrink-0" />
+                                         <cat.icon className="h-3.5 w-3.5 mr-0 shrink-0" />
                                          {cat.label}
                                      </Button>
                                  ))}
@@ -133,31 +133,37 @@ export function FAQ() {
 
                     <CardContent className="p-4 md:p-6 overflow-y-auto scrollbar-thin scrollbar-thumb-border dark:scrollbar-thumb-muted/50 scrollbar-track-transparent">
                          {filteredFaqs.length > 0 ? (
-                             <Accordion type="single" collapsible className="w-full space-y-3">
+                             <Accordion type="single" collapsible className="w-full">
                                  <AnimatePresence initial={false}>
-                                    {filteredFaqs.map((item) => (
-                                         <motion.div key={item.id} {...accordionMotionProps}>
+                                    {filteredFaqs.map((item, index) => (
+                                         <motion.div key={item.id} {...accordionMotionProps} 
+                                            className={cn(
+                                                "border-b border-border/30 dark:border-border/15",
+                                                index === filteredFaqs.length - 1 ? "border-b-0" : ""
+                                            )}
+                                         >
                                             <AccordionItem
-                                                 value={`item-${item.id}`}
+                                                value={`item-${item.id}`}
+                                                className="border-none py-1"
                                             >
-                                                 <AccordionTrigger className="text-left text-sm sm:text-base font-medium hover:no-underline px-4 py-3 text-foreground/90 data-[state=open]:text-primary data-[state=open]:font-semibold group">
-                                                     <span className="flex items-center gap-2 text-balance">
-                                                         <HelpCircle className="h-4 w-4 text-muted-foreground group-data-[state=open]:text-primary transition-colors shrink-0 mt-0.5" />
-                                                         {item.q}
+                                                <AccordionTrigger className="text-left text-sm sm:text-base font-medium hover:no-underline px-4 py-3 text-foreground/90 data-[state=open]:text-primary data-[state=open]:font-semibold group">
+                                                    <span className="flex items-center gap-2 text-balance">
+                                                        <HelpCircle className="h-4 w-4 text-muted-foreground group-data-[state=open]:text-primary transition-colors shrink-0 mt-0.5" />
+                                                        {item.q}
                                                     </span>
-                                                 </AccordionTrigger>
-                                                <AccordionContent className="text-muted-foreground text-sm px-4 pb-4 pt-0 space-y-3">
-                                                     <div className="border-l-2 border-border/30 pl-3"
-                                                          dangerouslySetInnerHTML={renderAnswer(item.a)} />
-                                                     <div className="flex flex-wrap gap-1 pt-1">
+                                                </AccordionTrigger>
+                                                <AccordionContent className="text-muted-foreground text-sm px-4 pt-0 space-y-3">
+                                                    <div className="border-l-2 border-border/30 pl-3"
+                                                         dangerouslySetInnerHTML={renderAnswer(item.a)} />
+                                                    <div className="flex flex-wrap gap-1 pt-1">
                                                         {item.tags.slice(0, 5).map(tag => (
-                                                             <Badge key={tag} variant="secondary" className="text-[9px] px-1.5 py-0.5 cursor-pointer hover:bg-accent/80 hover:text-accent-foreground border border-transparent hover:border-border/50 transition-all duration-150" onClick={() => setSearchTerm(tag)}>
-                                                                 #{tag}
-                                                             </Badge>
+                                                            <Badge key={tag} variant="secondary" className="text-[9px] px-1.5 py-0.5 cursor-pointer hover:bg-accent/80 hover:text-accent-foreground border border-transparent hover:border-border/50 transition-all duration-150" onClick={() => setSearchTerm(tag)}>
+                                                                #{tag}
+                                                            </Badge>
                                                         ))}
-                                                     </div>
+                                                    </div>
                                                 </AccordionContent>
-                                             </AccordionItem>
+                                            </AccordionItem>
                                         </motion.div>
                                     ))}
                                  </AnimatePresence>
@@ -178,9 +184,9 @@ export function FAQ() {
 
              <motion.p
                 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2, duration: 0.5 }}
-                className="mt-12 text-center text-sm text-muted-foreground max-w-xl mx-auto text-balance"
+                className="mt-12 text-center text-sm text-muted-foreground max-w-3xl mx-auto text-balance"
             >
-                 Can't find your answer? Dive into our community channels linked in the footer for direct support and discussions.
+                 Can't find your answer? Dive into our community channels for direct support and discussions.
              </motion.p>
          </Section>
      );

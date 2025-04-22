@@ -1,62 +1,62 @@
 // --- START OF FILE components/sections/00_Hero.tsx ---
 "use client";
 
-import { CockroachMascot } from "@/components/internal/cockroach-mascot";
 import { Section } from "@/components/layout/section";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
-import { ArrowDown, BarChartHorizontalIcon, BookOpen, FileText, ShieldCheck, Sparkles, TrendingUp, Zap } from "lucide-react"; // Added Sparkles
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowDown, BookOpen, FileText, ShieldCheck, Sparkles, TrendingUp, Zap } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useRef } from "react";
 import Image from 'next/image';
+
+// Constants and interfaces remain the same
+const SWAP_LINK = "https://jup.ag/swap/SOL-ROACHaBXfk3N57vr1gDmQCkSp22d9Xv4V1f";
+const EXPLORER_LINK = `https://solscan.io/token/ROACHaBXfk3N57vr1gDmQCkSp22d9Xv4V1f`;
+const DOCS_LINK = "/ROACH_Whitepaper_v2.txt";
 
 interface HeroProps {
   onScrollDown?: () => void;
-  align?: 'left' | 'center' | 'right'; // Renamed from alignment to align
+  align?: 'left' | 'center' | 'right';
 }
 
-const SWAP_LINK = "https://jup.ag/swap/SOL-ROACHaBXfk3N57vr1gDmQCkSp22d9Xv4V1f";
-const EXPLORER_LINK = `https://solscan.io/token/ROACHaBXfk3N57vr1gDmQCkSp22d9Xv4V1f`;
-const DOCS_LINK = "/ROACH_Whitepaper_v2.txt"; // Use whitepaper filename
-
 export function Hero({ onScrollDown, align = 'left' }: HeroProps) {
-    const targetRef = React.useRef<HTMLDivElement>(null);
+    const sectionRef = useRef<HTMLDivElement>(null);
+    
+    // Get scroll progress for this section
     const { scrollYProgress } = useScroll({
-        target: targetRef,
-        offset: ["start start", "end start"], // Track scroll relative to this section
+      target: sectionRef,
+      offset: ["start start", "end start"]
     });
-    const shouldReduceMotion = useReducedMotion();
-
-    // Apply subtle parallax, considering reduced motion preference
-    const mascotY = useTransform(scrollYProgress, [0, 0.5], ["0%", shouldReduceMotion ? "5%" : "30%"]);
-    const backgroundOpacity = useTransform(scrollYProgress, [0, 0.4], [0.5, 0.1]); // Fade background pattern
-
+    
+    // Simple parallax effect - image moves slower than scroll
+    const parallaxY = useTransform(scrollYProgress, [0, 1], ["-15%", "30%"]);
+    
     return (
       <Section
         id="hero"
-        ref={targetRef}
+        ref={sectionRef}
         disableDefaultHeight
-        className="h-screen flex flex-col justify-center relative overflow-hidden !pt-28 !pb-20 md:!pt-32 md:!pb-24 lg:!pt-36 lg:!pb-28 snap-start" // Changed min-h-screen to h-screen
-        containerClassName="flex flex-col flex-grow" // Added flex-grow to container
+        className="h-screen flex flex-col justify-center relative overflow-hidden !pt-28 !pb-20 md:!pt-32 md:!pb-24 lg:!pt-36 lg:!pb-28 snap-start"
+        containerClassName="flex flex-col flex-grow"
         gradientBackground
         fullWidthGradient={true}
         patternBackground="/patterns/circuit-board.svg"
         patternOpacity={0.03}
         gradientOpacity={0.4}
-        align={align} // This should now properly apply alignment
+        align={align}
         useSuspense
       >
         {/* Main content wrapper with flex-col and justify-between */}
-        <div className="z-10 w-full flex flex-col justify-around flex-grow gap-20"> {/* Added flex-grow */}
+        <div className="z-10 w-full flex flex-col justify-around flex-grow gap-20">
           {/* Top section with grid layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
             {/* Left column with text content */}
             <motion.div
-              className="flex flex-col max-w-5xl"
+              className="flex flex-col min-w-5xl"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
@@ -70,7 +70,7 @@ export function Hero({ onScrollDown, align = 'left' }: HeroProps) {
 
               {/* Main Headline */}
               <motion.h1
-                className="text-4xl font-extrabold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl !leading-[1.15] mb-5 max-w-4xl text-balance text-foreground dark:text-foreground/95"
+                className="text-5xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter !leading-[1.15] mb-5 text-balance text-foreground dark:text-foreground/95"
                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
               >
                 Don't Just Survive Market Chaos. <br className="hidden md:block" /> <span className="text-primary text-glow-primary">Capitalize On It.</span>
@@ -79,7 +79,7 @@ export function Hero({ onScrollDown, align = 'left' }: HeroProps) {
               {/* Sub-headline */}
               <motion.p
                 className={cn(
-                  "max-w-xl md:max-w-2xl lg:max-w-3xl text-base md:text-lg lg:text-xl text-muted-foreground mb-10 leading-relaxed text-balance",
+                  "text-base md:text-lg lg:text-xl text-muted-foreground mb-10 leading-relaxed text-balance",
                   align === 'center' ? 'mx-auto' : ''
                 )}
                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
@@ -131,25 +131,26 @@ export function Hero({ onScrollDown, align = 'left' }: HeroProps) {
               </motion.div>
             </motion.div>
 
-            {/* Right column with larger image */}
+            {/* Right column with simple parallax image */}
             <motion.div 
               className="hidden lg:flex justify-end items-center"
-              initial={{ opacity: 0, x: 64 }}
-              animate={{ opacity: 1, x: 16 }}
-              transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+              style={{ y: parallaxY }} // Apply parallax effect directly
             >
               <Image 
                 src="/hero-roach.png"
                 alt="Roach Hero Image"
                 height={380}
                 width={380}
-                className="object-contain drop-shadow-2xl"
+                className="object-contain drop-shadow-xl transition-all duration-200 ease-in-out scale-90 hover:scale-100 hover:drop-shadow-2xl"
                 priority
               />
             </motion.div>
           </div>
 
-          {/* Benefits Cards - now using relative positioning with margin-top auto */}
+          {/* Benefits Cards */}
           <motion.div
             className={cn(
               "w-full grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5",
@@ -166,7 +167,7 @@ export function Hero({ onScrollDown, align = 'left' }: HeroProps) {
           </motion.div>
         </div>
 
-        {/* Scroll Down Indicator - still absolute but just for positioning */}
+        {/* Scroll Down Indicator */}
         {onScrollDown && (
           <div className="absolute bottom-8 left-0 right-0 flex justify-center">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: 0.5 }}>
@@ -186,7 +187,7 @@ export function Hero({ onScrollDown, align = 'left' }: HeroProps) {
     );
 }
 
-// BenefitCard Component with enhanced hover effect
+// BenefitCard Component (unchanged)
 function BenefitCard({ icon: Icon, title, description, tooltip }: { icon: React.ElementType, title: string, description: string, tooltip?: string }) {
     const cardContent = (
         <Card className="h-full text-center transition-all duration-300 group border border-border/20 dark:border-border/25 hover:border-primary/40 dark:hover:border-primary/50 bg-card/60 dark:bg-card/40 hover:bg-card/80 backdrop-blur-sm shadow-sm hover:shadow-md">

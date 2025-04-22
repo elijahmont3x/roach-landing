@@ -282,9 +282,9 @@ export function Roadmap() {
 
                 <motion.div
                     initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.3 }} viewport={{ once: true }}
-                    className="mt-12 text-center text-xs text-muted-foreground max-w-2xl mx-auto italic px-4 text-balance"
+                    className="mt-12 text-center text-xs text-muted-foreground max-w-5xl mx-auto italic px-4 text-balance"
                 >
-                    <strong>Disclaimer:</strong> Roadmap provides strategic direction. Specific timelines and feature implementation are subject to change based on development progress, market dynamics, and community input. Items marked (Tentative) require further research or validation.
+                    Roadmap provides strategic direction. Specific timelines and feature implementation are subject to change based on development progress, market dynamics, and community input. Items marked (Tentative) require further research or validation.
                 </motion.div>
             </Section>
         </TooltipProvider>
