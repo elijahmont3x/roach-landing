@@ -20,27 +20,42 @@ export function CockroachMascot({ size = 'md', className }: CockroachMascotProps
   };
 
   return (
-    <div className={cn(
-      sizeClasses[size],
-      'relative flex-shrink-0',
-      'shadow-md hover:shadow-lg transition-shadow duration-300',
-      'rounded-full',
-      'border-2 border-solid border-border/70 hover:border-border/100',
-      'bg-background',
-      className
-    )}>
+    <div 
+      className={cn(
+        sizeClasses[size],
+        'relative flex-shrink-0',
+        'shadow-md transition-all duration-300',
+        'rounded-full',
+        'border-2 border-solid border-border/70', // Removed hover:border-border/100
+        'bg-background',
+        'roach-mascot', // Custom class for targeting
+        className
+      )}
+    >
+      {/* Default image - CSS handles visibility */}
       <Image
-      src="/logo.png"
-      alt="Roach Mascot"
-      fill
-      quality={100}
-      unoptimized={true}
-      sizes={`(max-width: 768px) ${parseInt(sizeClasses[size].split('-')[1])}px, ${parseInt(sizeClasses[size].split('-')[1])}px`}
-      className="object-contain scale-116"
-      priority={true}
+        src="/logo.png"
+        alt="Roach Mascot"
+        fill
+        quality={100}
+        unoptimized={true}
+        sizes={`(max-width: 768px) ${parseInt(sizeClasses[size].split('-')[1])}px, ${parseInt(sizeClasses[size].split('-')[1])}px`}
+        className="object-contain !scale-116"
+        priority={true}
+      />
+      
+      {/* Wink image - CSS handles visibility */}
+      <Image
+        src="/logo-wink.png"
+        alt="Roach Mascot Wink"
+        fill
+        quality={100}
+        unoptimized={true}
+        sizes={`(max-width: 768px) ${parseInt(sizeClasses[size].split('-')[1])}px, ${parseInt(sizeClasses[size].split('-')[1])}px`}
+        className="object-contain !scale-116 absolute inset-0 opacity-0"
+        priority={true}
       />
     </div>
   );
 }
-
 // --- END OF FILE components/ui/CockroachMascot.tsx ---

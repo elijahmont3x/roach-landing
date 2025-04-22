@@ -83,16 +83,19 @@ export function MarketScenarios() {
     const cardMotionProps = { whileHover:{ y: -4, scale: 1.015, zIndex: 10 }, transition:{ type: "spring", stiffness: 400, damping: 15 }};
 
     return (
-        <Section id="market-scenarios" className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-background/50 via-muted/5 to-background/80 dark:from-background/80 dark:via-background/10 dark:to-background">
+        <Section id="market-scenarios" align="center" useSuspense className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-background/50 via-muted/5 to-background/80 dark:from-background/80 dark:via-background/10 dark:to-background">
             <SectionHeader
                 title="Performance Under Pressure: $ROACH vs. Static Models"
                 description="Compare simulated responses across market volatility levels. Observe how $ROACH's dynamic system aims to outperform static token models by adapting to stress."
                 subtitle={<><Scale className="inline h-4 w-4 mr-1.5" /> Adaptive Scenario Comparison</>}
-                alignment="center" className="mb-16"
+                align="inherit" 
             />
 
             <Tabs value={activeScenarioId} onValueChange={setActiveScenarioId} className="max-w-6xl mx-auto">
-                <TabsList variant="segmented" className="md:grid-cols-4 mb-10 shadow-inner bg-muted/50 dark:bg-background/40 p-1.5 rounded-xl">
+                <TabsList 
+                    variant="segmented" 
+                    className="grid grid-cols-4 mb-10 shadow-inner bg-muted/50 dark:bg-background/40 p-1.5 rounded-xl overflow-x-auto w-full flex-nowrap whitespace-nowrap"
+                >
                     {marketScenarios.map((scenario) => {
                         const colors = scenarioColorMap[scenario.color as keyof typeof scenarioColorMap];
                         const isActive = scenario.id === activeScenarioId;
@@ -169,7 +172,7 @@ export function MarketScenarios() {
 
             {/* Disclaimer */}
             <div className="mt-12 text-center text-xs text-muted-foreground/80 max-w-3xl mx-auto border-t border-border/20 pt-5">
-                * <strong className="text-foreground/80">Antifragile Potential:</strong> Performance simulations are illustrative conceptual models based on the whitepaper's mechanics and intended behavior. Actual market performance involves numerous unpredictable factors. Always conduct your own thorough research (DYOR) before making any investment decisions.
+                Performance simulations are illustrative conceptual models based on the whitepaper's mechanics and intended behavior. Actual market performance involves numerous unpredictable factors. Always conduct your own thorough research (DYOR) before making any investment decisions.
             </div>
         </Section>
     );
@@ -190,16 +193,17 @@ function ScenarioCard({ tokenName, tokenIcon: TokenIcon, tier, priceData, reward
         <Card className={cn(
             "flex flex-col h-full transition-all duration-300 overflow-hidden border dark:bg-card/60 backdrop-blur-sm shadow-md",
              isRoach && activeTierColors ? activeTierColors.border : "border-border/20 dark:border-border/30", // Dynamic border for Roach
-             isRoach ? "dark:shadow-primary/10" : "dark:shadow-black/20" // Subtle shadow differences
+             isRoach ? "dark:shadow-primary/10" : "dark:shadow-black/20", // Subtle shadow differences
+             "hover-wink py-0 gap-0",
         )}>
             <CardHeader className={cn(
-                "flex-row items-center justify-between gap-2 border-b",
+                "flex-row items-center justify-between border-b",
                 isRoach && activeTierColors ? `${activeTierColors.bg} ${activeTierColors.border.replace('border-','border-b-')}` : "bg-muted/20 dark:bg-muted/10 border-b-border/20",
-                 "transition-colors duration-300 py-3 px-4" // Adjusted padding
+                 "transition-colors duration-300 py-6 px-4 gap-0" // Adjusted padding
             )}>
                 <div className="flex items-center gap-2.5">
-                    {isRoach ? <TokenIcon size="xs" className={cn("shrink-0 w-6 h-6 transition-colors duration-300", activeTierColors?.text, activeTierColors?.darkText)} />
-                             : <TokenIcon className={cn("h-5 w-5 shrink-0 text-muted-foreground/80")} />}
+                    {isRoach ? <TokenIcon size="md" className={cn("shrink-0 transition-colors duration-300", activeTierColors?.text, activeTierColors?.darkText)} />
+                             : <TokenIcon className={cn("h-6 w-6 my-2 shrink-0 text-muted-foreground/80")} />}
                     <CardTitle className={cn(
                         "text-sm sm:text-base font-semibold leading-tight transition-colors duration-300",
                          isRoach && activeTierColors ? cn(activeTierColors.text, activeTierColors.darkText) : 'text-foreground/95'
@@ -217,7 +221,6 @@ function ScenarioCard({ tokenName, tokenIcon: TokenIcon, tier, priceData, reward
                  )}
             </CardHeader>
             <CardContent className="space-y-4 p-4 md:p-5 flex-grow flex flex-col">
-                {clarification && <p className="text-xs italic text-muted-foreground/90 border-l-2 border-border/40 pl-2 py-1 bg-muted/10 rounded-r-sm">{clarification}</p>}
 
                 <div className="grid grid-cols-2 gap-4 text-sm flex-grow min-h-[100px]">
                     <MetricDisplay label="Price Impact" value={priceData.text} icon={priceData.icon} colorClass={priceData.colorClass} />
@@ -232,8 +235,8 @@ function ScenarioCard({ tokenName, tokenIcon: TokenIcon, tier, priceData, reward
                                     sentiment.toLowerCase().includes('anxious') || sentiment.toLowerCase().includes('panic') || sentiment.toLowerCase().includes('distress') ? ShieldAlert : TrendingDown
                                   }
                                   colorClass={isRoach && activeTierColors ? cn(activeTierColors.text, activeTierColors.darkText) : 'text-muted-foreground/80'} />
-                 </div>
-
+                </div>
+                {clarification && <p className="text-xs italic text-muted-foreground/90 border-l-2 border-border/40 pl-2 py-1 bg-muted/10 rounded-r-sm">{clarification}</p>}
                  {/* Enhanced Visual Placeholder */}
                  <div className="relative mt-4 border border-dashed border-border/30 dark:border-border/40 rounded-lg flex items-center justify-center p-3 aspect-[16/6] min-h-[100px] overflow-hidden bg-gradient-to-br from-muted/10 via-transparent to-muted/10 shadow-inner">
                     <p className="text-[10px] leading-snug text-muted-foreground/70 italic text-center px-2 z-10">

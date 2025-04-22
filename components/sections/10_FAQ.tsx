@@ -77,17 +77,17 @@ export function FAQ() {
      };
 
     return (
-         <Section id="faq" className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-background/70 to-muted/5 dark:from-background/70 dark:to-background/10">
+         <Section id="faq" align="left" useSuspense className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-background/70 to-muted/5 dark:from-background/70 dark:to-background/10">
              <SectionHeader
                  title="Frequently Asked Questions"
                  description="Your questions answered. Explore topics on $ROACH's concept, mechanics, technicals, and investment points. Use the filters or search for specific info."
                  subtitle={<><HelpCircle className="inline h-4 w-4 mr-1.5" /> $ROACH Knowledge Base</>}
-                 alignment="center" className="mb-12"
+                 align="inherit"
             />
 
              <motion.div
                 variants={cardVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
-                className="max-w-4xl mx-auto"
+                className="w-full mx-auto"
             >
                  <Card paddingless className="overflow-hidden border border-border/20 dark:border-border/25 shadow-lg shadow-primary/5">
                     <CardHeader className="p-4 md:p-5 border-b border-border/20 dark:border-border/25 bg-muted/30 dark:bg-card/60 backdrop-blur-sm">
@@ -131,7 +131,7 @@ export function FAQ() {
                         </div>
                      </CardHeader>
 
-                    <CardContent className="p-4 md:p-6 max-h-[70vh] lg:max-h-[65vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border dark:scrollbar-thumb-muted/50 scrollbar-track-transparent">
+                    <CardContent className="p-4 md:p-6 overflow-y-auto scrollbar-thin scrollbar-thumb-border dark:scrollbar-thumb-muted/50 scrollbar-track-transparent">
                          {filteredFaqs.length > 0 ? (
                              <Accordion type="single" collapsible className="w-full space-y-3">
                                  <AnimatePresence initial={false}>
@@ -139,7 +139,6 @@ export function FAQ() {
                                          <motion.div key={item.id} {...accordionMotionProps}>
                                             <AccordionItem
                                                  value={`item-${item.id}`}
-                                                className="border border-border/15 dark:border-border/20 rounded-lg shadow-sm bg-background/50 dark:bg-muted/10 transition-colors hover:border-border/30 data-[state=open]:border-primary/30 dark:data-[state=open]:border-primary/40 data-[state=open]:bg-primary/5 dark:data-[state=open]:bg-primary/10"
                                             >
                                                  <AccordionTrigger className="text-left text-sm sm:text-base font-medium hover:no-underline px-4 py-3 text-foreground/90 data-[state=open]:text-primary data-[state=open]:font-semibold group">
                                                      <span className="flex items-center gap-2 text-balance">

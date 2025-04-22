@@ -96,6 +96,35 @@
   --sidebar-accent-foreground: oklch(0.216 0.006 56.043);
   --sidebar-border: oklch(0.923 0.003 48.717);
   --sidebar-ring: oklch(0.709 0.01 56.259);
+  
+  /* Base font size for desktop */
+  font-size: 14px;
+}
+
+/* Scale down for smaller screens */
+@media (max-width: 768px) {
+  :root {
+    font-size: 13px; /* 94% of original size */
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    font-size: 12px; /* 87% of original size */
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    font-size: 11px; /* 81% of original size */
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+  :root {
+    font-size: 10px; /* 75% of original size */
+  }
 }
 
 .dark {
@@ -138,5 +167,64 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* More natural, spring-like wiggle animation */
+  @keyframes wiggle {
+    0% { transform: scale(1.0) rotate(0deg); }
+    20% { transform: scale(1.12) rotate(-10deg); } /* Initial overshoot */
+    35% { transform: scale(1.07) rotate(-3deg); } /* First rebound */
+    50% { transform: scale(1.09) rotate(-9deg); } /* Second peak */
+    65% { transform: scale(1.08) rotate(-6deg); } /* First settling */
+    80% { transform: scale(1.095) rotate(-7.5deg); } /* Small wobble */
+    100% { transform: scale(1.10) rotate(-8deg); } /* Final resting state */
+  }
+  
+  /* More organic exit animation with natural spring physics */
+  @keyframes exit-bounce {
+    0% { transform: scale(1.10) rotate(-8deg); }
+    20% { transform: scale(0.94) rotate(2deg); } /* Initial springback (more dramatic) */
+    40% { transform: scale(1.03) rotate(-1deg); } /* First rebound */
+    60% { transform: scale(0.98) rotate(0.5deg); } /* Second rebound */
+    80% { transform: scale(1.01) rotate(0deg); } /* Final small wobble */
+    100% { transform: scale(1.0) rotate(0deg); } /* Rest position */
+  }
+  
+  /* Image swap behavior */
+  .hover-wink:hover .roach-mascot img:first-child {
+    opacity: 0;
+    z-index: 0;
+  }
+  
+  .hover-wink:hover .roach-mascot img:last-child {
+    opacity: 1;
+    z-index: 10;
+  }
+  
+  /* All hover effects moved to the hover-wink parent class */
+  .hover-wink:hover .roach-mascot {
+    animation: wiggle 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow-lg);
+    transform: scale(1.10) rotate(-8deg);
+    border-color: var(--border); /* Added border color change here instead of inline hover */
+  }
+
+  /* More natural exit animation */
+  .hover-wink:not(:hover) .roach-mascot {
+    animation: exit-bounce 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; /* Adjusted timing function for natural spring */
+  }
+
+  /* Base state */
+  .roach-mascot {
+    transform: scale(1) rotate(0deg);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease; /* Added border-color transition */
+    position: relative;
+  }
+  
+  /* Image transition */
+  .roach-mascot img {
+    transition: opacity 0.3s ease, z-index 0.05s;
   }
 }

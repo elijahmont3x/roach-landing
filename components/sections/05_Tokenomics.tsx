@@ -166,12 +166,12 @@ export function Tokenomics() {
 
     return (
         <TooltipProvider>
-             <Section id="tokenomics" className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-muted/10 via-background to-muted/5 dark:from-background/10 dark:via-background dark:to-background/5">
+             <Section id="tokenomics" align="center" useSuspense className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-muted/10 via-background to-muted/5 dark:from-background/10 dark:via-background dark:to-background/5">
                 <SectionHeader
                     title="Tokenomics: Engineered for Longevity"
                     description="A fixed-supply framework ensures scarcity, while strategic allocation supports initial stability, growth initiatives, and long-term ecosystem health."
                     subtitle={<><PieChartIcon className="inline h-4 w-4 mr-1.5" /> Supply & Allocation Strategy </>}
-                    alignment="center" className="mb-16"
+                    align="inherit"
                 />
 
                  <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 xl:gap-8 max-w-7xl mx-auto items-stretch">

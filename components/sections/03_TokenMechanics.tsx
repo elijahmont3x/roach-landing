@@ -88,13 +88,119 @@ export function TokenMechanics() {
         setCurrentRatio(mapConditionToRatio(tierData[index].condition));
     };
 
-    const displayVariants = {
-        initial: { opacity: 0.7, x: 20, filter: 'blur(3px)' },
-        animate: { opacity: 1, x: 0, filter: 'blur(0px)', transition: { duration: 0.6, ease: [0.25, 1, 0.5, 1] } },
-        exit: { opacity: 0.7, x: -20, filter: 'blur(3px)', transition: { duration: 0.3, ease: 'easeIn' } }
+    // Add the missing cardMotionProps definition
+    const cardMotionProps = { 
+        initial: { opacity: 0, y: 20 }, 
+        whileInView: { opacity: 1, y: 0 }, 
+        viewport: { once: true, amount: 0.1 }, 
+        transition: { duration: 0.5 } 
+    };
+    
+    // Simplified item variants for cleaner transitions
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { 
+            opacity: 1, 
+            y: 0,
+            transition: { 
+                duration: 0.4, 
+                ease: "easeOut"
+            }
+        },
+        exit: { 
+            opacity: 0, 
+            y: -20, 
+            transition: { 
+                duration: 0.3, 
+                ease: "easeIn" 
+            }
+        }
     };
 
-    const cardMotionProps = { initial:{ opacity: 0, y: 20 }, whileInView:{ opacity: 1, y: 0 }, viewport:{ once: true, amount: 0.1 }, transition:{ duration: 0.5 } };
+    // Enhance display variants to be more dramatic
+    const displayVariants = {
+        initial: { opacity: 0, x: 40, filter: 'blur(4px)' },
+        animate: { opacity: 1, x: 0, filter: 'blur(0px)', transition: { duration: 0.7, ease: [0.25, 1, 0.5, 1] } },
+        exit: { opacity: 0, y: 40, filter: 'blur(4px)', transition: { duration: 0.4, ease: 'easeIn' } }
+    };
+
+    // Title badge variants
+    const badgeVariants = {
+        hidden: { opacity: 0, x: 20, scale: 0.9 },
+        visible: { 
+            opacity: 1, 
+            x: 0, 
+            scale: 1, 
+            transition: { 
+                duration: 0.8, 
+                ease: [0.25, 1, 0.5, 1] 
+            } 
+        },
+        exit: { 
+            opacity: 0, 
+            x: -20, 
+            scale: 0.9,
+            transition: { 
+                duration: 0.6, 
+                ease: "easeIn" 
+            }
+        }
+    };
+
+    // Animation variants - add these new variants for the cascading effect
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: { 
+            opacity: 1,
+            transition: { 
+                staggerChildren: 0.15,  // Controls the delay between each child
+                delayChildren: 0.2      // Initial delay before starting animations
+            } 
+        }
+    };
+
+    // Create allocation container variants with slightly slower stagger
+    const allocationContainerVariants = {
+        hidden: { opacity: 0 },
+        visible: { 
+            opacity: 1,
+            transition: { 
+                staggerChildren: 0.2,
+                delayChildren: 0.1
+            } 
+        }
+    };
+
+    // Flowchart element variants
+    const flowchartContainerVariants = {
+        hidden: { opacity: 0 },
+        visible: { 
+            opacity: 1,
+            transition: { 
+                staggerChildren: 0.1,
+                delayChildren: 0.1
+            } 
+        }
+    };
+
+    // Enhanced sequence container with reduced stagger time
+    const sequenceContainerVariants = {
+        hidden: { opacity: 0 },
+        visible: { 
+            opacity: 1,
+            transition: { 
+                staggerChildren: 0.25, // Reduced from 0.4 to 0.25 for faster sequence
+                delayChildren: 0.1     // Reduced from 0.2 to 0.1
+            } 
+        },
+        exit: {
+            opacity: 0,
+            transition: {
+                staggerChildren: 0.1,
+                staggerDirection: -1 // Reverse stagger on exit
+            }
+        }
+    };
 
     // Define the Mermaid flowchart markup based on the active tier
     const mermaidMarkup = useMemo(() => {
@@ -123,17 +229,31 @@ export function TokenMechanics() {
         `;
     }, [activeTier]);
 
+    // Add texture patterns for each tier background with higher fill opacity
+    const tierPatterns = {
+        1: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%231e6db9' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+        2: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%235a5a5a' fill-opacity='0.15'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10zm10 8c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm40 40c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        3: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23eab308' fill-opacity='0.15'%3E%3Cpath d='M0 0l10 10-10 10 10 10-10 10 10 10-10 10h60l-10-10 10-10-10-10 10-10-10-10 10-10H0zm19 17a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm22 26a3 3 0 1 0 0-6 3 3 0 0 0 0 6z'/%3E%3C/g%3E%3C/svg%3E")`,
+        4: `url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f97316' fill-opacity='0.15'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        5: `url("data:image/svg+xml,%3Csvg width='40' height='12' viewBox='0 0 40 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 6.172L6.172 0h5.656L0 11.828V6.172zm40 5.656L28.172 0h5.656L40 6.172v5.656zM6.172 12l12-12h3.656l12 12h-5.656L20 3.828 11.828 12H6.172zm12 0L20 10.172 21.828 12h-3.656z' fill='%23ef4444' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+    };
+
     return (
         <TooltipProvider>
-            <Section id="mechanics" className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-muted/5 via-background to-background/70 dark:from-background/5 dark:via-background dark:to-background/50 overflow-x-clip">
+            <Section
+                id="mechanics"
+                align="left" 
+                className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-muted/5 via-background to-background/70 dark:from-background/5 dark:via-background dark:to-background/50 overflow-x-clip"
+                useSuspense
+            >
                 <SectionHeader
                     title="The $ROACH Engine: Adaptive 5-Tier System"
                     description="Observe how $ROACH dynamically adjusts transaction taxes and rewards based on real-time market pressure (Sell/Buy Volume Ratio). This active adaptation defines its antifragile nature."
                     subtitle={<><Settings2 className="inline h-4 w-4 mr-1.5" /> Adaptive Core Mechanics </>}
-                    alignment="center" className="mb-16"
+                    align="inherit"
                 />
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-8 max-w-7xl mx-auto items-start">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-8 w-full mx-auto items-start">
                     {/* --- Interactive Visualizer Card (Span 7) --- */}
                     <motion.div {...cardMotionProps} className="lg:col-span-7 xl:col-span-8">
                         <Card className={cn(
@@ -191,98 +311,181 @@ export function TokenMechanics() {
                                  </div>
                              </CardHeader>
 
-                            <CardContent className="flex-grow flex flex-col overflow-hidden px-4 md:px-5 py-5">
-                                 <AnimatePresence mode="wait">
-                                     <motion.div
-                                        key={activeTier.id} variants={displayVariants} initial="initial" animate="animate" exit="exit"
-                                         className="flex flex-col flex-grow"
-                                    >
-                                        {/* Tier Info & Mascot */}
-                                        <div className="flex flex-col sm:flex-row items-center gap-4 mb-5 text-center sm:text-left">
-                                             <motion.div
-                                                 key={`mascot-${activeTier.id}`} initial={{ rotate: -5, scale: 0.9 }} animate={{ rotate: 0, scale: 1 }}
-                                                 transition={{ type: 'spring', stiffness: 250, damping: 12, delay: 0.1 }}
+                            <CardContent className="flex-grow flex flex-col overflow-hidden px-4 md:px-5 relative">
+                                {/* Tier-specific texture background with reduced opacity and gradients at both top and bottom */}
+                                <div 
+                                    className="absolute inset-0 pointer-events-none opacity-50 dark:opacity-30 transition-all duration-500"
+                                    style={{ 
+                                        backgroundImage: tierPatterns[activeTier.id],
+                                        backgroundRepeat: 'repeat',
+                                        backgroundSize: '250px auto',
+                                        maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.1) 10%, rgba(0,0,0,0.1) 90%, transparent 100%)',
+                                    }}
+                                />
+                                
+                                {/* Fade gradient overlay with tier color - adjusted to fade at both top and bottom */}
+                                <div 
+                                    className="absolute inset-0 pointer-events-none transition-all duration-500"
+                                    style={{ 
+                                        background: `linear-gradient(to bottom, 
+                                            transparent 0%,
+                                            rgba(var(--${currentTierColors.text.replace('text-', '').split(' ')[0]}-rgb), 0.08) 10%, 
+                                            rgba(var(--${currentTierColors.text.replace('text-', '').split(' ')[0]}-rgb), 0.08) 70%, 
+                                            rgba(var(--card), 0.95) 100%)`,
+                                    }}
+                                />
+
+                                {/* Softer content shadow for better readability */}
+                                <div className="absolute inset-x-0 top-0 h-20 pointer-events-none bg-gradient-to-b from-card/90 to-transparent z-0"></div>
+                                <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-card/95 to-transparent z-0"></div>
+                                
+                                <div className="relative flex flex-col"> {/* Container adapts to content */}
+                                    <AnimatePresence mode="wait">
+                                        <motion.div
+                                            key={activeTier.id}
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                            transition={{ duration: 0.3 }}
+                                        >
+                                            <motion.div
+                                                key={activeTier.id} variants={displayVariants} initial={{ opacity: 0, y: 0 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 0 }}
+                                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                                className="flex flex-col flex-grow"
                                             >
-                                                 <CockroachMascot size="md" className={cn("transition-colors duration-300 flex-shrink-0 w-16 h-16", currentTierColors.text, currentTierColors.darkText)} />
-                                             </motion.div>
-                                            <div className="flex-1">
-                                                 <Badge variant="secondary" className={cn("text-base md:text-lg px-4 py-1 shadow font-semibold transition-colors duration-300 border", currentTierColors.bg, currentTierColors.text, currentTierColors.border, currentTierColors.darkBorder)}>
-                                                     Tier {activeTier.id}: {activeTier.name}
-                                                 </Badge>
-                                                 <p className="text-xs sm:text-sm text-muted-foreground mt-1.5">
-                                                     Condition: Ratio <strong className={cn("transition-colors duration-300", currentTierColors.text, currentTierColors.darkText)}>{activeTier.condition.replace('Sell/Buy Ratio ', '')}</strong>
-                                                 </p>
-                                                 <p className="text-[11px] italic text-muted-foreground/80 mt-0.5">{activeTier.status}</p>
-                                            </div>
-                                         </div>
-
-                                        {/* Key Metrics Grid */}
-                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-5">
-                                             <MetricCard label="Buy Tax" value={`${activeTier.taxes.buy}%`} delta={activeTier.taxes.buy - tierData[1].taxes.buy} icon={TrendingUp} iconColor="text-green-600 dark:text-green-400" tooltip={`Lower tax encourages buying (${tierData.length-1}, ${tierData.length}).`} />
-                                            <MetricCard label="Sell Tax" value={`${activeTier.taxes.sell}%`} delta={activeTier.taxes.sell - tierData[1].taxes.sell} icon={TrendingDown} iconColor="text-red-600 dark:text-red-400" tooltip="Higher tax deters selling, funds rewards." />
-                                            <MetricCard label="Holder Rewards (Sell Reflect)" value={`${activeTier.distribution.sell.reflection}%`} delta={activeTier.distribution.sell.reflection - tierData[1].distribution.sell.reflection} icon={Users} iconColor={cn("text-primary", currentTierColors.text, currentTierColors.darkText)} tooltip="Share of SELL tax automatically redistributed. Max in high pressure." />
-                                        </div>
-
-                                         {/* Tax Allocation Breakdown */}
-                                        <div className={cn("border rounded-lg p-3 text-xs space-y-3 transition-colors duration-300 shadow-sm relative overflow-hidden", currentTierColors.border, currentTierColors.bg, currentTierColors.darkBorder, "dark:shadow-md dark:shadow-black/20")}>
-                                            <div className={cn("absolute inset-0 opacity-[0.03] bg-gradient-to-br", currentTierColors.indicator, 'to-transparent')} /> {/* Subtle BG element */}
-                                             <h4 className="font-semibold text-center text-[11px] uppercase tracking-wider text-foreground/90 mb-2">Tax Allocation: Tier {activeTier.id}</h4>
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 relative z-10">
-                                                {/* Buy Allocation */}
-                                                <div className="space-y-1 pr-2">
-                                                     <p className="font-medium text-green-700 dark:text-green-400 border-b border-green-500/15 pb-1 mb-1.5 text-[11px]">Buy Allocation ({activeTier.taxes.buy}%)</p>
-                                                    <DistributionItem icon={Users} label="Reflections" value={activeTier.distribution.buy.reflection} tooltip="Share of buy tax to holders." color={cn("text-primary", currentTierColors.text, currentTierColors.darkText)} />
-                                                    <DistributionItem icon={Droplets} label="Liquidity Pool" value={activeTier.distribution.buy.liquidity} tooltip="Added to DEX liquidity." color="text-blue-600 dark:text-blue-400" />
-                                                     <DistributionItem icon={Megaphone} label="Ecosystem Fund" value={activeTier.distribution.buy.marketing} tooltip="For marketing & development." color="text-orange-600 dark:text-orange-400" />
-                                                </div>
-                                                 {/* Sell Allocation */}
-                                                 <div className="space-y-1 md:border-l md:border-border/30 md:dark:border-border/20 md:pl-4">
-                                                     <p className="font-medium text-red-700 dark:text-red-400 border-b border-red-500/15 pb-1 mb-1.5 text-[11px]">Sell Allocation ({activeTier.taxes.sell}%)</p>
-                                                    <DistributionItem icon={Users} label="Reflections" value={activeTier.distribution.sell.reflection} tooltip="Share of sell tax to holders (core reward)." color={cn("text-primary", currentTierColors.text, currentTierColors.darkText)} isPrimary={true} />
-                                                     <DistributionItem icon={Droplets} label="Liquidity Pool" value={activeTier.distribution.sell.liquidity} tooltip="Added to DEX liquidity." color="text-blue-600 dark:text-blue-400" />
-                                                     <DistributionItem icon={Megaphone} label="Ecosystem Fund" value={activeTier.distribution.sell.marketing} tooltip="For marketing & development." color="text-orange-600 dark:text-orange-400" />
-                                                </div>
-                                             </div>
-                                         </div>
-
-                                         {/* Placeholder Section */}
-                                        <div className="mt-auto pt-4 border-t border-border/10 dark:border-border/20">
-                                            <div className={cn("relative overflow-hidden bg-white dark:bg-black/20 rounded-lg border", currentTierColors.border)}>
-                                                <div className="p-1">
-                                                    <h4 className="text-xs font-semibold text-center py-1 text-muted-foreground">Tier Adaptation Flow</h4>
-                                                    <div className="overflow-x-auto">
-                                                        <MermaidChart 
-                                                            chart={mermaidMarkup} 
-                                                            config={{
-                                                                theme: 'neutral',
-                                                                flowchart: {
-                                                                    curve: 'basis',
-                                                                    rankSpacing: 50,
-                                                                    nodeSpacing: 40,
-                                                                    padding: 15
-                                                                }
-                                                            }}
-                                                            className="min-w-[500px] py-2"
-                                                        />
+                                                {/* Tier Info & Mascot with staggered animation */}
+                                                <motion.div 
+                                                    className="flex flex-col sm:flex-row items-center gap-4 mb-5 text-center sm:text-left"
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    exit={{ opacity: 0 }}
+                                                    transition={{ duration: 0.3 }}
+                                                >
+                                                    <motion.div
+                                                        key={`mascot-${activeTier.id}`} 
+                                                        initial={{ rotate: -5, scale: 0.9, opacity: 0 }} 
+                                                        animate={{ rotate: 0, scale: 1, opacity: 1 }}
+                                                        exit={{ rotate: 5, scale: 0.9, opacity: 0 }}
+                                                        transition={{ type: 'spring', stiffness: 250, damping: 12, delay: 0.1 }}
+                                                    >
+                                                        <CockroachMascot size="md" className={cn("transition-colors duration-300 flex-shrink-0 w-16 h-16", currentTierColors.text, currentTierColors.darkText)} />
+                                                    </motion.div>
+                                                    
+                                                    <div className="flex-1">
+                                                        {/* Animated badge */}
+                                                        <AnimatePresence mode="wait">
+                                                            <motion.div
+                                                                key={`tier-badge-${activeTier.id}`}
+                                                                variants={badgeVariants}
+                                                                initial="hidden"
+                                                                animate="visible"
+                                                                exit="exit"
+                                                            >
+                                                                <Badge variant="secondary" className={cn("text-base md:text-lg px-4 py-1 shadow font-semibold transition-colors duration-300 border", currentTierColors.bg, currentTierColors.text, currentTierColors.border, currentTierColors.darkBorder)}>
+                                                                    Tier {activeTier.id}: {activeTier.name}
+                                                                </Badge>
+                                                            </motion.div>
+                                                        </AnimatePresence>
+                                                        
+                                                        <p className="text-xs sm:text-sm text-muted-foreground mt-1.5">
+                                                            Condition: Ratio <strong className={cn("transition-colors duration-300", currentTierColors.text, currentTierColors.darkText)}>{activeTier.condition.replace('Sell/Buy Ratio ', '')}</strong>
+                                                        </p>
+                                                        <p className="text-[11px] italic text-muted-foreground/80 mt-0.5">{activeTier.status}</p>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                     </motion.div>
-                                 </AnimatePresence>
+                                                </motion.div>
+
+                                                {/* Main Sequence Container for the entire content flow */}
+                                                <motion.div
+                                                    variants={sequenceContainerVariants}
+                                                    initial="hidden"
+                                                    animate="visible"
+                                                    exit="exit"
+                                                    viewport={{ once: true, amount: 0.1 }}
+                                                    className="flex flex-col flex-grow"
+                                                >
+                                                    {/* Key Metrics Grid - First item in sequence */}
+                                                    <motion.div 
+                                                        className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-5"
+                                                        variants={containerVariants}
+                                                        viewport={{ once: true }}
+                                                    >
+                                                        {/* ...existing metric cards... */}
+                                                        <motion.div variants={itemVariants}>
+                                                            <MetricCard 
+                                                                label="Buy Tax" 
+                                                                value={`${activeTier.taxes.buy}%`} 
+                                                                delta={activeTier.taxes.buy - tierData[1].taxes.buy} 
+                                                                icon={TrendingUp} 
+                                                                iconColor="text-green-600 dark:text-green-400" 
+                                                                tooltip={`Lower tax encourages buying (${tierData.length-1}, ${tierData.length}).`} 
+                                                            />
+                                                        </motion.div>
+                                                        <motion.div variants={itemVariants}>
+                                                            <MetricCard 
+                                                                label="Sell Tax" 
+                                                                value={`${activeTier.taxes.sell}%`} 
+                                                                delta={activeTier.taxes.sell - tierData[1].taxes.sell} 
+                                                                icon={TrendingDown} 
+                                                                iconColor="text-red-600 dark:text-red-400" 
+                                                                tooltip="Higher tax deters selling, funds rewards." 
+                                                            />
+                                                        </motion.div>
+                                                        <motion.div variants={itemVariants}>
+                                                            <MetricCard 
+                                                                label="Holder Rewards (Sell Reflect)" 
+                                                                value={`${activeTier.distribution.sell.reflection}%`} 
+                                                                delta={activeTier.distribution.sell.reflection - tierData[1].distribution.sell.reflection} 
+                                                                icon={Users} 
+                                                                iconColor={cn("text-primary", currentTierColors.text, currentTierColors.darkText)} 
+                                                                tooltip="Share of SELL tax automatically redistributed. Max in high pressure." 
+                                                            />
+                                                        </motion.div>
+                                                    </motion.div>
+
+                                                    {/* Tax Allocation Breakdown - Second item in sequence */}
+                                                    <motion.div 
+                                                        variants={itemVariants}
+                                                        viewport={{ once: true }}
+                                                        className={cn("border rounded-lg p-3 text-xs space-y-3 transition-colors duration-300 shadow-sm relative overflow-hidden", 
+                                                            currentTierColors.border, currentTierColors.bg, currentTierColors.darkBorder, "dark:shadow-md dark:shadow-black/20")}
+                                                    >
+                                                        <div className={cn("absolute inset-0 opacity-[0.03] bg-gradient-to-br", currentTierColors.indicator, 'to-transparent')} /> {/* Subtle BG element */}
+                                                        <h4 className="font-semibold text-center text-[11px] uppercase tracking-wider text-foreground/90 mb-2">Tax Allocation: Tier {activeTier.id}</h4>
+                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 relative z-10">
+                                                            {/* Buy Allocation */}
+                                                            <div className="space-y-1 pr-2">
+                                                                <p className="font-medium text-green-700 dark:text-green-400 border-b border-green-500/15 pb-1 mb-1.5 text-[11px]">Buy Allocation ({activeTier.taxes.buy}%)</p>
+                                                                <DistributionItem icon={Users} label="Reflections" value={activeTier.distribution.buy.reflection} tooltip="Share of buy tax to holders." color={cn("text-primary", currentTierColors.text, currentTierColors.darkText)} />
+                                                                <DistributionItem icon={Droplets} label="Liquidity Pool" value={activeTier.distribution.buy.liquidity} tooltip="Added to DEX liquidity." color="text-blue-600 dark:text-blue-400" />
+                                                                <DistributionItem icon={Megaphone} label="Ecosystem Fund" value={activeTier.distribution.buy.marketing} tooltip="For marketing & development." color="text-orange-600 dark:text-orange-400" />
+                                                            </div>
+                                                            {/* Sell Allocation */}
+                                                            <div className="space-y-1 md:border-l md:border-border/30 md:dark:border-border/20 md:pl-4">
+                                                                <p className="font-medium text-red-700 dark:text-red-400 border-b border-red-500/15 pb-1 mb-1.5 text-[11px]">Sell Allocation ({activeTier.taxes.sell}%)</p>
+                                                                <DistributionItem icon={Users} label="Reflections" value={activeTier.distribution.sell.reflection} tooltip="Share of sell tax to holders (core reward)." color={cn("text-primary", currentTierColors.text, currentTierColors.darkText)} isPrimary={true} />
+                                                                <DistributionItem icon={Droplets} label="Liquidity Pool" value={activeTier.distribution.sell.liquidity} tooltip="Added to DEX liquidity." color="text-blue-600 dark:text-blue-400" />
+                                                                <DistributionItem icon={Megaphone} label="Ecosystem Fund" value={activeTier.distribution.sell.marketing} tooltip="For marketing & development." color="text-orange-600 dark:text-orange-400" />
+                                                            </div>
+                                                        </div>
+                                                    </motion.div>
+                                                </motion.div>
+                                            </motion.div>
+                                        </motion.div>
+                                    </AnimatePresence>
+                                </div>
                             </CardContent>
                          </Card>
                      </motion.div>
 
                     {/* --- Static Tier Reference Table Card (Span 5/4) --- */}
                     <motion.div {...cardMotionProps} transition={{ delay: 0.1 }} className="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-24">
-                        <Card className="max-h-[calc(100vh-8rem)] overflow-hidden flex flex-col border shadow-md shadow-primary/5">
-                            <CardHeader className="flex-shrink-0 border-b pt-4 pb-3 px-4">
+                        <Card className="max-h-[calc(100vh-8rem)] overflow-hidden flex flex-col border shadow-md shadow-primary/5 gap-0">
+                            <CardHeader className="flex-shrink-0 border-b pb-3 px-4">
                                 <CardTitle className="text-lg font-semibold">Tier Reference Guide</CardTitle>
                                 <CardDescription className="text-xs">Tax & reflection levels. Click row to focus visualizer.</CardDescription>
                              </CardHeader>
-                             <CardContent className="px-0 pt-0 pb-1 flex-grow overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
-                                <Table className="min-w-[400px] text-xs">
+                             <CardContent className="px-0 py- flex flex-grow overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+                                <Table className="text-xs">
                                     <TableHeader className="sticky top-0 bg-card z-10 shadow-[0_2px_4px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_4px_rgba(0,0,0,0.2)]">
                                          <TableRow className="text-[10px] uppercase tracking-wider h-9">
                                              <TableHead className="w-[10%] text-center px-1 font-bold sticky left-0 bg-card z-20">Tier</TableHead>
@@ -308,21 +511,21 @@ export function TokenMechanics() {
                                                      )}
                                                     aria-current={isActive ? 'step' : undefined}
                                                 >
-                                                     <TableCell className={cn("font-bold text-center py-1 px-1 sticky left-0 z-20", isActive ? 'bg-primary/5 dark:bg-primary/15' : 'bg-card', colors.text, colors.darkText)}>{tier.id}</TableCell>
+                                                    <TableCell className={cn("font-bold text-center py-1 px-1 sticky left-0 z-20", isActive ? 'bg-primary/5 dark:bg-primary/15' : 'bg-card', colors.text, colors.darkText)}>{tier.id}</TableCell>
                                                     <TableCell className="py-1 px-2 text-left font-mono text-[11px] text-muted-foreground">{tier.condition.replace('Sell/Buy Ratio ', '')}</TableCell>
                                                     <TableCell className="py-1 px-1 text-center text-green-700 dark:text-green-400 font-semibold">{tier.taxes.buy}%</TableCell>
                                                     <TableCell className="py-1 px-1 text-center text-red-700 dark:text-red-400 font-semibold">{tier.taxes.sell}%</TableCell>
-                                                     <TableCell className={cn("py-1 px-1 text-center font-semibold", colors.text, colors.darkText)}>{tier.distribution.sell.reflection}%</TableCell>
+                                                    <TableCell className={cn("py-1 px-1 text-center font-semibold", colors.text, colors.darkText)}>{tier.distribution.sell.reflection}%</TableCell>
                                                  </TableRow>
                                             );
                                         })}
                                      </TableBody>
                                 </Table>
                              </CardContent>
-                             <div className="p-2 border-t text-center flex-shrink-0 bg-muted/20 dark:bg-muted/10">
-                                 <p className="text-[10px] text-muted-foreground/80 italic flex items-center justify-center gap-1">
-                                     <Timer className="h-3 w-3" /> Tier evaluation & adaptation occurs every 4 hours.
-                                 </p>
+                             <div className="pt-4 -mb-2 border-t text-center flex-shrink-0">
+                                <p className="text-[10px] text-muted-foreground/80 italic flex items-center justify-center gap-1">
+                                    <Timer className="h-3 w-3" /> <strong>Tier evaluation & adaptation occurs every 4 hours.</strong>
+                                </p>
                              </div>
                          </Card>
                     </motion.div>

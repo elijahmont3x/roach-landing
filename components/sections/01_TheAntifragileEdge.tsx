@@ -7,15 +7,65 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { Activity, AlertTriangle, BookOpen, ExternalLink, TrendingDown, TrendingUp, Zap, MinusCircle, Square, Sparkles, PlusCircle } from "lucide-react"; // Replaced icons for clarity
+// Updated icon imports with more conceptually rich options
+import { 
+  Activity, ExternalLink, TrendingDown, TrendingUp, Sparkles, 
+  Binary, Network, Orbit, Dna, Waves, LineChart, SigmaSquare,
+  GlassWater,
+  BrickWallFire,
+  Rocket
+} from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { FaDumpsterFire, FaSuitcaseRolling } from "react-icons/fa6";
 
-// Enhanced Concept Data (clearer visuals, links)
+// Enhanced concept data with improved analogies and examples
 const concepts = [
-  { value: "fragile", label: "Fragile", icon: MinusCircle, colorTheme: "destructive", summary: "Weakens Under Stress", definition: "Systems actively harmed or degraded by shocks, volatility, errors, and randomness. They thrive only in predictable, stable environments.", characteristics: ["Degrades Quickly", "Fears Uncertainty", "Requires Predictability", "Sensitive to Small Shocks"], cryptoExample: "Most 'Pump & Fun' tokens, over-leveraged positions lacking risk management, un-audited DeFi protocols vulnerable to single exploits.", responseToStress: { label: "Degrades / Breaks", icon: TrendingDown }, metaphor: "Glass Chalice", talebQuote: '"Fragility is aversion to volatility." - Nassim Taleb', visualPrompt: "Subject: Systemic Breakdown Visualization; Style: Glitchy, chaotic digital art; Composition: Line graph sharply declining into fragmentation, resembling broken data streams; Palette: Sharp reds, error blues, dark grays; Keywords: failure, error, vulnerability, system collapse; Message: Emphasis on catastrophic failure from stress." },
-  { value: "resilient", label: "Resilient", icon: Square, colorTheme: "amber", summary: "Withstands & Recovers", definition: "Systems capable of absorbing shocks and returning to their original state or functionality after disturbances. They endure stress but do not gain from it.", characteristics: ["Recovers to Baseline", "Absorbs Shocks", "Static Structure", "Maintains Equilibrium"], cryptoExample: "Stablecoins successfully maintaining their peg during moderate volatility, well-established blockchains weathering network congestion, simple locked LP tokens with no dynamic features.", responseToStress: { label: "Recovers to Original State", icon: Activity }, metaphor: "Rubber Ball", talebQuote: '"The resilient resists shocks and stays the same." - Nassim Taleb', visualPrompt: "Subject: System Resilience Cycle; Style: Clean, technical flowchart; Composition: Line graph showing a temporary dip followed by a complete return to the previous level, loop indication; Palette: Stable amber/yellow, neutral grays, clear indication of recovery path; Keywords: stability, recovery, bounce-back, endurance; Message: Illustration of returning to the status quo post-disturbance." },
-  { value: "antifragile", label: "$ROACH", icon: PlusCircle, colorTheme: "green", summary: "Gains Strength from Chaos", definition: "$ROACH's Goal: To embody systems that *actively benefit* from shocks, volatility, randomness, and stressors. Uses disorder as fuel for improvement.", characteristics: ["Benefits from Volatility", "Improves Under Pressure", "Leverages Chaos", "Adapts Dynamically ($ROACH 5-Tier System)"], cryptoExample: "$ROACH aims to achieve this via its adaptive tax/reflection model converting sell-offs into holder rewards and potential price floor strengthening, actively using volatility for ecosystem fortification.", responseToStress: { label: "Strengthens / Improves", icon: TrendingUp }, metaphor: "Hydra (Grows Stronger)", talebQuote: '"The antifragile gets better from shocks." - Nassim Taleb', visualPrompt: "Subject: Antifragile System Growth Spiral; Style: Energetic, abstract, biological-tech fusion; Composition: Ascending spiral graph where each 'stress point' (node) leads to a higher baseline level, demonstrating cumulative strengthening; Palette: Vibrant greens, blues, subtle metallic tech accents; Keywords: growth, adaptation, evolution, benefit from chaos; Message: Visualizing the concept of getting stronger through challenges." },
+  { 
+    value: "fragile", 
+    label: "Fragile", 
+    icon: TrendingDown, // Represents rigid binary systems with no flexibility
+    colorTheme: "destructive", 
+    summary: "Weakens Under Stress", 
+    definition: "Systems actively harmed or degraded by shocks, volatility, errors, and randomness. They thrive only in predictable, stable environments.", 
+    characteristics: ["Degrades Quickly", "Fears Uncertainty", "Requires Predictability", "Sensitive to Small Shocks"], 
+    cryptoExample: "Most 'Pump & Fun' tokens, over-leveraged positions lacking risk management, un-audited DeFi protocols vulnerable to single exploits.", 
+    responseToStress: { label: "Degrades / Breaks", icon: TrendingDown }, 
+    // More crypto-relevant analogy that investors will recognize
+    metaphor: "Liquidation Cascade", 
+    talebQuote: '"Fragility is aversion to volatility." - Nassim Taleb', 
+    visualPrompt: "Subject: Systemic Breakdown Visualization; Style: Glitchy, chaotic digital art; Composition: Line graph sharply declining into fragmentation, resembling broken data streams; Palette: Sharp reds, error blues, dark grays; Keywords: failure, error, vulnerability, system collapse; Message: Emphasis on catastrophic failure from stress." 
+  },
+  { 
+    value: "resilient", 
+    label: "Resilient", 
+    icon: Activity, // Represents interconnected systems that distribute shock
+    colorTheme: "amber", 
+    summary: "Withstands & Recovers", 
+    definition: "Systems capable of absorbing shocks and returning to their original state or functionality after disturbances. They endure stress but do not gain from it.", 
+    characteristics: ["Recovers to Baseline", "Absorbs Shocks", "Static Structure", "Maintains Equilibrium"], 
+    cryptoExample: "Stablecoins successfully maintaining their peg during moderate volatility, well-established blockchains weathering network congestion, simple locked LP tokens with no dynamic features.", 
+    responseToStress: { label: "Recovers to Original State", icon: Activity }, 
+    // More crypto-relevant analogy
+    metaphor: "Bitcoin Difficulty Adjustment", 
+    talebQuote: '"The resilient resists shocks and stays the same." - Nassim Taleb', 
+    visualPrompt: "Subject: System Resilience Cycle; Style: Clean, technical flowchart; Composition: Line graph showing a temporary dip followed by a complete return to the previous level, loop indication; Palette: Stable amber/yellow, neutral grays, clear indication of recovery path; Keywords: stability, recovery, bounce-back, endurance; Message: Illustration of returning to the status quo post-disturbance." 
+  },
+  { 
+    value: "antifragile", 
+    label: "$ROACH", 
+    icon: TrendingUp, // Represents evolutionary systems that adapt and grow
+    colorTheme: "green", 
+    summary: "Gains Strength from Chaos", 
+    definition: "$ROACH's Goal: To embody systems that *actively benefit* from shocks, volatility, randomness, and stressors. Uses disorder as fuel for improvement.", 
+    characteristics: ["Benefits from Volatility", "Improves Under Pressure", "Leverages Chaos", "Adapts Dynamically ($ROACH 5-Tier System)"], 
+    cryptoExample: "$ROACH aims to achieve this via its adaptive tax/reflection model converting sell-offs into holder rewards and potential price floor strengthening, actively using volatility for ecosystem fortification.", 
+    responseToStress: { label: "Strengthens / Improves", icon: TrendingUp }, 
+    // Crypto-focused analogy that shows sophistication
+    metaphor: "Positive Convexity", 
+    talebQuote: '"The antifragile gets better from shocks." - Nassim Taleb', 
+    visualPrompt: "Subject: Antifragile System Growth Spiral; Style: Energetic, abstract, biological-tech fusion; Composition: Ascending spiral graph where each 'stress point' (node) leads to a higher baseline level, demonstrating cumulative strengthening; Palette: Vibrant greens, blues, subtle metallic tech accents; Keywords: growth, adaptation, evolution, benefit from chaos; Message: Visualizing the concept of getting stronger through challenges." 
+  },
 ];
 
 const cardMotionProps = { initial: { opacity: 0, y: 20 }, whileInView: { opacity: 1, y: 0 }, transition: { duration: 0.6, ease: "easeOut" }, viewport: { once: true, amount: 0.2 } };
@@ -25,21 +75,21 @@ export function TheAntifragileEdge() {
   return (
     <Section
       id="the-antifragile-edge"
-      className="py-20 md:py-28 lg:py-32"
       gradientBackground
       patternBackground="/patterns/subtle-dots.svg" // Example pattern
       gradientOpacity={0.15}
       patternOpacity={0.015}
+      align="left"
+      useSuspense
     >
       <SectionHeader
-        title="Beyond Resilience: The Antifragile Edge"
-        description="Standard assets crumble (Fragile) or merely endure (Resilient) market shocks. $ROACH is architected differently—it's designed to harness volatility and grow stronger."
+          title="Not Just Resilient — Antifragile"
+          description="Standard assets crumble (Fragile) or merely endure (Resilient) market shocks. $ROACH is architected differently—it's designed to harness volatility and grow stronger."
         subtitle={<><Sparkles className="inline h-4 w-4 mr-1.5" /> Core Concept: Antifragility</>}
-        alignment="center"
-        className="mb-16"
+        align="inherit"
       />
 
-      <motion.div {...cardMotionProps} className="max-w-5xl mx-auto">
+      <motion.div {...cardMotionProps} className="w-full max-w-6xl mx-auto">
         <Card paddingless className="overflow-hidden border border-border/15 shadow-lg shadow-primary/5">
             <Tabs defaultValue="antifragile" className="w-full">
                 <TabsList variant="segmented" className="grid-cols-3 bg-muted/40 dark:bg-background/40">
@@ -118,9 +168,9 @@ interface ConceptContentProps {
 function ConceptContent({ icon: Icon, label, summary, definition, characteristics, cryptoExample, responseToStress, colorTheme, visualPrompt, metaphor, talebQuote }: ConceptContentProps) {
 
     const themes = {
-        destructive: { text: "text-destructive", border: "border-destructive/30 dark:border-destructive/40", bg: "bg-destructive/5 dark:bg-destructive/10", iconColor: "text-destructive", responseBadge: "bg-destructive/10 text-destructive border-destructive/20", characteristicIconColor: "text-destructive/70", baseIcon: MinusCircle },
-        amber: { text: "text-amber-600 dark:text-amber-400", border: "border-amber-500/30 dark:border-amber-500/40", bg: "bg-amber-500/5 dark:bg-amber-500/10", iconColor: "text-amber-500 dark:text-amber-400", responseBadge: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20", characteristicIconColor: "text-amber-600/70 dark:text-amber-500/70", baseIcon: Square },
-        green: { text: "text-green-600 dark:text-green-400", border: "border-green-500/30 dark:border-green-500/40", bg: "bg-green-500/5 dark:bg-green-500/10", iconColor: "text-green-500 dark:text-green-400", responseBadge: "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20", characteristicIconColor: "text-green-600/70 dark:text-green-500/70", baseIcon: PlusCircle }, // ROACH uses PlusCircle here
+        destructive: { text: "text-destructive", border: "border-destructive/30 dark:border-destructive/40", bg: "bg-destructive/5 dark:bg-destructive/10", iconColor: "text-destructive", responseBadge: "bg-destructive/10 text-destructive border-destructive/20", characteristicIconColor: "text-destructive/70", baseIcon: Binary }, // Updated icon
+        amber: { text: "text-amber-600 dark:text-amber-400", border: "border-amber-500/30 dark:border-amber-500/40", bg: "bg-amber-500/5 dark:bg-amber-500/10", iconColor: "text-amber-500 dark:text-amber-400", responseBadge: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20", characteristicIconColor: "text-amber-600/70 dark:text-amber-500/70", baseIcon: Network }, // Updated icon
+        green: { text: "text-green-600 dark:text-green-400", border: "border-green-500/30 dark:border-green-500/40", bg: "bg-green-500/5 dark:bg-green-500/10", iconColor: "text-green-500 dark:text-green-400", responseBadge: "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20", characteristicIconColor: "text-green-600/70 dark:text-green-500/70", baseIcon: Orbit }, // Updated icon
     };
     const theme = themes[colorTheme];
     const ResponseIcon = responseToStress.icon;

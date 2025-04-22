@@ -12,16 +12,18 @@ import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion
 import { ArrowDown, BarChartHorizontalIcon, BookOpen, FileText, ShieldCheck, Sparkles, TrendingUp, Zap } from "lucide-react"; // Added Sparkles
 import Link from "next/link";
 import React from "react";
+import Image from 'next/image';
 
 interface HeroProps {
   onScrollDown?: () => void;
+  align?: 'left' | 'center' | 'right'; // Renamed from alignment to align
 }
 
 const SWAP_LINK = "https://jup.ag/swap/SOL-ROACHaBXfk3N57vr1gDmQCkSp22d9Xv4V1f";
 const EXPLORER_LINK = `https://solscan.io/token/ROACHaBXfk3N57vr1gDmQCkSp22d9Xv4V1f`;
 const DOCS_LINK = "/ROACH_Whitepaper_v2.txt"; // Use whitepaper filename
 
-export function Hero({ onScrollDown }: HeroProps) {
+export function Hero({ onScrollDown, align = 'left' }: HeroProps) {
     const targetRef = React.useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: targetRef,
@@ -34,115 +36,153 @@ export function Hero({ onScrollDown }: HeroProps) {
     const backgroundOpacity = useTransform(scrollYProgress, [0, 0.4], [0.5, 0.1]); // Fade background pattern
 
     return (
-        <Section
-            id="hero"
-            ref={targetRef} // Attach ref for scroll tracking
-            disableDefaultHeight
-            className="min-h-screen flex flex-col justify-center items-center text-center relative overflow-hidden !pt-28 !pb-20 md:!pt-32 md:!pb-24 lg:!pt-36 lg:!pb-28 snap-start" // Keep full height behavior for Hero
-            gradientBackground
-            patternBackground="/patterns/circuit-board.svg" // Example subtle pattern
-            patternOpacity={0.03}
-            gradientOpacity={0.4}
-        >
-             {/* Content Area */}
+      <Section
+        id="hero"
+        ref={targetRef}
+        disableDefaultHeight
+        className="h-screen flex flex-col justify-center relative overflow-hidden !pt-28 !pb-20 md:!pt-32 md:!pb-24 lg:!pt-36 lg:!pb-28 snap-start" // Changed min-h-screen to h-screen
+        containerClassName="flex flex-col flex-grow" // Added flex-grow to container
+        gradientBackground
+        fullWidthGradient={true}
+        patternBackground="/patterns/circuit-board.svg"
+        patternOpacity={0.03}
+        gradientOpacity={0.4}
+        align={align} // This should now properly apply alignment
+        useSuspense
+      >
+        {/* Main content wrapper with flex-col and justify-between */}
+        <div className="z-10 w-full flex flex-col justify-around flex-grow gap-20"> {/* Added flex-grow */}
+          {/* Top section with grid layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end">
+            {/* Left column with text content */}
             <motion.div
-                className="z-10 flex flex-col items-center max-w-5xl mx-auto" // Increased max-width slightly
+              className="flex flex-col max-w-5xl"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
+            >
+              {/* Top Badge */}
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}>
+                <Badge variant="outline" size="lg" className="mb-4 border-primary/30 bg-primary/10 text-primary text-xs md:text-sm shadow-sm font-semibold">
+                  <Zap className="mr-1.5 h-3.5 w-3.5" /> The Antifragile SPL Token on Solana
+                </Badge>
+              </motion.div>
+
+              {/* Main Headline */}
+              <motion.h1
+                className="text-4xl font-extrabold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl !leading-[1.15] mb-5 max-w-4xl text-balance text-foreground dark:text-foreground/95"
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
+              >
+                Don't Just Survive Market Chaos. <br className="hidden md:block" /> <span className="text-primary text-glow-primary">Capitalize On It.</span>
+              </motion.h1>
+
+              {/* Sub-headline */}
+              <motion.p
+                className={cn(
+                  "max-w-xl md:max-w-2xl lg:max-w-3xl text-base md:text-lg lg:text-xl text-muted-foreground mb-10 leading-relaxed text-balance",
+                  align === 'center' ? 'mx-auto' : ''
+                )}
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
+              >
+                Introducing <strong className="font-semibold text-foreground">$ROACH</strong>: the evolutionary SPL token leveraging <strong className="font-semibold text-foreground">dynamic, antifragile economics</strong> to actively convert market stress into enhanced rewards and fortified stability.
+              </motion.p>
+
+              {/* Call to Action Buttons */}
+              <motion.div
+                className={cn(
+                  "flex flex-col sm:flex-row gap-3 sm:gap-4",
+                  align === 'center' ? 'justify-center max-w-md mx-auto' : 'max-w-md'
+                )}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-            >
-                 {/* Top Badge */}
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}>
-                    <Badge variant="outline" size="lg" className="mb-4 border-primary/30 bg-primary/10 text-primary text-xs md:text-sm shadow-sm font-semibold">
-                        <Zap className="mr-1.5 h-3.5 w-3.5" /> The Antifragile SPL Token on Solana
-                    </Badge>
-                </motion.div>
-
-                {/* Main Headline - Slightly refined wording */}
-                <motion.h1
-                    className={cn(
-                        "text-4xl font-extrabold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl !leading-[1.15] mb-5 max-w-4xl text-balance", // Adjusted leading slightly
-                         "text-foreground dark:text-foreground/95" // Explicit color
-                    )}
-                    initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
-                >
-                    Don't Just Survive Market Chaos. <br className="hidden md:block" /> <span className="text-primary text-glow-primary">Capitalize On It.</span>
-                </motion.h1>
-
-                {/* Sub-headline */}
-                <motion.p
-                    className={cn(
-                        "max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto text-base md:text-lg lg:text-xl text-muted-foreground mb-10 leading-relaxed text-balance"
-                    )}
-                    initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
-                >
-                     Introducing <strong className="font-semibold text-foreground">$ROACH</strong>: the evolutionary SPL token leveraging <strong className="font-semibold text-foreground">dynamic, antifragile economics</strong> to actively convert market stress into enhanced rewards and fortified stability.
-                </motion.p>
-
-                {/* Core Benefit Highlights - Enhanced with icons */}
-                <motion.div
-                    className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 mb-10 md:mb-12 max-w-4xl mx-auto w-full"
-                    initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.5, ease: "easeOut" }}
-                >
-                    <BenefitCard icon={TrendingUp} title="Adaptive Yield" description="Reflection rate climbs with selling volume." tooltip="Max 10% of sell tax redistributed (Tier 5)." />
-                    <BenefitCard icon={ShieldCheck} title="Dynamic Stability" description="Rising sell tax stabilizes during downturns." tooltip="Sell tax reaches 15% under high pressure." />
-                    <BenefitCard icon={Sparkles} title="Volatility Advantage" description="Engineered to benefit from market disorder." tooltip="Core design based on Nassim Taleb's Antifragility." />
-                </motion.div>
-
-                {/* Call to Action Buttons */}
-                <motion.div
-                    className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4 justify-center w-full max-w-md"
-                    initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.6, ease: "easeOut" }}
-                >
-                    <Link href={SWAP_LINK} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
-                         <Button size="lg" className="w-full sm:w-auto font-semibold shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 group animate-pulse-slow">
-                            <Zap className="h-5 w-5 mr-2 group-hover:animate-spin-fast" /> {/* Added subtle icon animation */}
-                            Acquire $ROACH Now
-                         </Button>
-                    </Link>
-                     {/* Group secondary actions */}
-                     <div className="flex items-center gap-2">
-                        <Tooltip delayDuration={100}>
-                            <TooltipTrigger asChild>
-                                <Link href={DOCS_LINK} target="_blank" rel="noopener noreferrer">
-                                    <Button variant="outline" size="icon" className="border-border/60 hover:border-primary/50">
-                                        <BookOpen className="h-5 w-5" />
-                                        <span className="sr-only">Read Whitepaper</span>
-                                    </Button>
-                                </Link>
-                            </TooltipTrigger>
-                            <TooltipContent><p className="text-xs">Read Whitepaper</p></TooltipContent>
-                        </Tooltip>
-                        <Tooltip delayDuration={100}>
-                            <TooltipTrigger asChild>
-                                <Link href={EXPLORER_LINK} target="_blank" rel="noopener noreferrer">
-                                    <Button variant="outline" size="icon" className="border-border/60 hover:border-primary/50">
-                                        <FileText className="h-5 w-5" />
-                                         <span className="sr-only">View Contract</span>
-                                    </Button>
-                                </Link>
-                            </TooltipTrigger>
-                             <TooltipContent><p className="text-xs">View Contract on Solscan</p></TooltipContent>
-                        </Tooltip>
-                    </div>
-                </motion.div>
-
-                 {/* Scroll Down Indicator - Optional */}
-                {onScrollDown && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: 0.5 }}>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 h-11 w-11 text-muted-foreground hover:text-primary mt-12 sm:mt-14 animate-bounce hover:animate-none"
-                            onClick={onScrollDown}
-                            aria-label="Scroll down to learn more"
-                        >
-                            <ArrowDown className="h-6 w-6" />
+                transition={{ duration: 0.7, delay: 0.5, ease: "easeOut" }}
+              >
+                <Link href={SWAP_LINK} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                  <Button size="lg" className="w-full sm:w-auto font-semibold shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 group animate-pulse-slow">
+                    <Zap className="h-5 w-5 mr-2 group-hover:animate-spin-fast" />
+                    Acquire $ROACH Now
+                  </Button>
+                </Link>
+                {/* Group secondary actions */}
+                <div className="flex items-center gap-2">
+                  <Tooltip delayDuration={100}>
+                    <TooltipTrigger asChild>
+                      <Link href={DOCS_LINK} target="_blank" rel="noopener noreferrer">
+                        <Button variant="outline" size="icon" className="border-border/60 hover:border-primary/50">
+                          <BookOpen className="h-5 w-5" />
+                          <span className="sr-only">Read Whitepaper</span>
                         </Button>
-                    </motion.div>
-                )}
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent><p className="text-xs">Read Whitepaper</p></TooltipContent>
+                  </Tooltip>
+                  <Tooltip delayDuration={100}>
+                    <TooltipTrigger asChild>
+                      <Link href={EXPLORER_LINK} target="_blank" rel="noopener noreferrer">
+                        <Button variant="outline" size="icon" className="border-border/60 hover:border-primary/50">
+                          <FileText className="h-5 w-5" />
+                          <span className="sr-only">View Contract</span>
+                        </Button>
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent><p className="text-xs">View Contract on Solscan</p></TooltipContent>
+                  </Tooltip>
+                </div>
+              </motion.div>
             </motion.div>
-        </Section>
+
+            {/* Right column with larger image */}
+            <motion.div 
+              className="hidden lg:flex justify-end items-center"
+              initial={{ opacity: 0, x: 64 }}
+              animate={{ opacity: 1, x: 16 }}
+              transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+            >
+              <Image 
+                src="/hero-roach.png"
+                alt="Roach Hero Image"
+                height={380}
+                width={380}
+                className="object-contain drop-shadow-2xl"
+                priority
+              />
+            </motion.div>
+          </div>
+
+          {/* Benefits Cards - now using relative positioning with margin-top auto */}
+          <motion.div
+            className={cn(
+              "w-full grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5",
+              "max-w-4xl", 
+              "mx-auto"
+            )}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.6, ease: "easeOut" }}
+          >
+            <BenefitCard icon={TrendingUp} title="Adaptive Yield" description="Reflection rate climbs with selling volume." tooltip="Max 10% of sell tax redistributed (Tier 5)." />
+            <BenefitCard icon={ShieldCheck} title="Dynamic Stability" description="Rising sell tax stabilizes during downturns." tooltip="Sell tax reaches 15% under high pressure." />
+            <BenefitCard icon={Sparkles} title="Volatility Advantage" description="Engineered to benefit from market disorder." tooltip="Core design based on Nassim Taleb's Antifragility." />
+          </motion.div>
+        </div>
+
+        {/* Scroll Down Indicator - still absolute but just for positioning */}
+        {onScrollDown && (
+          <div className="absolute bottom-8 left-0 right-0 flex justify-center">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: 0.5 }}>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-11 w-11 text-muted-foreground hover:text-primary animate-bounce hover:animate-none"
+                onClick={onScrollDown}
+                aria-label="Scroll down to learn more"
+              >
+                <ArrowDown className="h-6 w-6" />
+              </Button>
+            </motion.div>
+          </div>
+        )}
+      </Section>
     );
 }
 

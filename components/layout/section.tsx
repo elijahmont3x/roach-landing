@@ -20,18 +20,25 @@ interface SectionProps extends React.HTMLAttributes<HTMLElement> {
     patternOpacity?: number; // 0 to 1
     // New prop for suspense handling
     useSuspense?: boolean;
+    // Renamed from alignment to align
+    align?: 'left' | 'center' | 'right';
+    // New prop to make gradient full-width
+    fullWidthGradient?: boolean;
 }
 
 interface SectionHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
     title: React.ReactNode;
     description?: React.ReactNode;
     subtitle?: React.ReactNode;
-    alignment?: 'left' | 'center' | 'right';
+    // Also rename here for consistency
+    align?: 'left' | 'center' | 'right' | 'inherit';
     className?: string;
     titleClassName?: string;
     descriptionClassName?: string;
     // New prop for text glow effect
     glowEffect?: 'primary' | 'secondary' | 'none';
+    // Add a new prop for text alignment independent from block alignment
+    textAlign?: 'left' | 'center' | 'right' | 'inherit';
 }
 
 interface SectionConnectorProps {
@@ -53,6 +60,8 @@ export function Section({
     gradientOpacity = 0.5,
     patternOpacity = 0.02,
     useSuspense = false,
+    align = 'center', // Renamed from alignment to align
+    fullWidthGradient = false, // New prop
     ...props
 }: SectionProps) {
     // Suspense fallback UI
@@ -62,19 +71,40 @@ export function Section({
         </div>
     );
     
+    // Simplify alignment to only handle *horizontal* alignment
+    const contentAlignClasses = {
+        'left': 'items-start', // Only control horizontal alignment
+        'center': 'items-center', // Only control horizontal alignment
+        'right': 'items-end' // Only control horizontal alignment
+    }[align];
+    
+    // The container itself is always centered with mx-auto
+    // We'll apply custom width constraints based on the alignment
+    const containerWidthClasses = {
+        'left': 'mr-auto', // Left-aligned content gets right margin auto
+        'center': 'mx-auto', // Centered content gets margin auto on both sides
+        'right': 'ml-auto'   // Right-aligned content gets left margin auto
+    }[align];
+    
     return (
         <section
             id={id}
             className={cn(
                 "w-full relative scroll-snap-align-start", 
                 !disableDefaultHeight && "min-h-[100svh] flex flex-col justify-center py-16 md:py-20 lg:py-24",
+                // For sections that should fill the height completely, add h-screen or specific height classes
                 className
             )}
+            // Properly set data attribute as a prop
+            data-section-align={align}
             {...props}
         >
-            {/* Optional Background Effects */}
+            {/* Optional Background Effects - Adjusted for full-width capability */}
             {(gradientBackground || patternBackground) && (
-                <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+                <div className={cn(
+                    "absolute -z-10 overflow-hidden pointer-events-none",
+                    fullWidthGradient ? "fixed inset-0" : "inset-0" // Use fixed positioning for full-width
+                )}>
                     {gradientBackground && (
                          // Adjusted gradient for subtlety
                          <div
@@ -94,18 +124,23 @@ export function Section({
                     )}
                 </div>
             )}
-            {/* Main Content Container */}
-            <div className={cn(
-                "container mx-auto px-4 md:px-6 w-full z-10",
-                containerClassName
-            )}>
-                {useSuspense ? (
-                    <Suspense fallback={suspenseFallback}>
-                        {children}
-                    </Suspense>
-                ) : (
-                    children
+            {/* Container is always full width */}
+            <div 
+                className={cn(
+                    "container mx-auto px-4 md:px-6 w-full z-10 flex-grow flex flex-col", // Added flex-grow and flex flex-col
+                    containerClassName
                 )}
+            >
+                {/* Inner wrapper now has flex-grow to fill available height */}
+                <div className={cn("w-full flex-grow flex flex-col", contentAlignClasses)}>
+                    {useSuspense ? (
+                        <Suspense fallback={suspenseFallback}>
+                            {children}
+                        </Suspense>
+                    ) : (
+                        children  // FIX: Removed the incorrect curly braces around children
+                    )}
+                </div>
             </div>
         </section>
     );
@@ -116,48 +151,115 @@ export function SectionHeader({
     title,
     description,
     subtitle,
-    alignment = 'center',
+    align = 'inherit', // Default is now 'inherit' instead of a specific value
+    textAlign = 'left', 
     className,
     titleClassName,
     descriptionClassName,
-    glowEffect = 'none', // Default to no glow
+    glowEffect = 'none',
     ...props
 }: SectionHeaderProps) {
+    // Get reference to the component
+    const headerRef = React.useRef<HTMLDivElement>(null);
+    
+    // State to store inherited alignment from parent section
+    const [inheritedAlign, setInheritedAlign] = React.useState<'left' | 'center' | 'right'>('center');
+    
+    // Effect to find and read parent section's alignment
+    React.useEffect(() => {
+        // Run this only once after component mounts
+        if (align === 'inherit' && headerRef.current) {
+            try {
+                // Find the closest section element
+                const parentSection = headerRef.current.closest('section');
+                
+                if (parentSection) {
+                    // Log parent section for debugging
+                    console.log("Found parent section:", parentSection);
+                    
+                    // Direct DOM attribute access with fallback
+                    const alignAttr = parentSection.getAttribute('data-section-align');
+                    console.log("Raw alignment attribute:", alignAttr);
+                    
+                    // Set alignment based on the attribute value, with fallback to center
+                    if (alignAttr === 'left' || alignAttr === 'center' || alignAttr === 'right') {
+                        console.log(`Setting alignment to: ${alignAttr}`);
+                        setInheritedAlign(alignAttr as 'left' | 'center' | 'right');
+                    } else {
+                        console.log("No valid alignment found, defaulting to center");
+                        setInheritedAlign('center');
+                    }
+                } else {
+                    console.log("No parent section found");
+                }
+            } catch (error) {
+                console.error("Error finding parent section:", error);
+            }
+        }
+    }, [align]); // Only depend on align prop
+    
+    // Determine effective alignment - use inheritedAlign only when align is 'inherit'
+    const effectiveAlign = align === 'inherit' ? inheritedAlign : align;
+    
+    // For debugging - log the effective alignment being used
+    console.log("Using effectiveAlign:", effectiveAlign);
 
     const titleGlowClass = {
-        primary: 'text-glow-primary', // Assumes this class exists in globals.css or Tailwind config
+        primary: 'text-glow-primary',
         secondary: 'text-glow-secondary',
         none: ''
     }[glowEffect];
 
+    // Use effectiveAlign instead of align for text alignment
+    const effectiveTextAlign = textAlign === 'inherit' ? effectiveAlign : textAlign;
+    const textAlignClass = {
+        'left': 'text-left',
+        'center': 'text-center',
+        'right': 'text-right'
+    }[effectiveTextAlign];
+
+    // Use effectiveAlign for subtitle alignment
+    const subtitleAlignClass = {
+        'left': 'justify-start',
+        'center': 'justify-center',
+        'right': 'justify-end'
+    }[effectiveAlign];
+
     return (
         <div
+            ref={headerRef}
             className={cn(
-                "mb-12 md:mb-16 max-w-4xl",
+                "mb-12 md:mb-16 max-w-4xl relative", // Added relative positioning
                 {
-                    'mx-auto text-center': alignment === 'center',
-                    'text-right ml-auto': alignment === 'right',
-                    'text-left mr-auto': alignment === 'left',
+                    'mx-auto': effectiveAlign === 'center',
+                    'ml-auto': effectiveAlign === 'right',
+                    'mr-auto': effectiveAlign === 'left',
                 },
                 className
             )}
+            // Add debug attribute to check alignment in DOM
+            data-effective-align={effectiveAlign}
             {...props}
         >
             {subtitle && (
-                 // Added subtle shadow and refined style
-                 <Badge variant="outline" className="mb-3 text-xs px-2.5 py-1 shadow-sm border-primary/20 bg-primary/5 text-primary font-medium tracking-wide">
-                    {subtitle}
-                 </Badge>
+                <div className={cn("flex mb-3", subtitleAlignClass)}>
+                    <Badge 
+                        variant="outline" 
+                        className="text-xs px-2.5 py-1 shadow-sm border-primary/20 bg-primary/5 text-primary font-medium tracking-wide"
+                    >
+                        {subtitle}
+                    </Badge>
+                </div>
             )}
 
             <h2
                 className={cn(
-                    "text-2xl sm:text-3xl md:text-4xl lg:text-[2.8rem] font-bold tracking-tight !leading-snug mb-3 sm:mb-4 text-balance", // Adjusted line-height and margin
-                     "text-foreground dark:text-foreground/95", // Explicit foreground colors
-                     titleGlowClass, // Apply conditional glow class
-                     titleClassName
-                )}
-            >
+                    "text-2xl sm:text-3xl md:text-3xl lg:text-[2.8rem] font-bold tracking-tight !leading-snug mb-3 sm:mb-4 text-balance",
+                    "text-foreground dark:text-foreground/95",
+                    textAlignClass, // Apply text alignment
+                    titleGlowClass,
+                    titleClassName
+                )}>
                 {title}
             </h2>
 
@@ -165,7 +267,8 @@ export function SectionHeader({
                 <p
                     className={cn(
                         "text-base sm:text-lg lg:text-xl text-muted-foreground leading-relaxed sm:leading-relaxed",
-                        alignment === 'center' ? "max-w-[90%] sm:max-w-3xl mx-auto" : "max-w-full", // Adjust max-width for center
+                        textAlignClass, // Apply same text alignment as title
+                        "max-w-full", // Always max width
                         descriptionClassName
                     )}
                 >

@@ -127,12 +127,12 @@ export function HowToBuy() {
 
     return (
         <TooltipProvider>
-            <Section id="how-to-buy" className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-background/80 to-muted/10 dark:from-background/80 dark:to-background/15">
+            <Section id="how-to-buy" align="center" useSuspense className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-background/80 to-muted/10 dark:from-background/80 dark:to-background/15">
                  <SectionHeader
                     title="How to Get Your $ROACH"
                     description="Ready to join the Antifragile Colony? Follow these simple steps to securely purchase $ROACH on the Solana network."
                     subtitle={<><ShoppingCart className="inline h-4 w-4 mr-1.5" /> Secure Purchase Steps</>}
-                    alignment="center" className="mb-12"
+                    align="inherit"
                 />
 
                  {/* Enhanced Security Reminder */}

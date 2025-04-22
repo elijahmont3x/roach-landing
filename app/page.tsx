@@ -50,61 +50,23 @@ export default function Home() {
             <Header onScrollTo={handleScrollTo} />
             <main className="flex-grow scroll-smooth">
                 <Hero onScrollDown={() => handleScrollTo('the-antifragile-edge')} />
+                <TheAntifragileEdge id="the-antifragile-edge" />
+                <CockroachConnection id="cockroach-connection" />
                 
-                {/* Each section now handles its own suspense boundary */}
-                <Section useSuspense>
-                    <TheAntifragileEdge id="the-antifragile-edge" />
-                </Section>
-                
-                <Section useSuspense>
-                    <CockroachConnection id="cockroach-connection" />
-                </Section>
-                
-                <Section useSuspense>
                     <TokenMechanics id="mechanics" />
-                </Section>
                 
-                <Section useSuspense>
                     <MarketScenarios id="market-scenarios" />
-                </Section>
                 
-                <Section useSuspense>
                     <Tokenomics id="tokenomics" />
-                </Section>
                 
-                <Section useSuspense>
                     <SecuritySection id="security" />
-                </Section>
                 
-                <Section useSuspense>
                     <Roadmap id="roadmap" />
-                </Section>
                 
-                <Section useSuspense>
                     <HowToBuy id="how-to-buy" />
-                </Section>
-                
-                <SectionConnector 
-                    prevSection="Secure Purchase Guide" 
-                    summary="Acquire easily via Solana wallets and trusted DEXs." 
-                    nextConcept="Community Signals & Voices" 
-                    className="!py-12" 
-                />
-                
-                <Section useSuspense>
-                    <SocialProof id="social-proof" />
-                </Section>
-                
-                <SectionConnector 
-                    prevSection="The $ROACH Colony" 
-                    summary="Explore community sentiment and projected growth." 
-                    nextConcept="Frequently Asked Questions" 
-                    className="!py-12" 
-                />
-                
-                <Section useSuspense>
+
                     <FAQ id="faq" />
-                </Section>
+                    <SocialProof id="social-proof" />
             </main>
             <Footer />
             <ThemeToggleButton />

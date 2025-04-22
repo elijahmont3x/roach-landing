@@ -103,12 +103,12 @@ export function Roadmap() {
 
     return (
         <TooltipProvider>
-             <Section id="roadmap" className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-muted/5 via-background to-muted/5 dark:from-background/10 dark:via-background dark:to-background/5">
+             <Section id="roadmap" align="center" useSuspense className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-muted/5 via-background to-muted/5 dark:from-background/10 dark:via-background dark:to-background/5">
                 <SectionHeader
                     title="Roadmap: Charting the $ROACH Evolution"
                     description="Our phased strategy outlines the key milestones for $ROACH development, market entry, ecosystem growth, and long-term adaptation towards an antifragile future."
                     subtitle={<><Milestone className="inline h-4 w-4 mr-1.5" /> Development & Growth Plan</>}
-                    alignment="center" className="mb-16"
+                    align="inherit"
                 />
 
                 <motion.div
@@ -136,7 +136,8 @@ export function Roadmap() {
                                      </div>
                                       <Card className={cn(
                                         "border transition-all duration-300 overflow-hidden shadow-md hover:shadow-lg dark:shadow-md dark:shadow-black/15",
-                                          statusInfo.border, "dark:bg-card/80 backdrop-blur-sm hover:border-primary/40 dark:hover:border-primary/50"
+                                          statusInfo.border, "dark:bg-card/80 backdrop-blur-sm hover:border-primary/40 dark:hover:border-primary/50",
+                                          "py-0"
                                       )}>
                                          <CardHeader className={cn("border-b border-border/15 pb-3 pt-4 px-4", statusInfo.bg)}>
                                              <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-1.5">

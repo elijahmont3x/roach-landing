@@ -95,8 +95,8 @@ export const Header = memo(({ onScrollTo }: HeaderProps) => {
             )}
         >
             <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-                <Link href="/" className="flex items-center gap-2 mr-4 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm group" onClick={handleNavClick('/', true)}>
-                    <CockroachMascot size="md" className="text-primary transition-transform group-hover:rotate-[-10deg] group-hover:scale-110 duration-200" />
+                <Link href="/" className="hover-wink flex items-center gap-2 mr-4 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm group," onClick={handleNavClick('/', true)}>
+                    <CockroachMascot size="md" />
                     <span className="text-xl font-bold hidden sm:inline tracking-tighter bg-gradient-to-r from-primary to-foreground/80 bg-clip-text text-transparent">
                         $ROACH
                     </span>

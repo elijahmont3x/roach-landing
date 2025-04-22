@@ -78,12 +78,12 @@ export function SecuritySection() {
 
     return (
         <TooltipProvider>
-             <Section id="security" className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-background/50 to-muted/5 dark:from-background/50 dark:to-background/10">
+             <Section id="security" align="center" useSuspense className="py-20 md:py-28 lg:py-32 bg-gradient-to-b from-background/50 to-muted/5 dark:from-background/50 dark:to-background/10">
                 <SectionHeader
                     title="Fortified for Trust: Security & Transparency"
                     description="Built on verifiable safeguards: Our commitment includes comprehensive audits, locked liquidity, immutable contracts, and transparent team vesting."
                     subtitle={<><ShieldCheck className="inline h-4 w-4 mr-1.5" /> Verifiable Trust Pillars</>}
-                    alignment="center" className="mb-10"
+                    align="inherit"
                 />
 
                 {/* Pre-Launch Notice */}
@@ -113,7 +113,8 @@ export function SecuritySection() {
                                  <Card className={cn(
                                      "h-full transition-all duration-300 flex flex-col group overflow-hidden border dark:bg-card/60 backdrop-blur-sm shadow-sm hover:shadow-md dark:shadow-md dark:shadow-black/10",
                                      colors.border, "hover:border-primary/40 dark:hover:border-primary/50",
-                                     feature.pending && "opacity-80 dark:opacity-75"
+                                     feature.pending && "opacity-80 dark:opacity-75",
+                                     "py-0"
                                  )}>
                                      <CardContent className="flex-grow flex flex-col gap-3 p-5"> {/* Standardized Padding */}
                                         {/* Icon & Title Row */}
