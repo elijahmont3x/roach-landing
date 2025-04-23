@@ -24,7 +24,7 @@ const distributionData: AllocationItem[] = [
     { name: "Exchange Listings & Reserve", value: 40, color: "hsl(217, 89%, 61%)", darkColor: "hsl(217, 80%, 65%)", description: "Locked funds reserved for major CEX/DEX listing fees, market making support, and future strategic initiatives.", icon: Target }, // Blue
 ];
 const TOTAL_SUPPLY = 1_000_000_000;
-const contractAddress = "ROACHaBXfk3N57vr1gDmQCkSp22d9Xv4V1f";
+const contractAddress = "Not Yet Available";
 const explorerBaseUrl = "https://solscan.io/token/";
 const explorerLink = `${explorerBaseUrl}${contractAddress}`;
 const pinkLockLink = "#"; // Placeholder: Update post-lock
