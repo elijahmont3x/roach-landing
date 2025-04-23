@@ -136,6 +136,8 @@ export function TheAntifragileEdge() {
                              concept.colorTheme === 'amber' && 'text-amber-500',
                              concept.colorTheme === 'green' && 'text-green-500' // Roach uses Green here
                          )} />
+                         
+                        {/* @ts-ignore-next-line */}
                          <ConceptContent {...concept} />
                        </motion.div>
                     </AnimatePresence>

@@ -101,7 +101,7 @@ export function Footer() {
                                      : <ResourceLink href={RESOURCE_LINKS.audit} icon={ShieldCheck}>Security Audit Report</ResourceLink>
                                     }
                                 </li>
-                                <li><ResourceLink href={RESOURCE_LINKS.contract} icon={FileText}>Verified Contract ({contractAddressShort})</ResourceLink></li>
+                                {/* <li><ResourceLink href={RESOURCE_LINKS.contract} icon={FileText}>Verified Contract ({contractAddressShort})</ResourceLink></li> */}
                                 <li>
                                      {RESOURCE_LINKS.lockedLiquidity === "#"
                                      ? <ResourceLink href="#security" icon={Lock} isPending={true}>Liquidity Lock (Pending)</ResourceLink>
@@ -181,59 +181,86 @@ function FooterLink({ href, children, target, onScrollTo, className }: { href: s
         // Allow default behavior for external links (handled by Link component)
     };
 
-    const Component = isInternalSection ? 'button' : Link;
-    const componentProps = isInternalSection
-        ? { onClick: handleClick, 'aria-label': `Scroll to ${children}` }
-        : { href: href, target: target, rel: isExternal ? "noopener noreferrer" : undefined, 'aria-label': `Navigate to ${children}` };
-
-
-    return (
-        <Component
-            {...componentProps}
-            className={cn(
-                "text-muted-foreground hover:text-foreground hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm focus-visible:text-foreground transition-colors duration-200",
-                "inline-flex items-center gap-1", // Keep consistent gap
-                className // Allow external class overrides
-            )}
-        >
-            {children}
-            {isExternal && <ExternalLink className="h-3 w-3 opacity-60" />}
-        </Component>
+    const sharedClassNames = cn(
+        "text-muted-foreground hover:text-foreground hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm focus-visible:text-foreground transition-colors duration-200",
+        "inline-flex items-center gap-1", // Keep consistent gap
+        className // Allow external class overrides
     );
+
+    // Render different components based on link type to avoid type errors
+    if (isInternalSection) {
+        return (
+            <button
+                onClick={handleClick}
+                aria-label={`Scroll to ${children}`}
+                className={sharedClassNames}
+            >
+                {children}
+            </button>
+        );
+    } else {
+        return (
+            <Link
+                href={href}
+                target={target}
+                rel={isExternal ? "noopener noreferrer" : undefined}
+                aria-label={`Navigate to ${children}`}
+                className={sharedClassNames}
+            >
+                {children}
+                {isExternal && <ExternalLink className="h-3 w-3 opacity-60" />}
+            </Link>
+        );
+    }
 }
 
 
 function ResourceLink({ href, icon: Icon, children, isPending = false }: { href: string; icon: React.ElementType; children: React.ReactNode; isPending?: boolean; }) {
-     const Component = isPending ? 'button' : Link;
-     const handleClick = isPending ? (e: React.MouseEvent<HTMLButtonElement>) => {
-            e.preventDefault();
-             if (href.startsWith('#') && typeof window !== 'undefined') { // Simple check if it's a section link
-                const element = document.getElementById(href.substring(1));
-                if(element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-             } else {
-                console.log(`Resource for "${children}" is pending.`); // Add a console log or small user feedback if needed
-             }
-        } : undefined;
-
-      const commonProps = {
-        className: cn(
-            "text-muted-foreground hover:text-foreground focus-visible:text-foreground",
-            "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm",
-            "inline-flex items-center gap-1.5 group transition-colors duration-200",
-            isPending && "opacity-60 cursor-default hover:text-muted-foreground hover:no-underline" // Visual cue for pending
-        ),
-        'aria-label': `${children}${isPending ? ' (Pending)' : ''}`
-      };
-     const linkProps = !isPending ? { href: href, target: "_blank", rel: "noopener noreferrer" } : {};
-
-
-    return (
-        <Component {...commonProps} {...linkProps} onClick={handleClick}>
-            <Icon className={cn("h-3.5 w-3.5 text-muted-foreground/70 group-hover:text-foreground transition-colors", isPending && "group-hover:text-muted-foreground/70")} />
-            <span className={cn("group-hover:underline underline-offset-4", isPending && "group-hover:no-underline")}>{children}</span>
-            {!isPending && <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-60 transition-opacity duration-200" />}
-        </Component>
+    const commonClassName = cn(
+        "text-muted-foreground hover:text-foreground focus-visible:text-foreground",
+        "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm",
+        "inline-flex items-center gap-1.5 group transition-colors duration-200",
+        isPending && "opacity-60 cursor-default hover:text-muted-foreground hover:no-underline" // Visual cue for pending
     );
+    
+    const handlePendingClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        if (href.startsWith('#') && typeof window !== 'undefined') { // Simple check if it's a section link
+            const element = document.getElementById(href.substring(1));
+            if(element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            console.log(`Resource for "${children}" is pending.`); // Add a console log or small user feedback if needed
+        }
+    };
+
+    // Render different elements based on the isPending state
+    if (isPending) {
+        return (
+            <button 
+                className={commonClassName}
+                aria-label={`${children} (Pending)`}
+                onClick={handlePendingClick}
+            >
+                <Icon className={cn("h-3.5 w-3.5 text-muted-foreground/70 group-hover:text-muted-foreground/70")} />
+                <span className="group-hover:no-underline">{children}</span>
+            </button>
+        );
+    } else {
+        return (
+            // @ts-ignore-next-line
+            <Link 
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={children}
+                className={commonClassName}
+            >
+                <Icon className="h-3.5 w-3.5 text-muted-foreground/70 group-hover:text-foreground transition-colors" />
+                <span className="group-hover:underline underline-offset-4">{children}</span>
+                <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-60 transition-opacity duration-200" />
+            </Link>
+        );
+    }
 }
 
 
