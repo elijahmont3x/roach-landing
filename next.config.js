@@ -22,8 +22,11 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   
-  // Adjust base path if deploying to a subfolder
-  // basePath: '/your-repo-name',
+  // Set base path for production builds
+  basePath: process.env.NODE_ENV === 'production' ? '/roach-landing' : '',
+  
+  // Configure asset prefix for production (optional, if different from basePath)
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/roach-landing' : '',
 };
 
 module.exports = nextConfig;
