@@ -5,7 +5,6 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { Section, SectionHeader } from "@/components/layout/section";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CockroachMascot } from "@/components/internal/cockroach-mascot";
 import { tierData, Tier } from "@/lib/tier-data";
@@ -15,12 +14,6 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from 'next/dynamic';
-
-// Dynamically import Mermaid to avoid SSR issues
-const MermaidChart = dynamic(
-  () => import('@/components/ui/mermaid-chart').then(mod => mod.MermaidChart),
-  { ssr: false, loading: () => <div className="h-32 flex items-center justify-center"><p className="text-xs text-muted-foreground">Loading flowchart...</p></div> }
-);
 
 // Constants and Helpers (Remain mostly the same, adjust timing)
 const CYCLE_INTERVAL_MS = 5000; // Slower for user observation

@@ -138,7 +138,6 @@ export function SecuritySection() {
                                             <Tooltip delayDuration={150}>
                                                 <TooltipTrigger asChild>
                                                       {/* Dynamically render Link or button */}
-                                                       {/* @ts-ignore Issues with polymorphic components or dynamic tag names, using ignore for pragmatic solution here */}
                                                        <LinkComponent
                                                            href={!isInternalLink && !isPlaceholderLink ? feature.link : undefined}
                                                            target={!isInternalLink && !isPlaceholderLink ? '_blank' : undefined}

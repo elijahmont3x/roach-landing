@@ -30,7 +30,7 @@ const faqData: FAQItemData[] = [
     { id: "t1", category: 'technical', q: "Is the smart contract audited?", a: "Yes, a comprehensive security audit is planned with CertiK (or a comparable top-tier firm) *before* the official launch. The final report will be publicly available and linked on this site. No critical/major issues are expected based on internal reviews.", tags: ["audit", "security", "certik", "contract safety", "vulnerabilities", "verified", "planned"] },
     { id: "t2", category: 'technical', q: "How is initial liquidity secured?", a: "The liquidity pool (LP) tokens created on Raydium at launch will be verifiably locked for 12 months using PinkLock or a similar trusted service. This prevents the team from removing liquidity ('rug pull'). Proof will be shared publicly post-lock.", tags: ["liquidity", "lp lock", "locked", "rug pull", "secure", "pinklock", "raydium", "planned"] },
     { id: "t3", category: 'technical', q: "Is the supply capped? Can more tokens be minted?", a: "Yes, the total supply is absolutely fixed at 1 billion $ROACH. The mint authority on the contract will be *permanently revoked* after the initial setup and distribution are complete. This ensures no inflation and is verifiable on-chain.", tags: ["supply", "total supply", "fixed cap", "inflation", "no mint", "immutable", "planned"] },
-    { id: "t4", category: 'technical', q: "Where can I view the contract?", a: "The $ROACH contract address (ROACHaBXf...Xv4V1f) will be verified on explorers like Solscan post-deployment. You'll be able to inspect the code, transactions, and holder distribution there. The official address is prominently displayed on this site and community channels.", tags: ["contract", "address", "solscan", "explorer", "verify code", "on-chain data", "transparency"] },
+    { id: "t4", category: 'technical', q: "Where can I view the contract?", a: "The $ROACH contract address ill be verified on explorers like Solscan post-deployment. You'll be able to inspect the code, transactions, and holder distribution there. The official address is prominently displayed on this site and community channels.", tags: ["contract", "address", "solscan", "explorer", "verify code", "on-chain data", "transparency"] },
 
     { id: "i1", category: 'investment', q: "What are the primary investment risks?", a: "All crypto investments are high-risk. $ROACH faces market volatility, potential smart contract risks (despite audit plans), regulatory uncertainties, and the risk of capital loss. The antifragile concept is experimental. **Do Your Own Research (DYOR).**", tags: ["risk", "investment safety", "speculation", "volatility", "loss potential", "dyor"] },
     { id: "i2", category: 'investment', q: "Does 'antifragile' guarantee profit?", a: "**No.** 'Antifragile' describes the system's *intended response* to stress, aiming to strengthen from it. It does **not** guarantee price appreciation. Token value depends on adoption, trading activity, market sentiment, and many other factors. Profit is never guaranteed.", tags: ["profit", "guarantee", "price movement", "value accrual", "speculative asset", "no financial advice"] },
@@ -175,7 +175,7 @@ export function FAQ() {
                             >
                                  <Search className="h-10 w-10 mx-auto mb-3 opacity-40" />
                                  <p className="font-medium text-foreground/80 mb-1">No matching questions found.</p>
-                                 <p className="text-sm">Try adjusting your search term <strong className="text-foreground/80">"{searchTerm}"</strong> or selecting a different category.</p>
+                                 <p className="text-sm">Try adjusting your search term <strong className="text-foreground/80">&ldquo;{searchTerm}&rdquo;</strong> or selecting a different category.</p>
                              </motion.div>
                         )}
                      </CardContent>
@@ -186,7 +186,7 @@ export function FAQ() {
                 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2, duration: 0.5 }}
                 className="mt-12 text-center text-sm text-muted-foreground max-w-3xl mx-auto text-balance"
             >
-                 Can't find your answer? Dive into our community channels for direct support and discussions.
+                 Can&apos;t find your answer? Dive into our community channels for direct support and discussions.
              </motion.p>
          </Section>
      );

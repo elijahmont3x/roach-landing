@@ -188,7 +188,6 @@ function FooterLink({ href, children, target, onScrollTo, className }: { href: s
 
 
     return (
-         // @ts-ignore - Component type compatibility is handled dynamically
         <Component
             {...componentProps}
             className={cn(
@@ -257,8 +256,9 @@ function SocialLink({ href, icon: Icon, label }: { href: string; icon: React.Ele
 
 function SwapLinkButton({ href, children }: { href: string; children: React.ReactNode; }) {
     return (
-         <Link href={href} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
-            <Button variant="outline" size="sm" className={cn(
+        <>
+         {/* <Link href={href} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto"> */}
+            <Button disabled variant="outline" size="sm" className={cn(
                 "w-full sm:w-auto justify-center gap-1.5", // Center content
                 "dark:bg-muted/40 dark:hover:bg-muted/60 dark:border-border hover:border-primary/50", // Dark mode & hover tweaks
                  "text-foreground/90 hover:text-primary font-medium"
@@ -267,7 +267,8 @@ function SwapLinkButton({ href, children }: { href: string; children: React.Reac
                 {children}
                 <ExternalLink className="h-3 w-3 opacity-70" />
             </Button>
-        </Link>
+        {/* </Link> */}
+        </>
     );
 }
 // --- END OF FILE components/layout/footer.tsx ---

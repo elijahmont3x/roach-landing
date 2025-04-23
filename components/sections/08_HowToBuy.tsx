@@ -14,7 +14,7 @@ import { useCallback, useState } from 'react';
 import { toast } from "sonner";
 
 // Constants
-const CONTRACT_ADDRESS = "ROACHaBXfk3N57vr1gDmQCkSp22d9Xv4V1f";
+const CONTRACT_ADDRESS = "Not Available";
 const CONTRACT_ADDRESS_SHORT = `${CONTRACT_ADDRESS.slice(0, 6)}...${CONTRACT_ADDRESS.slice(-6)}`;
 const EXPLORER_LINK = `https://solscan.io/token/${CONTRACT_ADDRESS}`;
 const PRIMARY_SWAP_LINK = `https://jup.ag/swap/SOL-${CONTRACT_ADDRESS}`;
@@ -76,25 +76,25 @@ export function HowToBuy() {
                         <Input id="contract-address-guide" readOnly value={CONTRACT_ADDRESS} className="flex-1 h-auto font-mono text-[10px] sm:text-xs bg-transparent border-0 shadow-none px-1 selection:bg-primary/20 focus-visible:ring-0 py-0.5 leading-tight"/>
                         <Tooltip delayDuration={100}>
                              <TooltipTrigger asChild>
-                                 <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0 text-muted-foreground hover:text-primary" onClick={copyAddress} aria-label="Copy Contract Address">
+                                 <Button disabled variant="ghost" size="icon" className="h-6 w-6 shrink-0 text-muted-foreground hover:text-primary" onClick={copyAddress} aria-label="Copy Contract Address">
                                      {copied ? <Check className="h-4 w-4 text-green-500 animate-in fade-in duration-300" /> : <Copy className="h-3.5 w-3.5" />}
                                  </Button>
                              </TooltipTrigger>
                              <TooltipContent side="top"><p>Copy Address</p></TooltipContent>
                          </Tooltip>
                      </div>
-                    <Link href={PRIMARY_SWAP_LINK} target="_blank" rel="noopener noreferrer" className="block w-full">
-                        <Button className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-md hover:shadow-lg transition-all duration-300 group">
+                    {/* <Link href={PRIMARY_SWAP_LINK} target="_blank" rel="noopener noreferrer" className="block w-full"> */}
+                        <Button disabled className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-md hover:shadow-lg transition-all duration-300 group">
                             Swap on {PRIMARY_SWAP_NAME} <ExternalLink className="ml-1.5 h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                         </Button>
-                    </Link>
+                    {/* </Link> */}
                     <Tooltip delayDuration={100}>
                          <TooltipTrigger asChild>
-                             <Link href={SECONDARY_SWAP_LINK} target="_blank" rel="noopener noreferrer" className="block w-full">
-                                <Button variant="outline" size="sm" className="w-full text-xs h-8 border-red-500/30 hover:border-red-500/50 hover:bg-red-500/5 text-red-600 dark:text-red-400 dark:hover:bg-red-900/20">
+                             {/* <Link href={SECONDARY_SWAP_LINK} target="_blank" rel="noopener noreferrer" className="block w-full"> */}
+                                <Button disabled variant="outline" size="sm" className="w-full text-xs h-8 border-red-500/30 hover:border-red-500/50 hover:bg-red-500/5 text-red-600 dark:text-red-400 dark:hover:bg-red-900/20">
                                      Use {SECONDARY_SWAP_NAME} Instead <ExternalLink className="ml-1 h-3 w-3 opacity-70" />
                                  </Button>
-                             </Link>
+                             {/* </Link> */}
                          </TooltipTrigger>
                          <TooltipContent side="bottom"><p className="text-xs">Direct DEX Swap (Raydium)</p></TooltipContent>
                      </Tooltip>
@@ -175,11 +175,11 @@ export function HowToBuy() {
                                          {step.links && (
                                              <div className="flex flex-wrap gap-1.5 mb-3">
                                                  {step.links.map((link, linkIndex) => (
-                                                     <Link key={`link-${index}-${linkIndex}`} href={link.href} target="_blank" rel="noopener noreferrer" title={`Visit ${link.name}`}>
-                                                         <Button variant="outline" size="xs" className="text-xs font-medium gap-1 h-6 px-1.5 border-border/40 hover:border-primary/40 dark:bg-muted/30">
+                                                    //  <Link key={`link-${index}-${linkIndex}`} href={link.href} target="_blank" rel="noopener noreferrer" title={`Visit ${link.name}`}>
+                                                         <Button disabled variant="outline" size="xs" className="text-xs font-medium gap-1 h-6 px-1.5 border-border/40 hover:border-primary/40 dark:bg-muted/30">
                                                              {link.icon && <link.icon className="h-3 w-3 opacity-80" />} {link.name} <ExternalLink className="h-2.5 w-2.5 opacity-60" />
                                                          </Button>
-                                                     </Link>
+                                                    //  {/* </Link> */}
                                                  ))}
                                              </div>
                                          )}

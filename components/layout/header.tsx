@@ -117,22 +117,22 @@ export const Header = memo(({ onScrollTo }: HeaderProps) => {
                                 </button>
                             </NavigationMenuItem>
                         ))}
-                        <NavigationMenuItem>
+                        {/* <NavigationMenuItem>
                             <Link href={WHITEPAPER_LINK} target="_blank" rel="noopener noreferrer" legacyBehavior passHref>
                                 <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "bg-transparent h-9 px-3 text-sm font-medium hover:bg-accent/70 gap-1.5 focus:bg-accent/70")}>
                                    <BookOpen className="h-4 w-4 opacity-80"/> Whitepaper
                                 </NavigationMenuLink>
                             </Link>
-                        </NavigationMenuItem>
+                        </NavigationMenuItem> */}
                     </NavigationMenuList>
                 </NavigationMenu>
 
                 <div className="hidden lg:flex items-center gap-2 ml-auto">
-                    <Link href={SWAP_LINK} target="_blank" rel="noopener noreferrer">
-                        <Button size="sm" className="shadow-sm hover:shadow-md transition-shadow bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/90 font-semibold text-primary-foreground">
+                    {/* <Link href={SWAP_LINK} target="_blank" rel="noopener noreferrer"> */}
+                        <Button size="sm" disabled className="shadow-sm hover:shadow-md transition-shadow bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/90 font-semibold text-primary-foreground">
                            Get $ROACH
                         </Button>
-                    </Link>
+                    {/* </Link> */}
                 </div>
 
                 <div className="flex items-center gap-2 lg:hidden ml-auto">
@@ -175,20 +175,20 @@ export const Header = memo(({ onScrollTo }: HeaderProps) => {
                                     </SheetClose>
                                 ))}
                                 <SheetClose asChild>
-                                    <Link href={WHITEPAPER_LINK} target="_blank" rel="noopener noreferrer" legacyBehavior passHref>
-                                        <a className={cn(buttonVariants({ variant: "ghost", size: "lg" }), "w-full justify-start text-base font-medium h-11")}>
+                                    <Link href={WHITEPAPER_LINK} target="_blank" rel="noopener noreferrer">
+                                        <Button variant="ghost" size="lg" className="w-full justify-start text-base font-medium h-11">
                                            <BookOpen className="mr-2 h-4 w-4 opacity-80" /> Whitepaper
-                                        </a>
+                                        </Button>
                                     </Link>
                                 </SheetClose>
                             </nav>
 
                             <div className="mt-auto border-t border-border/30 p-4">
-                                <Link href={SWAP_LINK} target="_blank" rel="noopener noreferrer" onClick={handleNavClick(SWAP_LINK, true)}>
-                                    <Button className="w-full shadow-md bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/90 font-semibold text-primary-foreground" size="lg">
+                                {/* <Link href={SWAP_LINK} target="_blank" rel="noopener noreferrer" onClick={handleNavClick(SWAP_LINK, true)}> */}
+                                    <Button disabled className="w-full shadow-md bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/90 font-semibold text-primary-foreground" size="lg">
                                         Get $ROACH Now
                                     </Button>
-                                </Link>
+                                {/* </Link> */}
                             </div>
                         </SheetContent>
                     </Sheet>

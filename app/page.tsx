@@ -50,23 +50,16 @@ export default function Home() {
             <Header onScrollTo={handleScrollTo} />
             <main className="flex-grow scroll-smooth">
                 <Hero onScrollDown={() => handleScrollTo('the-antifragile-edge')} />
-                <TheAntifragileEdge id="the-antifragile-edge" />
-                <CockroachConnection id="cockroach-connection" />
-                
-                    <TokenMechanics id="mechanics" />
-                
-                    <MarketScenarios id="market-scenarios" />
-                
-                    <Tokenomics id="tokenomics" />
-                
-                    <SecuritySection id="security" />
-                
-                    <Roadmap id="roadmap" />
-                
-                    <HowToBuy id="how-to-buy" />
-
-                    <FAQ id="faq" />
-                    <SocialProof id="social-proof" />
+                <TheAntifragileEdge  />
+                <CockroachConnection />
+                <TokenMechanics  />
+                <MarketScenarios  />
+                <Tokenomics />
+                <SecuritySection />
+                <Roadmap />
+                <HowToBuy />
+                <FAQ />
+                <SocialProof />
             </main>
             <Footer />
             <ThemeToggleButton />
