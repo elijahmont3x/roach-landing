@@ -18,7 +18,7 @@ import { toast } from "sonner";
 // Data & Constants
 interface AllocationItem { name: string; value: number; color: string; darkColor: string; description: string; icon: React.ElementType; }
 const distributionData: AllocationItem[] = [
-    { name: "Liquidity & Public Sale", value: 40, color: "hsl(262, 83%, 69%)", darkColor: "hsl(262, 70%, 72%)", description: "Funds initial Raydium LP (locked), remaining allocated to potential future strategic public sale phases.", icon: Droplets }, // Violet
+    { name: "Liquidity & Public Sale", value: 40, color: "hsl(262, 83%, 69%)", darkColor: "hsl(262, 70%, 72%)", description: "Funds initial Raydium LP (Burned), remaining allocated to potential future strategic public sale phases.", icon: Droplets }, // Violet
     { name: "Ecosystem & Marketing", value: 10, color: "hsl(149, 65%, 53%)", darkColor: "hsl(149, 58%, 60%)", description: "Dedicated to marketing, partnerships, community rewards, and platform development.", icon: Megaphone }, // Green
     { name: "Team (Vested)", value: 10, color: "hsl(38, 92%, 60%)", darkColor: "hsl(40, 88%, 65%)", description: "Transparent 6-month linear vesting via smart contract ensures long-term team alignment.", icon: Users }, // Amber
     { name: "Exchange Listings & Reserve", value: 40, color: "hsl(217, 89%, 61%)", darkColor: "hsl(217, 80%, 65%)", description: "Locked funds reserved for major CEX/DEX listing fees, market making support, and future strategic initiatives.", icon: Target }, // Blue
@@ -38,7 +38,7 @@ const tokenDetails = [
     { key: "Total Supply", value: TOTAL_SUPPLY.toLocaleString(), icon: BarChartHorizontal, tooltip: "Fixed, non-inflationary supply.", immutable: true },
     { key: "Contract Address", value: contractAddress, icon: FileText, isAddress: true, link: explorerLink, tooltip: "View the verified contract code on Solscan.", immutable: true },
     { key: "Security Audit", value: "CertiK (In Progress)", icon: Construction, link: auditLink, tooltip: "Comprehensive security audit currently underway by CertiK. Click for planned report (placeholder).", external: true, pending: true },
-    { key: "Initial Liquidity", value: "To be Locked (12 Months)", icon: Lock, link: pinkLockLink, tooltip: "Raydium LP tokens scheduled for 12-month lock via PinkLock post-launch. Click for details (placeholder).", external: true, pending: true },
+    { key: "Liquidity", value: "To be Burned", icon: Lock, link: pinkLockLink, tooltip: "Raydium LP tokens scheduled for 12-month lock via PinkLock post-launch. Click for details (placeholder).", external: true, pending: true },
     { key: "Team Vesting", value: "6 Months Linear (Post-Launch)", icon: Users, link: vestingContractLink, tooltip: "Team tokens unlock linearly over 6 months via smart contract, starting after launch. Click for vesting schedule info.", external: vestingContractLink !== '#roadmap', pending: true }, // Mark as external if link isn't #roadmap
     { key: "Mint Authority", value: "Revoked Post-Launch", icon: MinusCircle, tooltip: "Minting disabled permanently after initial setup and distribution.", immutable: true, pending: true },
 ];
