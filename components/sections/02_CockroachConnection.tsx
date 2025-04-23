@@ -161,7 +161,7 @@ export function CockroachConnection() {
                     {/* Visual Placeholder for the diagram */}
                     <div className="absolute inset-0 z-0 rounded-lg overflow-hidden">
                         <Image
-                            src="/roach-evolution.png"
+                            src="roach-landing/roach-evolution.png"
                             alt="Roach Evolution - Biology to Tokenomics Diagram"
                             fill
                             className="object-contain"
