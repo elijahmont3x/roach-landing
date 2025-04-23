@@ -34,7 +34,7 @@ export function CockroachMascot({ size = 'md', className }: CockroachMascotProps
     >
       {/* Default image - CSS handles visibility */}
       <Image
-        src="roach-landing/logo.png"
+        src="/roach-landing/logo.png"
         alt="Roach Mascot"
         fill
         quality={100}
@@ -46,7 +46,7 @@ export function CockroachMascot({ size = 'md', className }: CockroachMascotProps
       
       {/* Wink image - CSS handles visibility */}
       <Image
-        src="roach-landing/logo-wink.png"
+        src="/roach-landing/logo-wink.png"
         alt="Roach Mascot Wink"
         fill
         quality={100}

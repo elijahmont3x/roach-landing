@@ -141,7 +141,7 @@ export function Hero({ onScrollDown, align = 'left' }: HeroProps) {
               style={{ y: parallaxY }} // Apply parallax effect directly
             >
               <Image 
-                src="roach-landing/hero-roach.png"
+                src="/roach-landing/hero-roach.png"
                 alt="Roach Hero Image"
                 height={380}
                 width={380}
