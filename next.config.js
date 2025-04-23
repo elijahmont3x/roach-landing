@@ -9,21 +9,22 @@ const nextConfig = {
   
   // Disable TypeScript type checking during build
   typescript: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
     ignoreBuildErrors: true,
   },
   
   // Disable ESLint during builds
   eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
   
-  // Adjust base path if deploying to a subfolder
-  basePath: '/roach-landing',
+  // Asset handling for GitHub Pages
+  basePath: process.env.NODE_ENV === 'production' ? '/roach-landing' : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/roach-landing/' : '',
+  
+  // Make path info available to components
+  env: {
+    NEXT_PUBLIC_BASE_PATH: process.env.NODE_ENV === 'production' ? '/roach-landing' : '',
+  },
 };
 
 module.exports = nextConfig;
